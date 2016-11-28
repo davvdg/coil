@@ -1,0 +1,51 @@
+<nav class="navbar navbar-light bg-faded">
+  <form class="form-inline float-xs-right">
+  	<a class="navbar-brand" href="#">hey {{user.username}}</a>
+  	<a ng-controller="LogoutCtrl" ng-click='logout()' class="btn btn-default">Logout</a>
+  </form>
+</nav>
+
+<div ng-controller='JobCtrl'>
+	<div class="container">
+	<form>
+		<div id="mainclass" class='form-group'>
+			<label>Main Class</label>
+			<input type="text" name="mainClass" ng-model='mainClass', class="form-control">
+		</div>
+
+		<div id="arguments" class='form-group'>
+			<label>Arguments</label>
+			<input type="text" name="arguments" ng-model='arguments', class="form-control">
+		</div>
+
+		<div id="ressource" class='form-group'>
+			<label>Ressources</label>
+			<input type="text" name="ressource" ng-model='ressource', class="form-control">
+		</div>
+	</form>
+	</div>
+	<div ng-controller='ConfCtrl' class="container">
+		<h3>Spark Conf</h3>
+		<div class='table-responsible'>
+			<table class="table">
+				<thead>
+					<tr><th>key</th><th>value</th><th>#</th></tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat='key in confsKeys'>
+						<td>{{key}}</td>
+						<td><input type="text" ng-model='confs[key]' class="form-control"/></td>
+						<td><button ng-click="delConf()">del</button></td>
+					</tr>
+					<!--add new conf option line -->
+					<tr >
+						<td><input type="text" ng-model='keyToAdd' class="form-control"/></td>
+						<td><input type="text" ng-model='valueToAdd' class="form-control"/></td>
+						<td><button ng-click="addConf()">add</button></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<button ng-click='submitJob()'>submit</button>
+</div>
