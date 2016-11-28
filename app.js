@@ -15,17 +15,57 @@ var express = require('express'),
 
 var cookieParser = require('cookie-parser');
 var passport = require('passport');
+
+
+
+var configPath = process.env.CONF_FILE_PATH || "./config.js";
+
+var parseEnvVars = function() {
+	for (i in process.env) {
+		if (i.startsWith("COIL__")) {
+			var value = process.env[i];
+			var newEnv = i
+			.replace("COIL__","")
+			.replace(/__/g,".")
+			.toLowerCase()
+			.replace(/(\_[a-z])/g, function($1){
+				return $1.toUpperCase().replace('_','');
+			});
+			var configPath = newEnv.split(".");
+			var configkey = config;
+			console.log(configkey);
+			console.log(configPath);
+			var override = true;
+			for (var idx=0; idx < configPath.length; idx++) {
+				var elem = configPath[idx];
+				console.log(elem);
+				if (elem in configkey) {
+					configkey = config[elem];
+				} else {
+					console.log("key " + elem + "not in " + configkey + "... skipping " + configPath);
+					override = false;
+					break;
+				}
+			}
+			if (override) {
+				console.log("setting config key" + configPath + "=" + value); 
+				configkey = value;
+			} 	
+		}
+	}
+}
+
+
+var config = require(configPath);
+parseEnvVars();
+
+var LdapStrategy = require('passport-ldapauth');
 var LocalStrategy = require('passport-local').Strategy;
 
 
 
 
-var auth = function(req, res, next){ 
-  if (!req.isAuthenticated()) res.send(401); 
-  else next();
-};
-
-
+if (config.auth.method === "local") {
 passport.use(new LocalStrategy(
   function(username, password, cb) {
     console.log(username,password);
@@ -43,7 +83,14 @@ passport.use(new LocalStrategy(
     });
     */
   }));
+}
 
+if (config.auth.method === "ldapauth") {
+	passport.use(new LdapStrategy({
+		server: config.auth.ldapauth
+	}
+	));
+}
 passport.serializeUser(function(user, cb) {
   cb(null, user.username);
 });
@@ -90,6 +137,12 @@ if (env === 'production') {
 
 app.use(passport.initialize());
 app.use(passport.session());
+
+var auth = function(req, res, next){ 
+  if (!req.isAuthenticated()) res.send(401); 
+  else next();
+};
+
 /**
  * Routes
  */
@@ -100,21 +153,9 @@ app.get('/', routes.index);
 app.get('/user/loggedin', function(req, res) {
   res.send(req.isAuthenticated() ? req.user : '0'); 
 });
-/*
-app.get('/login',
-  function(req, res){
-    res.render('login');
-  });
-*/
-app.post('/loginbis', 
-  passport.authenticate('local', { failureRedirect: '/login' }),
-  function(req, res) {
-    console.log("prout");
-    res.redirect('/');
-  });
 
 app.post('/user/login', function(req, res, next) {
-  passport.authenticate('local', function(err, user, info) {
+  passport.authenticate(config.auth.method, function(err, user, info) {
     if (err) {
       return next(err);
     }
