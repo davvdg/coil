@@ -33,22 +33,19 @@ var parseEnvVars = function() {
 			});
 			var configPath = newEnv.split(".");
 			var configkey = config;
-			console.log(configkey);
-			console.log(configPath);
 			var override = true;
 			for (var idx=0; idx < configPath.length; idx++) {
 				var elem = configPath[idx];
-				console.log(elem);
 				if (elem in configkey) {
-					configkey = config[elem];
+					configkey = configkey[elem];
 				} else {
-					console.log("key " + elem + "not in " + configkey + "... skipping " + configPath);
+					console.log("key " + elem + " not in " + configkey + "... skipping " + configPath);
 					override = false;
 					break;
 				}
 			}
 			if (override) {
-				console.log("setting config key" + configPath + "=" + value); 
+				console.log("ENV setting config key " + newEnv + "=" + value); 
 				configkey = value;
 			} 	
 		}
