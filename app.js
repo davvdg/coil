@@ -20,7 +20,7 @@ var passport = require('passport');
 
 var configPath = process.env.CONF_FILE_PATH || "./config.js";
 
-var parseEnvVars = function() {
+var parseEnvVars = function(config) {
 	for (i in process.env) {
 		if (i.startsWith("COIL__")) {
 			var value = process.env[i];
@@ -31,30 +31,42 @@ var parseEnvVars = function() {
 			.replace(/(\_[a-z])/g, function($1){
 				return $1.toUpperCase().replace('_','');
 			});
+
+
 			var configPath = newEnv.split(".");
-			var configkey = config;
+			var obj = config;
+      var key = undefined;
 			var override = true;
 			for (var idx=0; idx < configPath.length; idx++) {
-				var elem = configPath[idx];
-				if (elem in configkey) {
-					configkey = configkey[elem];
+				var key = configPath[idx];
+				if (key in obj) {
+          if (idx === configPath.length -1) {
+            obj = obj;
+            key = key;
+          } else {
+            obj = obj[key];  
+          }
 				} else {
-					console.log("key " + elem + " not in " + configkey + "... skipping " + configPath);
+					console.log("key " + elem + " not in " + obj + "... skipping " + configPath);
 					override = false;
 					break;
 				}
 			}
+
 			if (override) {
 				console.log("ENV setting config key " + newEnv + "=" + value); 
-				configkey = value;
+				obj[key] = value;
 			} 	
 		}
 	}
+  return config;
 }
 
 
 var config = require(configPath);
-parseEnvVars();
+config = parseEnvVars(config);
+
+console.log(config);
 
 var LdapStrategy = require('passport-ldapauth');
 var LocalStrategy = require('passport-local').Strategy;
@@ -63,23 +75,16 @@ var LocalStrategy = require('passport-local').Strategy;
 
 
 if (config.auth.method === "local") {
-passport.use(new LocalStrategy(
-  function(username, password, cb) {
-    console.log(username,password);
-    if (username==="xxxxx" && password==="xxxxx") {
-      var user = {username:"xxxxx","password":"xxxxx"};
-      return cb(null, user);
-    }
-    return cb(null, false);
-    /*
-    db.users.findByUsername(username, function(err, user) {
-      if (err) { return cb(err); }
-      if (!user) { return cb(null, false); }
-      if (user.password != password) { return cb(null, false); }
-      return cb(null, user);
-    });
-    */
-  }));
+  passport.use(new LocalStrategy(
+    function(username, password, cb) {
+      console.log(username,password);
+      if (username==="xxxxx" && password==="xxxxx") {
+        var user = {username:"xxxxx","password":"xxxxx"};
+        return cb(null, user);
+      }
+      return cb(null, false);
+    })
+  );
 }
 
 if (config.auth.method === "ldapauth") {
