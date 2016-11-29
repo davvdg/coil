@@ -168,6 +168,8 @@ app.post('/user/login', function(req, res, next) {
     }
     req.logIn(user, function(err) {
       if (err) {
+	console.log("failed to log user");
+	console.log(err);
         return res.status(500).json({
           err: 'Could not log in user'
         });
