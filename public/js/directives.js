@@ -2,7 +2,7 @@
 
 /* Directives */
 
-angular.module('myApp.directives', []).
+angular.module('myApp.directives', ['myApp.controllers']).
   directive('appVersion', function (version) {
     return function(scope, elm, attrs) {
       elm.text(version);
@@ -10,7 +10,15 @@ angular.module('myApp.directives', []).
   }).
   directive('kvtable', function () {
   return {
-    restrict: 'E',
-    templateUrl: '/partials/kvtable.html'    
+  	scope: {
+    	title: '@',
+    	items: '='
+    },
+    restrict: 'EA',
+    templateUrl: 'partials/kvtable.html',
+    replace: true,
+    controller: "ConfCtrl",
+    controllerAs: 'ctrl',
+    bindToController: true
   }
 });;

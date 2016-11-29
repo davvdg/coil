@@ -61,8 +61,8 @@ angular.module('myApp.controllers', []).
       this.keyToAdd = '';
       this.valueToAdd = '';
     }
-    this.delConf = function() {
-      delete this.confs[this.key];
+    this.delConf = function(key) {
+      delete this.confs[key];
       this.setFieldKeys();
     }
     
