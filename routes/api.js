@@ -5,6 +5,7 @@
 
 var http = require("http");
 var querystring = require("querystring");
+var config = require("../configMgmt.js").config;
 
 
 
@@ -21,11 +22,11 @@ exports.submitjob = function(req,res) {
 	if (newbody.sparkProperties["spark.app.name"]===undefined) {
 		newbody.sparkProperties["spark.app.name"] = "unamedJob";
 	}
-	
+        console.log(newbody);	
 	var _res=res;
 	var options = {
-	  hostname: 'sparkdispatcherendpoint',
-	  port: 80,
+	  hostname: config.spark.url,
+	  port: config.spark.port,
 	  path: '/v1/submissions/create',
 	  method: 'POST',
 	  headers: {

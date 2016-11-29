@@ -1,5 +1,6 @@
 FROM node
 ADD ./app.js /coil/
+ADD ./configMgmt.js /coil/
 ADD ./package.json /coil/
 ADD ./public /coil/public
 ADD ./routes /coil/routes

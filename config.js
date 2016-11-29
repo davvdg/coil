@@ -8,6 +8,10 @@ var config = {
   			searchBase: "ou=users,o=example.com",
   			searchFilter: "(uid={{username}})"
 		}
+	},
+	spark: {
+		url: "spark.yarn",
+		port: 80
 	}
 };
 
