@@ -17,8 +17,10 @@ angular.module('myApp.controllers', []).
   }).
   controller('JobCtrl', function ($scope, $http) {
     $scope.mainClass = "";
-    $scope.arguments = [];
+    $scope.arguments = "";
     $scope.ressource = "";
+    $scope.confs = {};
+    $scope.envs = {};
     // write Ctrl here
     $scope.submitJob = function() {
 
@@ -26,12 +28,10 @@ angular.module('myApp.controllers', []).
         "appResource": $scope.ressource,
         "mainClass": $scope.mainClass,
         "appArgs": $scope.arguments.split(" "),
-        "sparkProperties" : {},
-        "environmentVariables":{}
+        "sparkProperties" : $scope.confs,
+        "environmentVariables": $scope.envs
       }
       console.log($scope);
-      data.environmentVariables = $scope.$$childTail.env.confs;
-      data.sparkProperties = $scope.$$childTail.env.confs;
       console.log(data);
       $http.post('/api/submit', data);
 

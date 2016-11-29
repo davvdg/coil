@@ -11,8 +11,7 @@ angular.module('myApp.directives', ['myApp.controllers']).
   directive('kvtable', function () {
   return {
   	scope: {
-    	title: '@',
-    	items: '='
+    	confs: '='
     },
     restrict: 'EA',
     templateUrl: 'partials/kvtable.html',
