@@ -93,13 +93,15 @@ if (config.auth.method === "ldapauth") {
 	}
 	));
 }
+
 passport.serializeUser(function(user, cb) {
-  cb(null, user.username);
+  console.log(user);
+  cb(null, user);
 });
 
-passport.deserializeUser(function(id, cb) {
+passport.deserializeUser(function(user, cb) {
   
-  cb(null, {username:id});
+  cb(null, user);
   
 });
 
