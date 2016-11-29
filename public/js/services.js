@@ -26,15 +26,13 @@ angular.module('myApp').factory('AuthService',
 	function getUserStatus() {
 		return $http.get('/user/status')
 		// handle success
-		.success(function (data) {
-			if(data.status){
+		.then(function (res) {
+			if(res.data.status){
 				user = true;
 			} else {
 				user = false;
 			}
-		})
-		// handle error
-		.error(function (data) {
+		}, function (data) {
 			user = false;
 		});
 	}
@@ -47,17 +45,18 @@ angular.module('myApp').factory('AuthService',
 		// send a post request to the server
 		$http.post('/user/login', {username: username, password: password})
 		// handle success
-		.success(function (data, status) {
-			if(status === 200 && data.status){
+		.then(function (res) {
+			console.log(res);
+			if(res.status === 200 && res.data.status){
+				console.log("good");
 				user = true;
 				deferred.resolve();
 			} else {
+				console.log("not good");
 				user = false;
 				deferred.reject();
 			}
-		})
-		// handle error
-		.error(function (data) {
+		}, function (res) {
 			user = false;
 			deferred.reject();
 		});
@@ -75,12 +74,10 @@ angular.module('myApp').factory('AuthService',
 		// send a get request to the server
 		$http.get('/user/logout')
 		// handle success
-		.success(function (data) {
+		.then (function (data) {
 		  user = false;
 		  deferred.resolve();
-		})
-		// handle error
-		.error(function (data) {
+		}, function (data) {
 		  user = false;
 		  deferred.reject();
 		});

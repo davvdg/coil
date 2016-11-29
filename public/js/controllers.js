@@ -9,13 +9,11 @@ angular.module('myApp.controllers', []).
       method: 'GET',
       url: '/api/name'
     }).
-    success(function (data, status, headers, config) {
+    then(function (data, status, headers, config) {
       $scope.name = data.name;
-    }).
-    error(function (data, status, headers, config) {
+    }, function (data, status, headers, config) {
       $scope.name = 'Error!';
     });
-
   }).
   controller('JobCtrl', function ($scope, $http) {
     $scope.mainClass = "";
@@ -27,12 +25,13 @@ angular.module('myApp.controllers', []).
       var data = {
         "appResource": $scope.ressource,
         "mainClass": $scope.mainClass,
-        "appArgs": $scope.arguments,
+        "appArgs": $scope.arguments.split(" "),
         "sparkProperties" : {},
         "environmentVariables":{}
       }
       console.log($scope);
-      data.sparkProperties = $scope.$$childTail.confs;
+      data.environmentVariables = $scope.$$childTail.env.confs;
+      data.sparkProperties = $scope.$$childTail.env.confs;
       console.log(data);
       $http.post('/api/submit', data);
 
@@ -40,33 +39,34 @@ angular.module('myApp.controllers', []).
     }
 
   }).
-  controller("ConfCtrl", function($scope) {
-    $scope.confs = {};
-    $scope.confsKeys = [];
-    $scope.keyToAdd = '';
-    $scope.valueToAdd = '';
+  controller("ConfCtrl", function() {
+    this.confs = {};
+    this.confsKeys = [];
+    this.keyToAdd = '';
+    this.valueToAdd = '';
 
-    $scope.setFieldKeys = function() {
-        $scope.confsKeys = Object.keys($scope.confs)
+    this.setFieldKeys = function() {
+        this.confsKeys = Object.keys(this.confs)
     }
 
-    $scope.addConf = function() {
-      if ($scope.keyToAdd == "" || $scope.valueToAdd == "") {
+    this.addConf = function() {
+      console.log(this);
+      if (this.keyToAdd == "" || this.valueToAdd == "") {
         return;
       }
 
 
-      $scope.confs[$scope.keyToAdd] = $scope.valueToAdd;
-      $scope.setFieldKeys();
-      $scope.keyToAdd = '';
-      $scope.valueToAdd = '';
+      this.confs[this.keyToAdd] = this.valueToAdd;
+      this.setFieldKeys();
+      this.keyToAdd = '';
+      this.valueToAdd = '';
     }
-    $scope.delConf = function() {
-      delete $scope.confs[this.key];
-      $scope.setFieldKeys();
+    this.delConf = function() {
+      delete this.confs[this.key];
+      this.setFieldKeys();
     }
     
-    $scope.setFieldKeys();
+    this.setFieldKeys();
   }).
   controller('MyCtrl2', function ($scope) {
     // write Ctrl here
