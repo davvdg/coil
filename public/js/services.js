@@ -48,11 +48,10 @@ angular.module('myApp').factory('AuthService',
 		.then(function (res) {
 			console.log(res);
 			if(res.status === 200 && res.data.status){
-				console.log("good");
+				console.log(res.data);
 				user = true;
 				deferred.resolve();
 			} else {
-				console.log("not good");
 				user = false;
 				deferred.reject();
 			}

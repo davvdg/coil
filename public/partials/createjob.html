@@ -6,6 +6,7 @@
 </nav>
 
 <div ng-controller='JobCtrl'>
+	<div ng-show="error" class="alert alert-danger">{{errorMessage}}</div>
 	<div class="container">
 	<form>
 		<div id="mainclass" class='form-group'>

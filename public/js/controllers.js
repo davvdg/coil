@@ -21,6 +21,7 @@ angular.module('myApp.controllers', []).
     $scope.ressource = "";
     $scope.confs = {};
     $scope.envs = {};
+    $scope.errorMessage = "";
     // write Ctrl here
     $scope.submitJob = function() {
 
@@ -33,7 +34,17 @@ angular.module('myApp.controllers', []).
       }
       console.log($scope);
       console.log(data);
-      $http.post('/api/submit', data);
+      $http.post('/api/submit', data)
+      .then(
+        // on success
+        function(res) {
+          $scope.errorMessage = res.data.message;
+        }, 
+        // on error
+        function(res) {
+          console.log(res);
+          $scope.errorMessage = res.data;
+        });
 
 
     }
@@ -110,6 +121,7 @@ angular.module('myApp.controllers', []).
 
       };
 
+  }).controller('NavCtrl', function($scope, AuthService) {
   });
 /*
 
