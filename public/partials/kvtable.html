@@ -11,10 +11,33 @@
 					<td><button ng-click="ctrl.delConf(key)">del</button></td>
 				</tr>
 				<!--add new conf option line -->
-				<tr >
-					<td><input type="text" ng-model='ctrl.keyToAdd' class="form-control"/></td>
-					<td><input type="text" ng-model='ctrl.valueToAdd' class="form-control"/></td>
+				<tr ><td>
+				  <md-content class="md-padding">
+
+				    <form ng-submit="$event.preventDefault()">
+
+				<md-autocomplete
+          ng-disabled="ctrl.isDisabled"
+          md-no-cache="ctrl.noCache"
+          md-selected-item="ctrl.selectedItem"
+          md-search-text-change="ctrl.searchTextChange(ctrl.keyToAdd)"
+          md-search-text="ctrl.keyToAdd"
+          md-selected-item-change="ctrl.selectedItemChange(item)"
+          md-items="item in ctrl.querySearch(ctrl.keyToAdd)"
+          md-item-text="item.display"
+          md-min-length="0">
+          <span md-highlight-text="ctrl.keyToAdd">{{item.display}}</span>
+        <md-not-found>
+          No states matching "{{ctrl.keyToAdd}}" were found.
+        </md-not-found>
+      </md-autocomplete>
+      </form></md-content></td>
+					<!--<td><input type="text" ng-model='ctrl.keyToAdd' class="form-control"/></td>-->
+					<td>
+   <input type="text" ng-model='ctrl.valueToAdd' class="form-control"/></md-input></td>
+
 					<td><button ng-click="ctrl.addConf()">add</button></td>
+
 				</tr>
 			</tbody>
 		</table>

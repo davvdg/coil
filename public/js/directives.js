@@ -9,15 +9,21 @@ angular.module('myApp.directives', ['myApp.controllers']).
     };
   }).
   directive('kvtable', function () {
-  return {
-  	scope: {
-    	confs: '='
-    },
-    restrict: 'EA',
-    templateUrl: 'partials/kvtable.html',
-    replace: true,
-    controller: "ConfCtrl",
-    controllerAs: 'ctrl',
-    bindToController: true
-  }
-});;
+    return {
+    	scope: {
+      	confs: '='
+      },
+      restrict: 'EA',
+      templateUrl: 'partials/kvtable.html',
+      replace: true,
+      controller: "ConfCtrl",
+      controllerAs: 'ctrl',
+      bindToController: true
+    }
+  }).
+  directive('navelem', function() {
+    return {
+      templateUrl: 'partials.navtmpl.html',
+      controller: "NavCtrl"
+    }
+  });
