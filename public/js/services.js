@@ -14,6 +14,7 @@ angular.module('myApp').factory('AuthService',
 
     // create user variable
     var user = null;
+    var userinfo = null;
 
     function isLoggedIn() {
 		if(user) {
@@ -23,17 +24,25 @@ angular.module('myApp').factory('AuthService',
   		}
 	}
 
+	function getUserName() {
+		return userinfo;
+	}
+
 	function getUserStatus() {
 		return $http.get('/user/status')
 		// handle success
 		.then(function (res) {
+			console.log(res);
 			if(res.data.status){
 				user = true;
+				userinfo = res.config.data.username;
 			} else {
 				user = false;
+				userinfo = null;
 			}
 		}, function (data) {
 			user = false;
+			userinfo = null;
 		});
 	}
 
@@ -45,18 +54,20 @@ angular.module('myApp').factory('AuthService',
 		// send a post request to the server
 		$http.post('/user/login', {username: username, password: password})
 		// handle success
-		.then(function (res) {
-			console.log(res);
+		.then(function (res) {			
 			if(res.status === 200 && res.data.status){
-				console.log(res.data);
 				user = true;
+				userinfo = res.config.data.username;
+				console.log(res.config);
 				deferred.resolve();
 			} else {
 				user = false;
+				userinfo = null;
 				deferred.reject();
 			}
 		}, function (res) {
 			user = false;
+			userinfo = null;
 			deferred.reject();
 		});
 
@@ -75,9 +86,11 @@ angular.module('myApp').factory('AuthService',
 		// handle success
 		.then (function (data) {
 		  user = false;
+		  userinfo = null;
 		  deferred.resolve();
 		}, function (data) {
 		  user = false;
+		  userinfo = null;
 		  deferred.reject();
 		});
 
@@ -93,6 +106,7 @@ angular.module('myApp').factory('AuthService',
       getUserStatus: getUserStatus,
       login: login,
       logout: logout,
+      getUserName: getUserName
     });
 
 }]);

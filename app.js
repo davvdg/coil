@@ -144,6 +144,7 @@ app.get('/user/logout', function(req, res) {
 });
 
 app.get('/user/status', function(req, res) {
+  console.log(req);
   if (!req.isAuthenticated()) {
     return res.status(200).json({
       status: false

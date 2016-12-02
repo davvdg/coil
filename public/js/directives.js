@@ -23,7 +23,8 @@ angular.module('myApp.directives', ['myApp.controllers']).
   }).
   directive('navelem', function() {
     return {
-      templateUrl: 'partials.navtmpl.html',
-      controller: "NavCtrl"
+      templateUrl: 'partials/navtmpl.html',
+      controller: "NavCtrl",
+      controllerAs: 'ctrl',
     }
   });

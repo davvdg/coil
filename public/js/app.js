@@ -43,6 +43,8 @@ config(function ($routeProvider, $locationProvider) {
       if (AuthService.isLoggedIn() === false) {
         $location.path('/login');
       };
+    }, function(res) {
+      console.log(res);
     });
   });
 });

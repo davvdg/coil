@@ -241,6 +241,13 @@ self.states        = this.loadAll();
       };
 
   }).controller('NavCtrl', function($scope, AuthService) {
+    var self = this;
+    self.isLoggedIn = function() {
+      return AuthService.isLoggedIn();
+    }
+    self.getUserName = function() {
+      return AuthService.getUserName();
+    }    
   });
 /*
 
