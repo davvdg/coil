@@ -53,9 +53,22 @@ exports.submitjob = function(req,res) {
 	proxyreq.end(JSON.stringify(newbody));
 };
 
-exports.getJobStatus = function(req, res) {
-	var driver = req.params.driver;
-	
+exports.getDriverStatus = function(req, res) {
+	var _res=res;
+	var driver = req.params.id;
+	var options = {
+	  uri: 'http://'+ config.spark.url + ':' + config.spark.port + '/v1/submissions/status/' + driver,
+	};
+	//console.log(options);
+	request(options, function(error, response, body) {
+		if (!error && response.statusCode == 200) {
+			data = parseSparkDispatcherRawDatas(body);
+			_res.json(data);
+		} else {
+			_res.json({state: "error"});
+		}
+	});
+}
 	// while the job is not started, there is nothing to do.
 	// then:
 	// here we could query mesos to get the current host and attach to the sandbox.
@@ -63,7 +76,7 @@ exports.getJobStatus = function(req, res) {
 	// when the spark application will be started, the hostname + port should become availables...
 	// ok, when it starts, the message dumped is a stringyfied json.
 
-}
+
 
 var parseSparkDispatcherRawDatas = function (datas) {
 	var jmessage = {"state": "FAILED_PARSING"};
@@ -138,7 +151,11 @@ exports.proxyDriver = function(req,res) {
 	getDriverIpPort(driver).then(function(ip) {
 		if (ip !== "") {
 			var newUrl = "http://" + ip + "/"
-			request(newUrl).pipe(res);
+			request(newUrl).
+			on('error', function(err) {
+    			console.log(err)
+    		}).
+			pipe(res);
 		} else {
 			res.body = "failed to get driver's ip";
 		}

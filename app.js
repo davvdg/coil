@@ -157,6 +157,7 @@ app.get('/user/status', function(req, res) {
 
 //app.get('/partials/:name', routes.partials);
 app.get("/drivergui/:id", api.proxyDriver);
+app.get("/driverstatus/:id", api.getDriverStatus);
 // JSON API
 app.get('/api/name', api.name);
 
