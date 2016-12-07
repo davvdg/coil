@@ -91,27 +91,32 @@ var parseSparkDispatcherRawDatas = function (datas) {
 					replace(/\:\s([A-Z0-9_.]+)/g, ': "$1"').
 					replace(/\"uuid\"\:\s.*\n/g, ''); // @todo: escape the uuid
 
-	var dataMatches = message.match(/.*\"data\"\:\s(.*)\n.*/g);
+	var dataMatches = rawmessage.match(/data\:\s.*\n/g);
 
-	message = message.replace(/\"data\"\:\s.*\n/g, '');
+	message = message.replace(/\"data\"\:\s(.*)\n/g, '');
 					
 					//replace(/\}\,\n(\s*)/g, '}\n$1');
 	message = "{" + message + "}"
-
-	//console.log(message);
 	jmessage = JSON.parse(message);
 	if (dataMatches) {
     	if (dataMatches.length) {
-    		console.log(dataMatches[0]);
-    		console.log(dataMatches[1]);
+    		//console.log(dataMatches[0]);
+    		//console.log(dataMatches[1]);
     		var data0 = dataMatches[0].
     			replace(/[^\\]\"/g, '').
-    			replace(/\\sha25\:[0-9a-f]*/g, '\\"');
-    		console.log(data0);
-    		var completedDatas = '{' + data0 + '}';
-    		console.log(completedDatas.slice(11080,11090));
-    		var jcompletedDatas = JSON.parse(completedDatas);
-    		jmessage.data = jcompletedDatas.data;
+    			replace(/\\sha25\:[0-9a-f]*/g, '\\"').
+    			replace(/data\:(.*)/g, "$1").
+    			replace(/\\n/g, '\n').
+    			replace(/\\"/g, '"').
+    			replace(/\\"/g, '\"');    		
+    		var completedDatas = '{ "data": ' + data0.slice(0, -2) + '}';
+    		//console.log(completedDatas.slice(11080,11090));
+    		try {
+				var jcompletedDatas = JSON.parse(completedDatas);
+    			jmessage.data = jcompletedDatas.data;
+    		} catch (e) {
+    			console.log(e);
+    		}
 
     	}
 	}
