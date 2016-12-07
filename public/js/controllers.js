@@ -38,6 +38,7 @@ angular.module('myApp.controllers', []).
       .then(
         // on success
         function(res) {
+          console.log(res);
           $scope.errorMessage = res.data.message;
         }, 
         // on error

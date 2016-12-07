@@ -29,52 +29,5 @@
 	<kvtable data-confs="confs"/>
 	<h3>Spark Env</h3>
 	<kvtable data-confs="envs"/>
-
-<!--
-	<div ng-controller='ConfCtrl as conf' class="container">
-		<h3>Spark Conf</h3>
-		<div class='table-responsible'>
-			<table class="table">
-				<thead>
-					<tr><th>key</th><th>value</th><th>#</th></tr>
-				</thead>
-				<tbody>
-					<tr ng-repeat='key in conf.confsKeys'>
-						<td>{{key}}</td>
-						<td><input type="text" ng-model='conf.confs[key]' class="form-control"/></td>
-						<td><button ng-click="conf.delConf()">del</button></td>
-					</tr>
-					<tr >
-						<td><input type="text" ng-model='conf.keyToAdd' class="form-control"/></td>
-						<td><input type="text" ng-model='conf.valueToAdd' class="form-control"/></td>
-						<td><button ng-click="conf.addConf()">add</button></td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-	</div>
-	<div ng-controller='ConfCtrl as env' class="container">
-		<h3>Env Conf</h3>
-		<div class='table-responsible'>
-			<table class="table">
-				<thead>
-					<tr><th>key</th><th>value</th><th>#</th></tr>
-				</thead>
-				<tbody>
-					<tr ng-repeat='key in env.confsKeys'>
-						<td>{{key}}</td>
-						<td><input type="text" ng-model='env.confs[key]' class="form-control"/></td>
-						<td><button ng-click="env.delConf()">del</button></td>
-					</tr>
-					<tr >
-						<td><input type="text" ng-model='env.keyToAdd' class="form-control"/></td>
-						<td><input type="text" ng-model='env.valueToAdd' class="form-control"/></td>
-						<td><button ng-click="env.addConf()">add</button></td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-	</div>
--->
 	<button ng-click='submitJob()'>submit</button>
 </div>

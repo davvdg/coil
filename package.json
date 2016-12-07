@@ -13,7 +13,10 @@
     "passport-local": "^1.0.0",
     "express-session": "^1.14.2",
     "cookie-parser": "^1.4.3",
-    "passport-ldapauth": "^0.6.0"
+    "passport-ldapauth": "^0.6.0",
+    "request": "^2.79.0",
+    "request-promise": "^4.1.1"
   },
+
   "scripts": {"start": "node app.js"}
 }

@@ -6,7 +6,8 @@
 var http = require("http");
 var querystring = require("querystring");
 var config = require("../configMgmt.js").config;
-
+var request = require('request');
+var rp = require('request-promise');
 
 
 exports.name = function (req, res) {
@@ -51,3 +52,97 @@ exports.submitjob = function(req,res) {
 	//proxyreq.write(JSON.stringify(newbody));
 	proxyreq.end(JSON.stringify(newbody));
 };
+
+exports.getJobStatus = function(req, res) {
+	var driver = req.params.driver;
+	
+	// while the job is not started, there is nothing to do.
+	// then:
+	// here we could query mesos to get the current host and attach to the sandbox.
+	// we can keep polling spark dispatcher for informations about the driver.
+	// when the spark application will be started, the hostname + port should become availables...
+	// ok, when it starts, the message dumped is a stringyfied json.
+
+}
+
+var parseSparkDispatcherRawDatas = function (datas) {
+	var jmessage = {"state": "FAILED_PARSING"};
+	var jdata = JSON.parse(datas);
+	var rawmessage = "\n" + jdata.message;
+	//console.log(rawmessage);
+	var message = rawmessage.
+					replace(/\n(\s*[a-z0-9_]*)\s\{/g, '\n$1: {').
+					replace(/\}\n([a-z0-9_]+)/g, "},\n$1").
+					replace(/([a-z0-9A-Z_\"]+)(\n\s*[a-z0-9_\"]+)/g, '$1,$2').
+					replace(/([a-z0-9_]+)\:/g, '"$1":').
+					replace(/\:\s([A-Z0-9_.]+)/g, ': "$1"').
+					replace(/\"uuid\"\:\s.*\n/g, ''); // @todo: escape the uuid
+
+	var dataMatches = message.match(/.*\"data\"\:\s(.*)\n.*/g);
+
+	message = message.replace(/\"data\"\:\s.*\n/g, '');
+					
+					//replace(/\}\,\n(\s*)/g, '}\n$1');
+	message = "{" + message + "}"
+
+	//console.log(message);
+	jmessage = JSON.parse(message);
+	if (dataMatches) {
+    	if (dataMatches.length) {
+    		console.log(dataMatches[0]);
+    		console.log(dataMatches[1]);
+    		var data0 = dataMatches[0].
+    			replace(/[^\\]\"/g, '').
+    			replace(/\\sha25\:[0-9a-f]*/g, '\\"');
+    		console.log(data0);
+    		var completedDatas = '{' + data0 + '}';
+    		console.log(completedDatas.slice(11080,11090));
+    		var jcompletedDatas = JSON.parse(completedDatas);
+    		jmessage.data = jcompletedDatas.data;
+
+    	}
+	}
+	return jmessage;
+}
+    	
+var getDriverIpPortFromRawDatas= function(rawDatas) {
+	parsedData = parseSparkDispatcherRawDatas(rawDatas);
+	if (parsedData.state !== "FAILED_PARSING") {
+		return parsedData.container_status.network_infos.ip_addresses.ip_address + ":4040";
+	}
+	return "";
+}
+
+var getDriverIpPort = function(driver) {
+	var options = {
+	  uri: 'http://'+ config.spark.url + ':' + config.spark.port + '/v1/submissions/status/' + driver,
+	};
+	//console.log(options);
+	var promise = rp(options)
+    .then(getDriverIpPortFromRawDatas)
+    .catch(function (err) {
+    	console.log(err);
+        // API call failed... 
+    });
+    return promise;
+}
+
+/**
+Given a driver id, this function will find the internal host:port running the driver
+And will pass all requests to it.
+This may need a specific driver url configuration to work.
+**/
+exports.proxyDriver = function(req,res) {	
+	var driver = req.params.id;
+
+	getDriverIpPort(driver).then(function(ip) {
+		if (ip !== "") {
+			var newUrl = "http://" + ip + "/"
+			request(newUrl).pipe(res);
+		} else {
+			res.body = "failed to get driver's ip";
+		}
+	}).catch(function(err) {
+		res.body = err;
+	});
+}

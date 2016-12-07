@@ -48,7 +48,7 @@ if (config.auth.method === "ldapauth") {
 }
 
 passport.serializeUser(function(user, cb) {
-  console.log(user);
+  //console.log(user);
   cb(null, user);
 });
 
@@ -156,7 +156,7 @@ app.get('/user/status', function(req, res) {
 });
 
 //app.get('/partials/:name', routes.partials);
-
+app.get("/drivergui/:id", api.proxyDriver);
 // JSON API
 app.get('/api/name', api.name);
 
@@ -164,6 +164,8 @@ app.get('/api/name', api.name);
 app.get('*', routes.index);
 
 app.post('/api/submit', auth, api.submitjob);
+
+
 
 /**
  * Start Server
