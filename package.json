@@ -4,19 +4,21 @@
   "private": true,
   "dependencies": {
     "body-parser": "^1.0.2",
-    "express-error-handler": "^0.1.4",
+    "cookie-parser": "^1.4.3",
     "express": "^4.1.1",
+    "express-error-handler": "^0.1.4",
+    "express-session": "^1.14.2",
     "jade": "~0.31.2",
     "method-override": "^1.0.0",
     "morgan": "^1.0.0",
     "passport": "^0.3.2",
-    "passport-local": "^1.0.0",
-    "express-session": "^1.14.2",
-    "cookie-parser": "^1.4.3",
     "passport-ldapauth": "^0.6.0",
+    "passport-local": "^1.0.0",
     "request": "^2.79.0",
-    "request-promise": "^4.1.1"
+    "request-promise": "^4.1.1",
+    "uuid": "^3.0.1"
   },
-
-  "scripts": {"start": "node app.js"}
+  "scripts": {
+    "start": "node app.js"
+  }
 }

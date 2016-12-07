@@ -8,6 +8,7 @@ var querystring = require("querystring");
 var config = require("../configMgmt.js").config;
 var request = require('request');
 var rp = require('request-promise');
+var uuid = require('uuid/v4');
 
 
 exports.name = function (req, res) {
@@ -16,14 +17,18 @@ exports.name = function (req, res) {
   });
 };
 
+var jobCache = {};
+
 exports.submitjob = function(req,res) {
 	var newbody = req.body;
+	var jobuuid = uuid();
 	newbody.action = "CreateSubmissionRequest";
 	newbody.clientSparkVersion = "2.0.2";
 	if (newbody.sparkProperties["spark.app.name"]===undefined) {
 		newbody.sparkProperties["spark.app.name"] = "unamedJob";
 	}
-        console.log(newbody);	
+	newbody.sparkProperties["spark.mesos.driver.webui.url"] = "/drivergui/" + jobuuid;
+    console.log(newbody);	
 	var _res=res;
 	var options = {
 	  hostname: config.spark.url,
@@ -40,6 +45,9 @@ exports.submitjob = function(req,res) {
 	  console.log('Headers: ' + JSON.stringify(res.headers));
 	  res.setEncoding('utf8');
 	  res.on('data', function (body) {
+	  	console.log(body);
+	  	jobCache[jobuuid] = {driver: body.submissionId};
+
 	    _res.json(body);
 	  });
 	});
@@ -159,10 +167,11 @@ exports.proxyDriver = function(req,res) {
 			request(newUrl).
 			on('error', function(err) {
     			console.log(err)
+    			res.body(err);
     		}).
 			pipe(res);
 		} else {
-			res.body = "failed to get driver's ip";
+			res.body("failed to get driver's ip");
 		}
 	}).catch(function(err) {
 		res.body = err;
