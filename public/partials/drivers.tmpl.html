@@ -7,7 +7,7 @@
 			<tbody>
 				<tr ng-repeat='key in driversCtrl.driversKeys'>
 					<td>{{key}}</td>
-					<td>{{driversCtrl.drivers[key].driver}}</td>
+					<td><a href="/driver/{{driversCtrl.drivers[key].driver}}">{{driversCtrl.drivers[key].driver}}</a></td>
 					<td><button ng-click="driversCtrl.guiKillDriver(key)">Kill Driver</button></td>
 				</tr>
 			</tbody>

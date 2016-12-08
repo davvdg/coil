@@ -144,7 +144,6 @@ app.get('/user/logout', function(req, res) {
 });
 
 app.get('/user/status', function(req, res) {
-  console.log(req);
   if (!req.isAuthenticated()) {
     return res.status(200).json({
       status: false
@@ -156,7 +155,7 @@ app.get('/user/status', function(req, res) {
 });
 
 //app.get('/partials/:name', routes.partials);
-app.get("/drivergui/:id", api.proxyDriverJob);
+app.get("/drivergui/:id", auth, api.proxyDriver);
 
 // JSON API
 app.get('/api/name', api.name);

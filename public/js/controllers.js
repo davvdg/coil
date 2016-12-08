@@ -348,13 +348,15 @@ self.states        = this.loadAll();
 
     self.loadDrivers();   
   }).controller('DriverCtrl', function($scope, $http, $routeParams) {
+    var self = this;
     self.driverID = $routeParams.id;
     self.details = "";
+    self.state = "UNKNOWN";
     console.log(self.driverID);
     self.setDriverInfos = function(driverDetails) {
-      self.details = JSON.stringify(driverDetails);
+      self.state = driverDetails.state;
+      self.details = JSON.stringify(driverDetails, null, 2);
       self.$apply();
-      console.log(self);
     }   
     self.loadDriverInfos = function() {
       if (self.driverID !== "") {

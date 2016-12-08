@@ -1,13 +1,8 @@
-<nav class="navbar navbar-light bg-faded">
-  <form class="form-inline float-xs-right">
-  	<a class="navbar-brand" href="#">hey {{user.username}}</a>
-  	<a ng-controller="LogoutCtrl" ng-click='logout()' class="btn btn-default">Logout</a>
-  </form>
-</nav>
-
-<div ng-controller='JobCtrl'>
+<div class="container" ng-controller='JobCtrl'>
+	<h1>Create and Submit Spark Job</h1>
+	<h3>Main options</h3>
 	<div ng-show="error" class="alert alert-danger">{{errorMessage}}</div>
-	<div class="container">
+	<div>
 	<form>
 		<div id="mainclass" class='form-group'>
 			<label>Main Class</label>

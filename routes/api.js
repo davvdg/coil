@@ -117,7 +117,13 @@ var parseSparkDispatcherRawDatas = function (datas) {
 					
 					//replace(/\}\,\n(\s*)/g, '}\n$1');
 	message = "{" + message + "}"
-	jmessage = JSON.parse(message);
+	try {
+		jmessage = JSON.parse(message);
+	} catch (e) {
+		console.log(message);
+		console.log(e);
+	}
+	
 	if (dataMatches) {
     	if (dataMatches.length) {
     		//console.log(dataMatches[0]);
@@ -135,6 +141,7 @@ var parseSparkDispatcherRawDatas = function (datas) {
 				var jcompletedDatas = JSON.parse(completedDatas);
     			jmessage.data = jcompletedDatas.data;
     		} catch (e) {
+    			console.log(jcompletedDatas);
     			console.log(e);
     		}
 
