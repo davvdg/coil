@@ -62,6 +62,17 @@ exports.submitjob = function(req,res) {
 	proxyreq.end(JSON.stringify(newbody));
 };
 
+exports.killJob = function(req, res) {
+	var driver = req.params.id;
+	var newUrl = 'http://'+ config.spark.url + ':' + config.spark.port + '/v1/submissions/kill/' + driver
+	request.post(newUrl).
+	on('error', function(err) {
+    	console.log(err)
+    	res.body(err);
+    }).
+	pipe(res);
+}
+
 exports.getDriverStatus = function(req, res) {
 	var _res=res;
 	var driver = req.params.id;
@@ -171,7 +182,7 @@ var getDriverIpPortFromJob = function(driverjob) {
 exports.proxyDriverJob = function(req,res) {	
 	var driverjob = req.params.id;
 
-	getDriverIpPort(driverjob).then(function(ip) {
+	getDriverIpPortFromJob(driverjob).then(function(ip) {
 		if (ip !== "") {
 			var newUrl = "http://" + ip + "/"
 			request(newUrl).
@@ -212,3 +223,38 @@ exports.proxyDriver = function(req,res) {
 		res.body = err;
 	});
 }
+exports.getDriverList = function(req, res) {
+	res.json(jobCache);
+}
+
+var cheerio = require("cheerio");
+exports.parseDriverPage = function() {
+	var options = {
+	  uri: 'http://'+ config.spark.url + ':' + config.spark.port,
+	};
+	//console.log(options);
+	var promise = rp(options)
+    .then(function(data) {
+    	var $ = cheerio.load(data);
+    	var aSS = $('a');
+    	var aSStext = aSS.map(function(idx, elem) {
+    		return $(elem).text();
+    	}).get();
+    	var driverList = aSStext.filter(function(elem) {
+    		if (elem.match(/driver\-[0-9]*-[0-9]*/)) {
+    			return true;
+    		} else {
+    			return false;
+    		}
+    	});
+    	driverList.forEach(function(elem) {
+    		var jobuuid = uuid();
+    		jobCache[jobuuid] = {driver: elem};
+    	})
+    })
+    .catch(function (err) {
+    	console.log(err);
+        // API call failed... 
+    });
+}
+

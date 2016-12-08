@@ -157,16 +157,20 @@ app.get('/user/status', function(req, res) {
 
 //app.get('/partials/:name', routes.partials);
 app.get("/drivergui/:id", api.proxyDriverJob);
-app.get("/driverstatus/:id", api.getDriverStatus);
+
 // JSON API
 app.get('/api/name', api.name);
 
 // redirect all others to the index (HTML5 history)
-app.get('*', routes.index);
+
 
 app.post('/api/submit', auth, api.submitjob);
 
+app.post('/api/driver/kill/:id',  auth, api.killJob);
+app.get("/api/driver/status/:id", auth, api.getDriverStatus);
+app.get('/api/driver/list',       auth, api.getDriverList);
 
+app.get('*', routes.index);
 
 /**
  * Start Server
@@ -174,4 +178,5 @@ app.post('/api/submit', auth, api.submitjob);
 
 http.createServer(app).listen(app.get('port'), function () {
   console.log('Express server listening on port ' + app.get('port'));
+  api.parseDriverPage();
 });

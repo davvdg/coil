@@ -26,10 +26,13 @@ config(function ($routeProvider, $locationProvider) {
       templateUrl: 'partials/createjob.html',
       controller: 'JobCtrl'
     }).
-    when('/view2', {
-      templateUrl: 'partials/partial2',
-      controller: 'MyCtrl2'
+    when('/driver', {
+      templateUrl: 'partials/drivers.tmpl.html',
+      controller: 'DriversCtrl'
     }).
+    when('/driver/:id', {
+      templateUrl: 'partials/driversdetails.tmpl.html',
+    }).    
     otherwise({
       redirectTo: '/'
     });

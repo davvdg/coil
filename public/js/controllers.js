@@ -308,6 +308,70 @@ self.states        = this.loadAll();
     self.getUserName = function() {
       return AuthService.getUserName();
     }    
+  }).controller('DriversCtrl', function($scope, $http) {
+    var self = this;
+    self.drivers = {};
+    self.driversKeys = [];
+    self.setDrivers = function(driversObject) {
+      self.drivers = driversObject;
+      self.driversKeys = Object.keys(self.drivers);
+      self.$apply();
+    };
+    self.loadDrivers = function() {
+      $http.get('/api/driver/list')
+      .then(
+        // on success
+        function(res) {
+          console.log(res);
+          self.setDrivers(res.data);
+        }, 
+        // on error
+        function(res) {
+          console.log(res);
+        });
+    }
+
+    self.guiKillDriver = function(driverCoilJob) {
+      if (confirm("Are you sure you want to kill this driver ????")) {
+        var driver = self.drivers[driverCoilJob].driver;
+          // todo code for deletion
+        $http.post('/api/driver/kill/' + driver)
+          .then(
+            function(res) {
+              console.log(res);              
+            }, 
+            function(res) {
+              console.log(res);
+            });
+      }
+    }
+
+    self.loadDrivers();   
+  }).controller('DriverCtrl', function($scope, $http, $routeParams) {
+    self.driverID = $routeParams.id;
+    self.details = "";
+    console.log(self.driverID);
+    self.setDriverInfos = function(driverDetails) {
+      self.details = JSON.stringify(driverDetails);
+      self.$apply();
+      console.log(self);
+    }   
+    self.loadDriverInfos = function() {
+      if (self.driverID !== "") {
+        $http.get('/api/driver/status/' + self.driverID)
+        .then(
+        // on success
+        function(res) {
+          console.log(res.data);
+          self.setDriverInfos(res.data);
+        }, 
+        // on error
+        function(res) {
+          console.log(res);
+        });
+      }
+    }
+    self.loadDriverInfos();
   });
 /*
 

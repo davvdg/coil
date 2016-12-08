@@ -28,4 +28,11 @@ angular.module('myApp.directives', ['myApp.controllers']).
       controller: "NavCtrl",
       controllerAs: 'ctrl',
     }
+  }).
+  directive('drivers', function() {
+    return {
+      templateUrl: 'partials/drivers.tmpl.html',
+      controller: "DriversCtrl",
+      controllerAs: 'ctrl',
+    }
   });
