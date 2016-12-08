@@ -28,6 +28,7 @@ exports.submitjob = function(req,res) {
 		newbody.sparkProperties["spark.app.name"] = "unamedJob";
 	}
 	newbody.sparkProperties["spark.mesos.driver.webui.url"] = "/drivergui/" + jobuuid;
+	newbody.environmentVariables["COIL_UUID"] = jobuuid;
     console.log(newbody);	
 	var _res=res;
 	var options = {
@@ -151,6 +152,40 @@ var getDriverIpPort = function(driver) {
         // API call failed... 
     });
     return promise;
+}
+
+var getDriverIpPortFromJob = function(driverjob) {
+	var driver = jobCache[driverjob].driver;
+	var options = {
+	  uri: 'http://'+ config.spark.url + ':' + config.spark.port + '/v1/submissions/status/' + driver,
+	};
+	//console.log(options);
+	var promise = rp(options)
+    .then(getDriverIpPortFromRawDatas)
+    .catch(function (err) {
+    	console.log(err);
+        // API call failed... 
+    });
+    return promise;
+}
+exports.proxyDriverJob = function(req,res) {	
+	var driverjob = req.params.id;
+
+	getDriverIpPort(driverjob).then(function(ip) {
+		if (ip !== "") {
+			var newUrl = "http://" + ip + "/"
+			request(newUrl).
+			on('error', function(err) {
+    			console.log(err)
+    			res.body(err);
+    		}).
+			pipe(res);
+		} else {
+			res.body("failed to get driver's ip");
+		}
+	}).catch(function(err) {
+		res.body = err;
+	});
 }
 
 /**

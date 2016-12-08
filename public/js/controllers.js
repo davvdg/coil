@@ -23,8 +23,7 @@ angular.module('myApp.controllers', []).
     $scope.envs = {};
     $scope.errorMessage = "";
     // write Ctrl here
-    $scope.submitJob = function() {
-
+    var prepareJson= function($scope) {
       var data = {
         "appResource": $scope.ressource,
         "mainClass": $scope.mainClass,
@@ -34,6 +33,12 @@ angular.module('myApp.controllers', []).
       }
       console.log($scope);
       console.log(data);
+      return data;    
+    }
+
+    $scope.submitJob = function() {
+      var data = prepareJson($scope);
+
       $http.post('/api/submit', data)
       .then(
         // on success
@@ -46,8 +51,58 @@ angular.module('myApp.controllers', []).
           console.log(res);
           $scope.errorMessage = res.data;
         });
+    }
 
+    $scope.downloadJson = function() {
+      var data = prepareJson($scope);
+    
+      var filename = 'job.json';
 
+      if (typeof data === 'object') {
+        data = JSON.stringify(data, undefined, 2);
+      }
+
+      var blob = new Blob([data], {type: 'text/json'});
+
+  // FOR IE:
+
+      if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+          window.navigator.msSaveOrOpenBlob(blob, filename);
+      }
+      else{
+          var e = document.createEvent('MouseEvents'),
+              a = document.createElement('a');
+
+          a.download = filename;
+          a.href = window.URL.createObjectURL(blob);
+          a.dataset.downloadurl = ['text/json', a.download, a.href].join(':');
+          e.initEvent('click', true, false, window,
+              0, 0, 0, 0, 0, false, false, false, false, 0, null);
+          a.dispatchEvent(e);
+      }
+    }
+
+    $scope.loadJson = function(){
+      var f = document.getElementById('file').files[0];
+      console.log(f);
+      var self = $scope;
+      console.log(self);
+      var r = new FileReader();
+      r.onloadend = function(e){
+        var data = e.target.result;
+        
+        var jData = JSON.parse(data);
+        console.log(jData);
+        console.log(self);
+        self.ressource = jData.appResource;
+        self.arguments = jData.appArgs.join(" ");
+        self.mainClass = jData.mainClass;
+        self.confs = jData.sparkProperties;
+        self.envs =jData.environmentVariables;
+        self.$apply();    
+        //send your binary data via $http or $resource or do anything else with it
+      }
+      r.readAsText(f);
     }
 
   }).
@@ -62,7 +117,11 @@ angular.module('myApp.controllers', []).
     self.isDisabled    = false;
 
     // list of `state` value/display objects
-    
+    this.setconfs= function(confs) {
+        this.confs = confs
+        this.setFieldKeys();
+        this.$apply();
+    };
 
     this.setFieldKeys = function() {
         this.confsKeys = Object.keys(this.confs)
