@@ -1,5 +1,10 @@
 <div class="container" ng-controller='JobCtrl'>
 	<h1>Create and Submit Spark Job</h1>
+	<div class="row">
+		<button type="button" class="col-xs-4 btn btn-primary btn-sm" ng-click='downloadJson()'>download json</button>
+		<input type="file" class="col-xs-4 btn btn-primary btn-sm" id="file" name="file"/>
+		<button type="button" class="col-xs-4 btn btn-primary btn-sm" ng-click='downloadJson()'>load json</button>
+	</div>
 	<h3>Main options</h3>
 	<div ng-show="error" class="alert alert-danger">{{errorMessage}}</div>
 	<div>
@@ -24,8 +29,5 @@
 	<kvtable data-confs="confs"/>
 	<h3>Spark Env</h3>
 	<kvtable data-confs="envs"/>
-	<button ng-click='submitJob()'>submit</button>
-	<button ng-click='downloadJson()'>download json</button>
-	<input type="file" id="file" name="file"/>
-	<button ng-click='loadJson()'>load json</button>
+	<button class="btn btn-primary btn-lg btn-block" ng-click='submitJob()'>submit</button>
 </div>
