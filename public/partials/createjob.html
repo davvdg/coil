@@ -1,9 +1,9 @@
 <div class="container" ng-controller='JobCtrl'>
 	<h1>Create and Submit Spark Job</h1>
 	<div class="row">
-		<button type="button" class="col-xs-4 btn btn-primary btn-sm" ng-click='downloadJson()'>download json</button>
+		<button type="button" class="col-xs-4 btn btn-primary btn-sm" ng-click='downloadJson()'>save as json</button>
 		<input type="file" class="col-xs-4 btn btn-primary btn-sm" id="file" name="file"/>
-		<button type="button" class="col-xs-4 btn btn-primary btn-sm" ng-click='downloadJson()'>load json</button>
+		<button type="button" class="col-xs-4 btn btn-primary btn-sm" ng-click='downloadJson()'>load from json</button>
 	</div>
 	<h3>Main options</h3>
 	<div ng-show="error" class="alert alert-danger">{{errorMessage}}</div>

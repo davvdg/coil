@@ -32,13 +32,7 @@ config(function ($routeProvider, $locationProvider) {
     }).
     when('/driver/:id', {
       templateUrl: 'partials/driversdetails.tmpl.html',
-    }).
-    when('/drivergui/:id', {
-      controller: ['$location', function($location, routeParams){
-        var driver = $routeParams.id
-        $location.replace('/drivergui/' + driver);
-      }]
-    }).      
+    }).   
     otherwise({
       redirectTo: '/'
     });

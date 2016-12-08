@@ -68,7 +68,7 @@ exports.killJob = function(req, res) {
 	request.post(newUrl).
 	on('error', function(err) {
     	console.log(err)
-    	res.body(err);
+    	res.json(err);
     }).
 	pipe(res);
 }
@@ -220,7 +220,7 @@ exports.proxyDriver = function(req,res) {
 			request(newUrl).
 			on('error', function(err) {
     			console.log(err)
-    			res.body(err);
+    			res.json(err);
     		}).
 			pipe(res);
 		} else {
