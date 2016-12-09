@@ -232,6 +232,29 @@ exports.proxyDriver = function(req,res) {
 		res.body = err;
 	});
 }
+
+exports.proxyDriverApi = function(req,res) {	
+	var driver = req.params.driverid;
+	var fullPath = url.parse(req.url).path;
+	var proxyPath = fullPath.match(/\/api\/spark\/(.*)/)[1]
+	getDriverIpPort(driver).then(function(ip) {
+		if (ip !== "") {
+			var newUrl = "http://" + ip + "/api/v1/" + proxyPath;
+			console.log(newUrl);
+			request(newUrl).
+			on('error', function(err) {
+    			console.log(err)
+    			res.json(err);
+    		}).
+			pipe(res);
+		} else {
+			res.body("failed to get driver's ip");
+		}
+	}).catch(function(err) {
+		res.body = err;
+	});
+}
+
 exports.getDriverList = function(req, res) {
 	res.json(jobCache);
 }

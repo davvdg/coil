@@ -179,7 +179,28 @@ app.post('/api/driver/kill/:id',  auth, api.killJob);
 app.get("/api/driver/status/:id", auth, api.getDriverStatus);
 app.get('/api/driver/list',       auth, api.getDriverList);
 
+// spark api 
+app.get('/api/spark/applications',                                                        auth, api.proxyDriverApi);
+app.get('/api/spark/applications/:app-id/jobs',                                           auth, api.proxyDriverApi);
+app.get('/api/spark/applications/:app-id/stages',                                         auth, api.proxyDriverApi);
+app.get('/api/spark/applications/:app-id/stages/:stage-id',                               auth, api.proxyDriverApi);
+app.get('/api/spark/applications/:app-id/stages/:stage-id/:stage-attempt-id',             auth, api.proxyDriverApi);
+app.get('/api/spark/applications/:app-id/stages/:stage-id/:stage-attempt-id/taskSummary', auth, api.proxyDriverApi);
+app.get('/api/spark/applications/:app-id/stages/:stage-id/:stage-attempt-id/taskList',    auth, api.proxyDriverApi);
+app.get('/api/spark/applications/:app-id/executors',                                      auth, api.proxyDriverApi);
+app.get('/api/spark/applications/:app-id/storage/rdd',                                    auth, api.proxyDriverApi);
+app.get('/api/spark/applications/:app-id/storage/rdd/rdd-id',                             auth, api.proxyDriverApi);
+app.get('/api/spark/applications/:app-id/logs',                                           auth, api.proxyDriverApi);
+app.get('/api/spark/applications/:app-id/:attempt-id/logs',                               auth, api.proxyDriverApi);
+
+
+
+
 app.get('*', routes.index);
+
+
+
+
 
 /**
  * Start Server
