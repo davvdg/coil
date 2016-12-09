@@ -364,7 +364,7 @@ self.states        = this.loadAll();
       if (confirm("Are you sure you want to kill this driver ????")) {
         var driver = self.drivers[driverCoilJob].driver;
           // todo code for deletion
-        $http.post('/api/driver/kill/' + driver)
+        $http.post('/api/driver/'+driver+'/kill)
           .then(
             function(res) {
               console.log(res);              
@@ -389,7 +389,7 @@ self.states        = this.loadAll();
     }   
     self.loadDriverInfos = function() {
       if (self.driverID !== "") {
-        $http.get('/api/driver/status/' + self.driverID)
+        $http.get('/api/driver/'+ self.driverID +'/status' )
         .then(
         // on success
         function(res) {

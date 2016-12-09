@@ -175,23 +175,23 @@ app.get('/api/name', api.name);
 
 app.post('/api/submit', auth, api.submitjob);
 
-app.post('/api/driver/kill/:id',  auth, api.killJob);
-app.get("/api/driver/status/:id", auth, api.getDriverStatus);
+app.post('/api/driver/:driverid/kill',  auth, api.killJob);
+app.get("/api/driver/:driverid/status", auth, api.getDriverStatus);
 app.get('/api/driver/list',       auth, api.getDriverList);
 
 // spark api 
-app.get('/api/spark/applications',                                                        auth, api.proxyDriverApi);
-app.get('/api/spark/applications/:app-id/jobs',                                           auth, api.proxyDriverApi);
-app.get('/api/spark/applications/:app-id/stages',                                         auth, api.proxyDriverApi);
-app.get('/api/spark/applications/:app-id/stages/:stage-id',                               auth, api.proxyDriverApi);
-app.get('/api/spark/applications/:app-id/stages/:stage-id/:stage-attempt-id',             auth, api.proxyDriverApi);
-app.get('/api/spark/applications/:app-id/stages/:stage-id/:stage-attempt-id/taskSummary', auth, api.proxyDriverApi);
-app.get('/api/spark/applications/:app-id/stages/:stage-id/:stage-attempt-id/taskList',    auth, api.proxyDriverApi);
-app.get('/api/spark/applications/:app-id/executors',                                      auth, api.proxyDriverApi);
-app.get('/api/spark/applications/:app-id/storage/rdd',                                    auth, api.proxyDriverApi);
-app.get('/api/spark/applications/:app-id/storage/rdd/rdd-id',                             auth, api.proxyDriverApi);
-app.get('/api/spark/applications/:app-id/logs',                                           auth, api.proxyDriverApi);
-app.get('/api/spark/applications/:app-id/:attempt-id/logs',                               auth, api.proxyDriverApi);
+app.get('/api/driver/:driverid/applications',                                                        auth, api.proxyDriverApi);
+app.get('/api/driver/:driverid/applications/:app-id/jobs',                                           auth, api.proxyDriverApi);
+app.get('/api/driver/:driverid/applications/:app-id/stages',                                         auth, api.proxyDriverApi);
+app.get('/api/driver/:driverid/applications/:app-id/stages/:stage-id',                               auth, api.proxyDriverApi);
+app.get('/api/driver/:driverid/applications/:app-id/stages/:stage-id/:stage-attempt-id',             auth, api.proxyDriverApi);
+app.get('/api/driver/:driverid/applications/:app-id/stages/:stage-id/:stage-attempt-id/taskSummary', auth, api.proxyDriverApi);
+app.get('/api/driver/:driverid/applications/:app-id/stages/:stage-id/:stage-attempt-id/taskList',    auth, api.proxyDriverApi);
+app.get('/api/driver/:driverid/applications/:app-id/executors',                                      auth, api.proxyDriverApi);
+app.get('/api/driver/:driverid/applications/:app-id/storage/rdd',                                    auth, api.proxyDriverApi);
+app.get('/api/driver/:driverid/applications/:app-id/storage/rdd/rdd-id',                             auth, api.proxyDriverApi);
+app.get('/api/driver/:driverid/applications/:app-id/logs',                                           auth, api.proxyDriverApi);
+app.get('/api/driver/:driverid/applications/:app-id/:attempt-id/logs',                               auth, api.proxyDriverApi);
 
 
 

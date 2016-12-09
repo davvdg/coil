@@ -63,7 +63,7 @@ exports.submitjob = function(req,res) {
 };
 
 exports.killJob = function(req, res) {
-	var driver = req.params.id;
+	var driver = req.params.driverid;
 	var newUrl = 'http://'+ config.spark.url + ':' + config.spark.port + '/v1/submissions/kill/' + driver
 	request.post(newUrl).
 	on('error', function(err) {
@@ -75,7 +75,7 @@ exports.killJob = function(req, res) {
 
 exports.getDriverStatus = function(req, res) {
 	var _res=res;
-	var driver = req.params.id;
+	var driver = req.params.driverid;
 	var options = {
 	  uri: 'http://'+ config.spark.url + ':' + config.spark.port + '/v1/submissions/status/' + driver,
 	};
@@ -236,10 +236,10 @@ exports.proxyDriver = function(req,res) {
 exports.proxyDriverApi = function(req,res) {	
 	var driver = req.params.driverid;
 	var fullPath = url.parse(req.url).path;
-	var proxyPath = fullPath.match(/\/api\/spark\/(.*)/)[1]
+	var proxyPath = fullPath.match(/\/drivergui\/driver\-[0-9]*\-[0-9]*(.*)/)[1]
 	getDriverIpPort(driver).then(function(ip) {
 		if (ip !== "") {
-			var newUrl = "http://" + ip + "/api/v1/" + proxyPath;
+			var newUrl = "http://" + ip + "/api/v1" + proxyPath;
 			console.log(newUrl);
 			request(newUrl).
 			on('error', function(err) {
