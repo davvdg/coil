@@ -236,7 +236,7 @@ exports.proxyDriver = function(req,res) {
 exports.proxyDriverApi = function(req,res) {	
 	var driver = req.params.driverid;
 	var fullPath = url.parse(req.url).path;
-	var proxyPath = fullPath.match(/\/drivergui\/driver\-[0-9]*\-[0-9]*(.*)/)[1]
+	var proxyPath = fullPath.match(/\/api\/driver\/driver\-[0-9]*\-[0-9]*(.*)/)[1]
 	getDriverIpPort(driver).then(function(ip) {
 		if (ip !== "") {
 			var newUrl = "http://" + ip + "/api/v1" + proxyPath;

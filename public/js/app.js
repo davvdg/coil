@@ -6,9 +6,11 @@ angular.module('myApp', [
   'ngMaterial',
   'ngRoute',
   'myApp.controllers',
+  //'myApp.sparkcontrollers',
   'myApp.filters',
   'myApp.services',
-  'myApp.directives'
+  'myApp.directives',
+  //'myApp.sparksdirectives',
 ]).
 config(function ($routeProvider, $locationProvider) {
   $routeProvider.
