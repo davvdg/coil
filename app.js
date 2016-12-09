@@ -165,6 +165,7 @@ app.get("/drivergui/:driverid/threadDump", auth, api.proxyDriver);
 
 app.get("/drivergui/:driverid/jobs/job", auth, api.proxyDriver);
 app.get("/drivergui/:driverid/stages/stage", auth, api.proxyDriver);
+app.get("/drivergui/:driverid/stages/kill", auth, api.proxyDriver);
 app.get("/drivergui/:driverid/storage/rdd", auth, api.proxyDriver);
 // JSON API
 app.get('/api/name', api.name);

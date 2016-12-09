@@ -23,6 +23,19 @@ angular.module('myApp.controllers', []).
     $scope.envs = {};
     $scope.errorMessage = "";
     // write Ctrl here
+    /**
+      Reset the controller
+    */
+    $scope.clearAll = function() {
+      console.log("clear");
+      $scope.mainClass = "";
+      $scope.arguments = "";
+      $scope.ressource = "";
+      $scope.confs = {};
+      $scope.envs = {};
+      $scope.errorMessage = "";      
+    }
+
     var prepareJson= function($scope) {
       var data = {
         "appResource": $scope.ressource,
@@ -82,31 +95,41 @@ angular.module('myApp.controllers', []).
       }
     }
 
-    $scope.loadJson = function(){
-      var f = document.getElementById('file').files[0];
-      console.log(f);
-      var self = $scope;
-      console.log(self);
-      var r = new FileReader();
-      r.onloadend = function(e){
-        var data = e.target.result;
-        
-        var jData = JSON.parse(data);
-        console.log(jData);
+    $scope.loadJson = function() {
+      var x = document.createElement("INPUT");
+      x.setAttribute("type", "file");
+      var e = document.createEvent('MouseEvents');
+      e.initEvent('click', true, false, window,
+              0, 0, 0, 0, 0, false, false, false, false, 0, null);
+      x.dispatchEvent(e);      
+      x.onchange = function() {
+        var f = x.files[0];
+      //var f = document.getElementById('file').files[0];
+        console.log(f);
+        var self = $scope;
         console.log(self);
-        self.ressource = jData.appResource;
-        self.arguments = jData.appArgs.join(" ");
-        self.mainClass = jData.mainClass;
-        self.confs = jData.sparkProperties;
-        self.envs =jData.environmentVariables;
-        self.$apply();    
-        //send your binary data via $http or $resource or do anything else with it
+        var r = new FileReader();
+        r.onloadend = function(e){
+          var data = e.target.result;
+          
+          var jData = JSON.parse(data);
+          console.log(jData);
+          console.log(self);
+          self.ressource = jData.appResource;
+          self.arguments = jData.appArgs.join(" ");
+          self.mainClass = jData.mainClass;
+          self.confs = jData.sparkProperties;
+          self.envs =jData.environmentVariables;
+          self.$apply();    
+          //send your binary data via $http or $resource or do anything else with it
+        }
+        r.readAsText(f);        
       }
-      r.readAsText(f);
+      
     }
 
   }).
-  controller("ConfCtrl", function() {
+  controller("ConfCtrl", function($scope) {
     this.confs = {};
     this.confsKeys = [];
     this.keyToAdd = '';
@@ -115,6 +138,12 @@ angular.module('myApp.controllers', []).
 
     self.simulateQuery = false;
     self.isDisabled    = false;
+    $scope.$watch(angular.bind(this, function () {
+      return this.confs;
+    }), function (newVal) {
+      self.setFieldKeys();
+      console.log('Name changed to ' + newVal);
+    });
 
     // list of `state` value/display objects
     this.setconfs= function(confs) {
