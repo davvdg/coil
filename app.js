@@ -157,14 +157,15 @@ app.get('/user/status', function(req, res) {
 //app.get('/partials/:name', routes.partials);
 app.get("/drivergui/:driverid", auth, api.proxyDriver);
 app.get("/drivergui/:driverid/jobs", auth, api.proxyDriver);
-app.get("/drivergui/:driverid/stage", auth, api.proxyDriver);
+app.get("/drivergui/:driverid/stages", auth, api.proxyDriver);
 app.get("/drivergui/:driverid/storage", auth, api.proxyDriver);
 app.get("/drivergui/:driverid/environment", auth, api.proxyDriver);
 app.get("/drivergui/:driverid/executors", auth, api.proxyDriver);
+app.get("/drivergui/:driverid/threadDump", auth, api.proxyDriver);
 
 app.get("/drivergui/:driverid/jobs/job", auth, api.proxyDriver);
-
-
+app.get("/drivergui/:driverid/stages/stage", auth, api.proxyDriver);
+app.get("/drivergui/:driverid/storage/rdd", auth, api.proxyDriver);
 // JSON API
 app.get('/api/name', api.name);
 
