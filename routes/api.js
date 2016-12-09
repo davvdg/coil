@@ -9,7 +9,7 @@ var config = require("../configMgmt.js").config;
 var request = require('request');
 var rp = require('request-promise');
 var uuid = require('uuid/v4');
-
+var url = require('url');
 
 exports.name = function (req, res) {
   res.json({
@@ -187,7 +187,7 @@ var getDriverIpPortFromJob = function(driverjob) {
     return promise;
 }
 exports.proxyDriverJob = function(req,res) {	
-	var driverjob = req.params.id;
+	var driverjob = req.params.driverid;
 
 	getDriverIpPortFromJob(driverjob).then(function(ip) {
 		if (ip !== "") {
@@ -212,11 +212,13 @@ And will pass all requests to it.
 This may need a specific driver url configuration to work.
 **/
 exports.proxyDriver = function(req,res) {	
-	var driver = req.params.id;
-
+	var driver = req.params.driverid;
+	var fullPath = url.parse(req.url).path;
+	var proxyPath = fullPath.match(/\/drivergui\/driver\-[0-9]*\-[0-9]*(.*)/)[1]
 	getDriverIpPort(driver).then(function(ip) {
 		if (ip !== "") {
-			var newUrl = "http://" + ip + "/"
+			var newUrl = "http://" + ip + proxyPath;
+			console.log(newUrl);
 			request(newUrl).
 			on('error', function(err) {
     			console.log(err)
