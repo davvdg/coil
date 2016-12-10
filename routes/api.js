@@ -233,6 +233,24 @@ exports.proxyDriver = function(req,res) {
 	});
 }
 
+exports.fakeApplications = function(req, res) {
+	res.json([{
+	  "id" : "e9456879-2194-49fe-b79f-cf94c4d8f439-0408",
+	  "name" : "retrieval_test_10k_ndb_msc_edit_comb_batch_spark_3.py",
+	  "attempts" : [ {
+	    "startTime" : "2016-12-09T14:18:59.825GMT",
+	    "endTime" : "1969-12-31T23:59:59.999GMT",
+	    "lastUpdated" : "2016-12-09T14:18:59.825GMT",
+	    "duration" : 0,
+	    "sparkUser" : "",
+	    "completed" : false,
+	    "startTimeEpoch" : 1481293139825,
+	    "endTimeEpoch" : -1,
+	    "lastUpdatedEpoch" : 1481293139825
+	  } ]
+	}]);
+}
+
 exports.proxyDriverApi = function(req,res) {	
 	var driver = req.params.driverid;
 	var fullPath = url.parse(req.url).path;

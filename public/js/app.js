@@ -6,7 +6,7 @@ angular.module('myApp', [
   'ngMaterial',
   'ngRoute',
   'myApp.controllers',
-  //'myApp.sparkcontrollers',
+  'myApp.sparkcontrollers',
   'myApp.filters',
   'myApp.services',
   'myApp.directives',
@@ -32,9 +32,15 @@ config(function ($routeProvider, $locationProvider) {
       templateUrl: 'partials/drivers.tmpl.html',
       controller: 'DriversCtrl'
     }).
-    when('/driver/:id', {
+    when('/driver/:driverid', {
       templateUrl: 'partials/driversdetails.tmpl.html',
-    }).   
+    }).
+    when('/driver/:driverid/applications', {
+      templateUrl: 'partials/applications.tmpl.html'
+    }).
+    when('/driver/:driverid/applications/:appid', {
+      templateUrl: 'partials/application.tmpl.html'
+    }).
     otherwise({
       redirectTo: '/'
     });

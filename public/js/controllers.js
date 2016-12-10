@@ -299,6 +299,7 @@ self.states        = this.loadAll();
       $scope.error = false;
       $scope.disabled = true;
 
+
       // call login from service
       AuthService.login($scope.loginForm.username, $scope.loginForm.password)
       
@@ -378,7 +379,7 @@ self.states        = this.loadAll();
     self.loadDrivers();   
   }).controller('DriverCtrl', function($scope, $http, $routeParams) {
     var self = this;
-    self.driverID = $routeParams.id;
+    self.driverID = $routeParams.driverid;
     self.details = "";
     self.state = "UNKNOWN";
     console.log(self.driverID);

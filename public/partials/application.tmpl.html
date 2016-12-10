@@ -1,0 +1,66 @@
+<div ng-controller='SparkApplicationCtrl as sactrl'>
+	<h2>Application {{sactrl.name}}</h2>
+	<h4>Attempts</h4>
+	<table class="table table-bordered table-striped table-condensed sortable">
+      <thead><tr>
+      	<th>Start Time</th>
+      	<th>EndTime</th>
+      	<th>Last Updated</th>
+      	<th>Duration</th>
+      	<th>Completed</th>
+		</tr>
+	  </thead>
+      <tbody>
+        <tr ng-repeat='attempt in sactrl.attempts'>
+        	<td>{{attempt.startTime}}</td>
+        	<td>{{attempt.endTime}}</td>
+        	<td>{{attempt.lastUpdated}}</td>
+        	<td>{{duration}}</td>
+        	<td>{{completed}}</td>
+        </tr>
+   	  </tbody>
+   	</table>
+
+
+
+	<h4>Active Job ()</h4>
+	<table class="table table-bordered table-striped table-condensed sortable">
+      <thead>
+      	<tr>
+      		<th>Job Id</th>
+      		<th>Description</th>
+      		<th>Submitted</th>
+      		<th>Duration</th>
+      		<th class="sorttable_nosort">Stages: Succeeded/Total</th>
+      		<th class="sorttable_nosort">Tasks (for all stages): Succeeded/Total</th>
+      	</tr>
+      	</thead>
+      <tbody>
+        <tr ng-repeat='job in sactrl.jobs' id="{{job.id}}">
+        <td sorttable_customkey="{{job.jobId}}">
+          {{job.jobId}} 
+        </td>
+        <td>
+          <span class="description-input">
+          <a href="/driver/{{sactrl.driverid}}/applications/{{sactrl.appid}}/jobs/job?id={{job.jobId}}" class="name-link">{{job.name}}</a>
+        </span></td>
+        <td sorttable_customkey="{{job.submissionTime}}">
+          {{job.submissionTime}}
+        </td>
+        <td sorttable_customkey="{{job.submissionTime}}">{{job.submissionTime}} s</td>
+        <td class="stage-progress-cell">
+          {{job.numCompletedStages}}/{{job.stageIds.length()}}
+          
+          
+        </td>
+        <td class="progress-cell">
+          <div class="progress">
+      		<span style="text-align:center; position:absolute; width:100%; left:0;">{{job.numCompletedTasks}}/{{job.numTasks}}</span>
+      		<div class="bar bar-completed" style="width:{{job.numCompletedTasks/job.numTasks*100}}%"></div>
+      		<div class="bar bar-running" style="width:{{100-(job.numCompletedTasks/job.numTasks*100)}}%"></div>
+    		</div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+</div>

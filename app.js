@@ -10,6 +10,7 @@ var express = require('express'),
   morgan = require('morgan'),
   routes = require('./routes'),
   api = require('./routes/api'),
+  fakeapi = require('./routes/fakeapi'),
   http = require('http'),
   path = require('path');
 
@@ -180,8 +181,12 @@ app.get("/api/driver/:driverid/status", auth, api.getDriverStatus);
 app.get('/api/driver/list',       auth, api.getDriverList);
 
 // spark api 
+//app.get('/api/driver/:driverid/applications',                                                        auth, fakeapi.fakeApplications);
+//app.get('/api/driver/:driverid/applications/:appid/jobs',                                           auth, fakeapi.fakeJobs);
+
 app.get('/api/driver/:driverid/applications',                                                        auth, api.proxyDriverApi);
 app.get('/api/driver/:driverid/applications/:appid/jobs',                                           auth, api.proxyDriverApi);
+
 app.get('/api/driver/:driverid/applications/:appid/stages',                                         auth, api.proxyDriverApi);
 app.get('/api/driver/:driverid/applications/:appid/stages/:stageid',                               auth, api.proxyDriverApi);
 app.get('/api/driver/:driverid/applications/:appid/stages/:stageid/:stageattemptid',             auth, api.proxyDriverApi);
