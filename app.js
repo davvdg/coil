@@ -181,16 +181,16 @@ app.post('/api/driver/:driverid/kill',  auth, api.killJob);
 app.get("/api/driver/:driverid/status", auth, api.getDriverStatus);
 app.get('/api/driver/list',       auth, api.getDriverList);
 
-if (simulate) {
-  app.get('/api/driver/:driverid/applications',                                                        auth, fakeapi.fakeApplications);
-  app.get('/api/driver/:driverid/applications/:appid/jobs',                                           auth, fakeapi.fakeJobs);
-  app.get('/api/driver/:driverid/applications/:appid/jobs/:jobid',                                           auth, fakeapi.fakeJob);
-  app.get('/api/driver/:driverid/applications/:appid/executors',                                      auth, fakeapi.fakeExecutors);
+if (simulate==="true") {
+  app.get('/api/driver/:driverid/applications',                           auth, fakeapi.fakeApplications);
+  app.get('/api/driver/:driverid/applications/:appid/jobs',               auth, fakeapi.fakeJobs);
+  app.get('/api/driver/:driverid/applications/:appid/jobs/:jobid',        auth, fakeapi.fakeJob);
+  app.get('/api/driver/:driverid/applications/:appid/executors',          auth, fakeapi.fakeExecutors);
 } else {
-  app.get('/api/driver/:driverid/applications',                                                        auth, api.proxyDriverApi);
-  app.get('/api/driver/:driverid/applications/:appid/jobs',                                           auth, api.proxyDriverApi);
-  app.get('/api/driver/:driverid/applications/:appid/jobs/:jobid',                                           auth, api.proxyDriverApi);
-  app.get('/api/driver/:driverid/applications/:appid/executors',                                      auth, api.proxyDriverApi);
+  app.get('/api/driver/:driverid/applications',                           auth, api.proxyDriverApi);
+  app.get('/api/driver/:driverid/applications/:appid/jobs',               auth, api.proxyDriverApi);
+  app.get('/api/driver/:driverid/applications/:appid/jobs/:jobid',        auth, api.proxyDriverApi);
+  app.get('/api/driver/:driverid/applications/:appid/executors',          auth, api.proxyDriverApi);
 }
 
 app.get('/api/driver/:driverid/applications/:appid/stages',                                         auth, api.proxyDriverApi);

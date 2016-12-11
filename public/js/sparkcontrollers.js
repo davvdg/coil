@@ -61,12 +61,12 @@ angular.module('myApp.sparkcontrollers', [])
         function(res) {
           console.log(res);
         });
-      $timeout(function(){
-        self.loadJobs();
-      },5000)
     }
 
-    self.loadAppInfo();
+    var myInterval = setInterval(self.loadJobs, 5000);
+    $scope.$on("$destroy", function(){
+        clearInterval(myInterval);
+    });
     self.loadJobs();
   })
   .controller("SparkStagesCtrl", function($scope) {
@@ -155,11 +155,12 @@ angular.module('myApp.sparkcontrollers', [])
         function(res) {
           console.log(res);
         });
-      $timeout(function(){
-        self.loadExecutors();
-      },5000)
-    }
 
+    }
+    var myInterval = setInterval(self.loadExecutors, 5000);
+    $scope.$on("$destroy", function(){
+        clearInterval(myInterval);
+    });
     self.loadExecutors();
 
   });
