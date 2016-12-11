@@ -26,6 +26,8 @@ angular.module('myApp.sparkcontrollers', [])
     self.name = "";
     self.attempts = [];
     self.jobs = [];
+    self.limit = 20;
+    self.start = 0;
 
     self.loadAppInfo = function() {
       $http.get('/api/driver/'+self.driverid+'/applications')
