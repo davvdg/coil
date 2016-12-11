@@ -19,7 +19,7 @@ angular.module('myApp.sparkcontrollers', [])
     }
     self.load();
   })
-  .controller("SparkApplicationCtrl", function($scope, $http, $routeParams) {
+  .controller("SparkApplicationCtrl", function($scope, $http, $routeParams, $timeout) {
     var self = this;
     self.driverid = $routeParams.driverid;
     self.appid = $routeParams.appid;
@@ -60,6 +60,9 @@ angular.module('myApp.sparkcontrollers', [])
         function(res) {
           console.log(res);
         });
+      $timeout(function(){
+        self.loadJobs();
+      },5000)
     }
 
     self.loadAppInfo();
@@ -69,5 +72,34 @@ angular.module('myApp.sparkcontrollers', [])
 
   })
   .controller("SparkStageCtrl", function($scope) {
+
+  })
+  .controller("SparkExecutorsCtrl", function($scope, $http, $routeParams, $timeout) {
+    var self = this;
+    self.driverid = $routeParams.driverid;
+    self.appid = $routeParams.appid;
+    self.name = "";
+    self.executors = [];
+    self.limit = 20;
+    self.start = 0;
+
+
+    self.loadExecutors = function() {
+      $http.get('/api/driver/'+self.driverid+'/applications/' + self.appid + '/executors')
+      .then(
+        // on success
+        function(res) {
+          self.executors = res.data;
+        }, 
+        // on error
+        function(res) {
+          console.log(res);
+        });
+      $timeout(function(){
+        self.loadExecutors();
+      },5000)
+    }
+
+    self.loadExecutors();
 
   });

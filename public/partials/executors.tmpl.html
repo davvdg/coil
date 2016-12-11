@@ -1,0 +1,191 @@
+<div class="container-fluid" ng-controller="SparkExecutorsCtrl as sexcCtrl">
+          <div class="row-fluid">
+            <div class="span12">
+              <h3 style="vertical-align: bottom; display: inline-block;">
+                Executors
+                
+              </h3>
+            </div>
+          </div>
+          <div class="row">
+        <div class="span12">
+          <h4>Summary</h4>
+          <table class="table table-bordered table-condensed table-striped">
+      <thead>
+        <tr><th></th>
+        <th>RDD Blocks</th>
+        <th><span data-toggle="tooltip" title="Memory used / total available memory for storage of data like RDD partitions cached in memory. ">Storage Memory</span></th>
+        <th>Disk Used</th>
+        <th>Cores</th>
+        <th>Active Tasks</th>
+        <th>Failed Tasks</th>
+        <th>Complete Tasks</th>
+        <th>Total Tasks</th>
+        <th>
+          <span data-toggle="tooltip" title="Shaded red when garbage collection (GC) time is over 10% of task time">Task Time (GC Time)</span>
+        </th>
+        <th><span data-toggle="tooltip" title="Bytes and records read from Hadoop or from Spark storage.">Input</span></th>
+        <th><span data-toggle="tooltip" title="Total shuffle bytes and records read (includes both data read locally and data read from
+       remote executors). ">Shuffle Read</span></th>
+        <th>
+          <span data-toggle="tooltip" data-placement="left" title="Bytes and records written to disk in order to be read by a shuffle in a future stage.">
+            Shuffle Write
+          </span>
+        </th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td>
+            <b>Active(12)</b>
+          </td>
+          <td>128</td>
+          <td sorttable_customkey="3262345">
+              3.1 MB /
+              74.7 GB
+          </td>
+          <td sorttable_customkey="0">
+            0.0 B
+          </td>
+          <td>80</td>
+            <td style="background:hsla(240, 100%, 50%, 0.55);color:white">8</td><td style="">0</td><td>21710232</td><td>21710240</td>
+          <td sorttable_customkey="4234675898" style="">
+            1176.30 h
+            (9.68 h)
+          </td>
+          <td sorttable_customkey="422212235665">
+            393.2 GB
+          </td>
+          <td sorttable_customkey="0">
+            0.0 B
+          </td>
+          <td sorttable_customkey="0">
+            0.0 B
+          </td>
+        </tr>
+        <tr>
+      <td><b>Dead(0)</b></td>
+      <td>0</td>
+      <td sorttable_customkey="0">
+        0.0 B /
+        0.0 B
+      </td>
+      <td sorttable_customkey="0">
+        0.0 B
+      </td>
+      <td>0</td>
+      <td style="">0</td><td style="">0</td><td>0</td><td>0</td><td sorttable_customkey="0" style="">
+      0 ms
+      (0 ms)
+    </td>
+      <td sorttable_customkey="0">
+        0.0 B
+      </td>
+      <td sorttable_customkey="0">
+        0.0 B
+      </td>
+      <td sorttable_customkey="0">
+        0.0 B
+      </td>
+    </tr>
+        <tr>
+      <td><b>Total(12)</b></td>
+      <td>128</td>
+      <td sorttable_customkey="3262345">
+        3.1 MB /
+        74.7 GB
+      </td>
+      <td sorttable_customkey="0">
+        0.0 B
+      </td>
+      <td>80</td>
+      <td style="background:hsla(240, 100%, 50%, 0.55);color:white">8</td><td style="">0</td><td>21710232</td><td>21710240</td><td sorttable_customkey="4234675898" style="">
+      1176.30 h
+      (9.68 h)
+    </td>
+      <td sorttable_customkey="422212235665">
+        393.2 GB
+      </td>
+      <td sorttable_customkey="0">
+        0.0 B
+      </td>
+      <td sorttable_customkey="0">
+        0.0 B
+      </td>
+    </tr>
+      </tbody>
+    </table>
+        </div>
+      </div><div class="row">
+        <div class="span12">
+          <h4>Executors</h4>
+          <table class="table table-bordered table-condensed table-striped sortable">
+        <thead>
+          <tr><th class="sorttable_numeric">Executor ID</th>
+          <th>Address</th>
+          <th>Status</th>
+          <th>RDD Blocks</th>
+          <th><span data-toggle="tooltip" title="Memory used / total available memory for storage of data like RDD partitions cached in memory. ">Storage Memory</span></th>
+          <th>Disk Used</th>
+          <th>Cores</th>
+          <th>Active Tasks</th>
+          <th>Failed Tasks</th>
+          <th>Complete Tasks</th>
+          <th>Total Tasks</th>
+          <th><span data-toggle="tooltip" title="Shaded red when garbage collection (GC) time is over 10% of task time">Task Time (GC Time)</span></th>
+          <th><span data-toggle="tooltip" title="Bytes and records read from Hadoop or from Spark storage.">Input</span></th>
+          <th><span data-toggle="tooltip" title="Total shuffle bytes and records read (includes both data read locally and data read from
+       remote executors). ">Shuffle Read</span></th>
+          <th>
+            <!-- Place the shuffle write tooltip on the left (rather than the default position
+              of on top) because the shuffle write column is the last column on the right side and
+              the tooltip is wider than the column, so it doesn't fit on top. -->
+            <span data-toggle="tooltip" data-placement="left" title="Bytes and records written to disk in order to be read by a shuffle in a future stage.">
+              Shuffle Write
+            </span>
+          </th>
+          
+          <th class="sorttable_nosort">Thread Dump</th>
+        </tr>
+        </thead>
+        <tbody>
+          <tr ng-model="sexcCtrl.executors" ng-repeat='executor in sexcCtrl.executors'>
+          <td sorttable_customkey="10">10</td>
+          <td>{{executor.hostPort}}</td>
+          <td sorttable_customkey="Active">
+            {{executor.isActive}}
+          </td>
+          <td>{{executor.rddBlocks}}</td>
+          <!-- memory -->
+          <td sorttable_customkey="187522">
+            {{executor.memoryUsed}} / {{executor.maxMemory}}
+          </td>
+          <td sorttable_customkey="0">
+            {{executor.diskUsed}}
+          </td>
+          <td>{{executor.totalCores}}</td>
+          
+          <td style="">{{executor.activeTasks}}</td>
+          <td style="">{{executor.failedTasks}}</td>
+          <td>{{executor.completedTasks}}</td>
+          <td>{{executor.totalTasks}}</td>
+          
+          <td sorttable_customkey="239059011" style="">
+            {{executor.totalGCTime}}
+          </td>
+          <td sorttable_customkey="27637291347">
+            {{executor.totalInputBytes}}
+          </td>
+          <td sorttable_customkey="0">
+            {{executor.totalShuffleRead}}
+          </td>
+          <td sorttable_customkey="0">
+            {{executor.totalShuffleWrite}}
+          </td>
+          <td>
+            <a href="threadDump/?executorId={{executor.id}}">Thread Dump</a>
+          </td>
+        </tr><tr>
+      </table>
+    </div>
+  </div>
+</div>

@@ -41,6 +41,9 @@ config(function ($routeProvider, $locationProvider) {
     when('/driver/:driverid/applications/:appid', {
       templateUrl: 'partials/application.tmpl.html'
     }).
+    when('/driver/:driverid/applications/:appid/executors', {
+      templateUrl: 'partials/executors.tmpl.html'
+    }).
     otherwise({
       redirectTo: '/'
     });

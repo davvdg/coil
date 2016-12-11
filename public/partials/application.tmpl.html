@@ -1,4 +1,27 @@
 <div ng-controller='SparkApplicationCtrl as sactrl'>
+	<div class="navbar">
+		<div class="nav navbar-brand">
+		  <a href="/" class="brand">
+		    <img src="/static/spark-logo-77x50px-hd.png">
+		    <span class="version">2.0.2</span>
+		  </a>
+		</div>
+		<p class="navbar-text pull-right">
+		  <strong title="retrieval_test_10k_ndb_msc_edit_comb_batch_spark_3.py">retrieval_test_10k_ndb_msc_edit_...</strong> application UI
+		</p>
+		<ul class="nav navbar-nav"><li class="active">
+	        <a href="/jobs/">Jobs</a>
+	      </li><li class="">
+	        <a href="/stages/">Stages</a>
+	      </li><li class="">
+	        <a href="/storage/">Storage</a>
+	      </li><li class="">
+	        <a href="/environment/">Environment</a>
+	      </li><li class="">
+	        <a href="/driver/{{sactrl.driverid}}/applications/{{sactrl.appid}}/executors/">Executors</a>
+	      </li>
+	    </ul>
+	</div>
 	<h2>Application {{sactrl.name}}</h2>
 	<h4>Attempts</h4>
 	<table class="table table-bordered table-striped table-condensed sortable">

@@ -183,7 +183,8 @@ app.get('/api/driver/list',       auth, api.getDriverList);
 
 //app.get('/api/driver/:driverid/applications',                                                        auth, fakeapi.fakeApplications);
 //app.get('/api/driver/:driverid/applications/:appid/jobs',                                           auth, fakeapi.fakeJobs);
-//app.get('/api/driver/:driverid/applications/:appid/jobs/:jobid',                                           auth, fakeapi.fakeJobs);
+//app.get('/api/driver/:driverid/applications/:appid/jobs/:jobid',                                           auth, fakeapi.fakeJob);
+//app.get('/api/driver/:driverid/applications/:appid/executors',                                      auth, fakeapi.fakeExecutors);
 
 app.get('/api/driver/:driverid/applications',                                                        auth, api.proxyDriverApi);
 app.get('/api/driver/:driverid/applications/:appid/jobs',                                           auth, api.proxyDriverApi);
