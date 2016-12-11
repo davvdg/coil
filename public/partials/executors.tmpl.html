@@ -35,82 +35,102 @@
       </tr></thead>
       <tbody>
         <tr>
-          <td>
-            <b>Active(12)</b>
-          </td>
-          <td>128</td>
+      <td><b>Active({{(sexcCtrl.executors | filter:{isActive:true}).length}})</b></td>
+
+          <td>{{sexcCtrl.totalActives.rddBlocks}}</td>
           <td sorttable_customkey="3262345">
-              3.1 MB /
-              74.7 GB
+              {{sexcCtrl.totalActives.memoryUsed}} /
+              {{sexcCtrl.totalActives.maxMemory}}
           </td>
           <td sorttable_customkey="0">
-            0.0 B
+            {{sexcCtrl.totalActives.diskUsed}}
           </td>
-          <td>80</td>
-            <td style="background:hsla(240, 100%, 50%, 0.55);color:white">8</td><td style="">0</td><td>21710232</td><td>21710240</td>
+          <td>
+            {{sexcCtrl.totalActives.totalCores}}
+          </td>
+            <td style="background:hsla(240, 100%, 50%, 0.55);color:white">{{sexcCtrl.totalActives.activeTasks}}</td>
+            <td style="">{{sexcCtrl.totalActives.failedTasks}}</td>
+            <td>{{sexcCtrl.totalActives.completedTasks}}</td>
+            <td>{{sexcCtrl.totalActives.totalTasks}}</td>
           <td sorttable_customkey="4234675898" style="">
-            1176.30 h
-            (9.68 h)
+            {{sexcCtrl.totalActives.totalDuration}}
+            ({{sexcCtrl.totalActives.totalGCTime}})
           </td>
           <td sorttable_customkey="422212235665">
-            393.2 GB
+            {{sexcCtrl.totalActives.totalInputBytes}}
           </td>
           <td sorttable_customkey="0">
-            0.0 B
+            {{sexcCtrl.totalActives.totalShuffleRead}}
           </td>
           <td sorttable_customkey="0">
-            0.0 B
+            {{sexcCtrl.totalActives.totalShuffleWrite}}
           </td>
         </tr>
         <tr>
-      <td><b>Dead(0)</b></td>
-      <td>0</td>
-      <td sorttable_customkey="0">
-        0.0 B /
-        0.0 B
-      </td>
-      <td sorttable_customkey="0">
-        0.0 B
-      </td>
-      <td>0</td>
-      <td style="">0</td><td style="">0</td><td>0</td><td>0</td><td sorttable_customkey="0" style="">
-      0 ms
-      (0 ms)
-    </td>
-      <td sorttable_customkey="0">
-        0.0 B
-      </td>
-      <td sorttable_customkey="0">
-        0.0 B
-      </td>
-      <td sorttable_customkey="0">
-        0.0 B
-      </td>
-    </tr>
+      <td><b>Dead({{(sexcCtrl.executors | filter:{isActive:false}).length}})</b></td>
+        <td>{{sexcCtrl.totalDeads.rddBlocks}}</td>
+
+        <td sorttable_customkey="3262345">
+            {{sexcCtrl.totalDeads.memoryUsed}} /
+            {{sexcCtrl.totalDeads.maxMemory}}
+        </td>
+        <td sorttable_customkey="0">
+          {{sexcCtrl.totalDeads.diskUsed}}
+        </td>
+        <td>
+          {{sexcCtrl.totalDeads.totalCores}}
+        </td>
+          <td style="background:hsla(240, 100%, 50%, 0.55);color:white">{{sexcCtrl.totalDeads.activeTasks}}</td>
+          <td style="">{{sexcCtrl.totalDeads.failedTasks}}</td>
+          <td>{{sexcCtrl.totalDeads.completedTasks}}</td>
+          <td>{{sexcCtrl.totalDeads.totalTasks}}</td>
+        <td sorttable_customkey="4234675898" style="">
+          {{sexcCtrl.totalDeads.totalDuration}}
+          ({{sexcCtrl.totalDeads.totalGCTime}})
+        </td>
+        <td sorttable_customkey="422212235665">
+          {{sexcCtrl.totalDeads.totalInputBytes}}
+        </td>
+        <td sorttable_customkey="0">
+          {{sexcCtrl.totalDeads.totalShuffleRead}}
+        </td>
+        <td sorttable_customkey="0">
+          {{sexcCtrl.totalDeads.totalShuffleWrite}}
+        </td>
+        </tr>
         <tr>
-      <td><b>Total(12)</b></td>
-      <td>128</td>
-      <td sorttable_customkey="3262345">
-        3.1 MB /
-        74.7 GB
-      </td>
-      <td sorttable_customkey="0">
-        0.0 B
-      </td>
-      <td>80</td>
-      <td style="background:hsla(240, 100%, 50%, 0.55);color:white">8</td><td style="">0</td><td>21710232</td><td>21710240</td><td sorttable_customkey="4234675898" style="">
-      1176.30 h
-      (9.68 h)
-    </td>
-      <td sorttable_customkey="422212235665">
-        393.2 GB
-      </td>
-      <td sorttable_customkey="0">
-        0.0 B
-      </td>
-      <td sorttable_customkey="0">
-        0.0 B
-      </td>
+      <td><b>Total({{sexcCtrl.executors.length}})</b></td>
+        <td>{{sexcCtrl.totals.rddBlocks}}</td>
+
+        <td sorttable_customkey="3262345">
+            {{sexcCtrl.totals.memoryUsed}} /
+            {{sexcCtrl.totals.maxMemory}}
+        </td>
+        <td sorttable_customkey="0">
+          {{sexcCtrl.totals.diskUsed}}
+        </td>
+        <td>
+          {{sexcCtrl.totals.totalCores}}
+        </td>
+          <td style="background:hsla(240, 100%, 50%, 0.55);color:white">{{sexcCtrl.totals.activeTasks}}</td>
+          <td style="">{{sexcCtrl.totals.failedTasks}}</td>
+          <td>{{sexcCtrl.totals.completedTasks}}</td>
+          <td>{{sexcCtrl.totals.totalTasks}}</td>
+        <td sorttable_customkey="4234675898" style="">
+          {{sexcCtrl.totals.totalDuration}}
+          ({{sexcCtrl.totals.totalGCTime}})
+        </td>
+        <td sorttable_customkey="422212235665">
+          {{sexcCtrl.totals.totalInputBytes}}
+        </td>
+        <td sorttable_customkey="0">
+          {{sexcCtrl.totals.totalShuffleRead}}
+        </td>
+        <td sorttable_customkey="0">
+          {{sexcCtrl.totals.totalShuffleWrite}}
+        </td>
+        </tr>
+        <tr>
     </tr>
       </tbody>
     </table>
@@ -149,7 +169,7 @@
         </thead>
         <tbody>
           <tr ng-model="sexcCtrl.executors" ng-repeat='executor in sexcCtrl.executors'>
-          <td sorttable_customkey="10">10</td>
+          <td sorttable_customkey="10">{{executor.id}}</td>
           <td>{{executor.hostPort}}</td>
           <td sorttable_customkey="Active">
             {{executor.isActive}}

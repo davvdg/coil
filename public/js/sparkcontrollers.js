@@ -29,6 +29,7 @@ angular.module('myApp.sparkcontrollers', [])
     self.limit = 20;
     self.start = 0;
 
+
     self.loadAppInfo = function() {
       $http.get('/api/driver/'+self.driverid+'/applications')
       .then(
@@ -82,7 +83,65 @@ angular.module('myApp.sparkcontrollers', [])
     self.executors = [];
     self.limit = 20;
     self.start = 0;
+    var zeros = {
+        "rddBlocks" : 0,
+        "memoryUsed" : 0,
+        "diskUsed" : 0,
+        "totalCores" : 0,
+        "maxTasks" : 0,
+        "activeTasks" : 0,
+        "failedTasks" : 0,
+        "completedTasks" : 0,
+        "totalTasks" : 0,
+        "totalDuration" : 0,
+        "totalGCTime" : 0,
+        "totalInputBytes" : 0,
+        "totalShuffleRead" : 0,
+        "totalShuffleWrite" : 0,
+        "maxMemory" : 0,
+      };
 
+    self.totalActives = Object.create(zeros);
+    self.totalDeads = Object.create(zeros);
+    self.totals = Object.create(zeros);
+
+
+    self.updateMetrics = function() {
+      var zeros = {
+        "rddBlocks" : 0,
+        "memoryUsed" : 0,
+        "diskUsed" : 0,
+        "totalCores" : 0,
+        "maxTasks" : 0,
+        "activeTasks" : 0,
+        "failedTasks" : 0,
+        "completedTasks" : 0,
+        "totalTasks" : 0,
+        "totalDuration" : 0,
+        "totalGCTime" : 0,
+        "totalInputBytes" : 0,
+        "totalShuffleRead" : 0,
+        "totalShuffleWrite" : 0,
+        "maxMemory" : 0,
+      };
+
+      self.totalActives = Object.create(zeros);
+      self.totalDeads = Object.create(zeros);
+      self.totals = Object.create(zeros);
+
+      self.executors.forEach(
+        function(executor) {
+        for (var key in zeros) {
+            if (executor.isActive) {
+              self.totalActives[key] += executor[key];
+            } else {
+              self.totalDeads[key] += executor[key];
+            }
+            self.totals[key] += executor[key];
+          }
+        }
+      );
+    }
 
     self.loadExecutors = function() {
       $http.get('/api/driver/'+self.driverid+'/applications/' + self.appid + '/executors')
@@ -90,6 +149,7 @@ angular.module('myApp.sparkcontrollers', [])
         // on success
         function(res) {
           self.executors = res.data;
+          self.updateMetrics();
         }, 
         // on error
         function(res) {
