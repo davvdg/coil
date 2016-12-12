@@ -19,7 +19,7 @@ exports.name = function (req, res) {
 
 var jobCache = {};
 
-exports.submitjob = function(req,res) {
+exports.submitSparkjob = function(req,res) {
 	var newbody = req.body;
 	var jobuuid = uuid();
 	newbody.action = "CreateSubmissionRequest";
@@ -61,6 +61,51 @@ exports.submitjob = function(req,res) {
 	//proxyreq.write(JSON.stringify(newbody));
 	proxyreq.end(JSON.stringify(newbody));
 };
+
+exports.postCookJobs = function(req,res) {
+	var newbody = req.body;
+	var jobs = newbody.jobs;
+	jobs.forEach(function(idx, elem) {
+		var jobuuid = uuid();
+		elem["uuid"] = jobuuid;
+		elem.envs["COIL_UUID"] = jobuuid
+	});
+    console.log(newbody);	
+
+	var _res=res;
+	var options = {
+	  hostname: config.cook.url,
+	  port: config.cook.port,
+	  path: '/rawscheduler',
+	  method: 'POST',
+	  headers: {
+	      'Content-Type': 'application/json;charset=UTF-8',
+	  },
+	};
+
+	var proxyreq = http.request(options, function(res) {
+	  console.log('Status: ' + res.statusCode);
+	  console.log('Headers: ' + JSON.stringify(res.headers));
+	  res.setEncoding('utf8');
+	  res.on('data', function (body) {
+	  	var jobs = newbody.jobs;
+		jobs.forEach(function(idx, elem) {
+			jobCache[elem.uuid] = elem;
+		});	  	
+	    _res.json(newbody);
+	  });
+	});
+
+	proxyreq.on('error', function(e) {
+	  console.log('problem with request: ' + e.message);
+	  _res.json(e);
+	});
+	// write data to request body
+	//proxyreq.write(JSON.stringify(newbody));
+	proxyreq.end(JSON.stringify(newbody));
+};
+
+
 
 exports.killJob = function(req, res) {
 	var driver = req.params.driverid;
@@ -233,24 +278,6 @@ exports.proxyDriver = function(req,res) {
 	});
 }
 
-exports.fakeApplications = function(req, res) {
-	res.json([{
-	  "id" : "e9456879-2194-49fe-b79f-cf94c4d8f439-0408",
-	  "name" : "retrieval_test_10k_ndb_msc_edit_comb_batch_spark_3.py",
-	  "attempts" : [ {
-	    "startTime" : "2016-12-09T14:18:59.825GMT",
-	    "endTime" : "1969-12-31T23:59:59.999GMT",
-	    "lastUpdated" : "2016-12-09T14:18:59.825GMT",
-	    "duration" : 0,
-	    "sparkUser" : "",
-	    "completed" : false,
-	    "startTimeEpoch" : 1481293139825,
-	    "endTimeEpoch" : -1,
-	    "lastUpdatedEpoch" : 1481293139825
-	  } ]
-	}]);
-}
-
 exports.proxyDriverApi = function(req,res) {	
 	var driver = req.params.driverid;
 	var fullPath = url.parse(req.url).path;
@@ -308,3 +335,14 @@ exports.parseDriverPage = function() {
     });
 }
 
+// get logs from mesos...
+// mounted path:
+// /var/lib/mesos/slave/slaves/e9456879-2194-49fe-b79f-cf94c4d8f439-S30/frameworks/7cebff55-810c-4528-b462-473be4cb2b7f-0003/executors/driver-20161209141841-0077/runs/c668a49a-3392-4e00-892a-c1d371a5d23f:/mnt/mesos/sandbox
+// '/var/lib/mesos/slave/slaves/' + slaveid + '/framework/' + frameworkid + 'executor' + driverid + '/runs/' + runid 
+// slaveid = slave_id.value
+// 
+// task -> "frameworkid": 7cebff55-810c-4528-b462-473be4cb2b7f-0003 <--
+//         "slave_id" : "e9456879-2194-49fe-b79f-cf94c4d8f439-S30", --> slave id the task is running on
+//         "state" : "TASK_RUNNING",
+//         "executor_id" : "",
+//         "id" : "driver-20161209141841-0077" --> task id

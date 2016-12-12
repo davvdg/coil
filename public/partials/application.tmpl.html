@@ -46,7 +46,7 @@
 
 
 
-	<h4 ng-model='sactrl.jobs'>Active Job ({{sactrl.jobs.length}})</h4>
+	<h4 ng-model='sactrl.jobs'>Active Job ({{(sactrl.jobs | filter:{status:"RUNNING"}).length}})</h4>
 	<table class="table table-bordered table-striped table-condensed sortable">
       <thead>
       	<tr>
@@ -81,7 +81,7 @@
       </tbody>
     </table>
 
-	<h4 ng-model='sactrl.jobs'>Completed Job ({{sactrl.jobs.length}})</h4>
+	<h4 ng-model='sactrl.jobs'>Completed Job ({{(sactrl.jobs | filter:{status:"SUCCEEDED"}).length}})</h4>
 	<table class="table table-bordered table-striped table-condensed sortable">
       <thead>
       	<tr>
@@ -118,7 +118,7 @@
     </table>
 
 
-	<h4 ng-model='sactrl.jobs'>Failed Job ({{sactrl.jobs.length}})</h4>
+	<h4 ng-model='sactrl.jobs'>Failed Job ({{(sactrl.jobs | filter:{status:"FAILED"}).length}})</h4>
 	<table class="table table-bordered table-striped table-condensed sortable">
       <thead>
       	<tr>

@@ -11,6 +11,7 @@ var express = require('express'),
   routes = require('./routes'),
   api = require('./routes/api'),
   fakeapi = require('./routes/fakeapi'),
+  fakeCookApi = require('./routes/fakeCookApi'),
   http = require('http'),
   path = require('path');
 
@@ -175,7 +176,7 @@ app.get('/api/name', api.name);
 // redirect all others to the index (HTML5 history)
 
 
-app.post('/api/submit', auth, api.submitjob);
+app.post('/api/submit/spark', auth, api.submitSparkjob);
 
 app.post('/api/driver/:driverid/kill',  auth, api.killJob);
 app.get("/api/driver/:driverid/status", auth, api.getDriverStatus);
@@ -186,11 +187,13 @@ if (simulate==="true") {
   app.get('/api/driver/:driverid/applications/:appid/jobs',               auth, fakeapi.fakeJobs);
   app.get('/api/driver/:driverid/applications/:appid/jobs/:jobid',        auth, fakeapi.fakeJob);
   app.get('/api/driver/:driverid/applications/:appid/executors',          auth, fakeapi.fakeExecutors);
+  app.post('/api/submit/cook', auth, fakeCookApi.postCookJobs);  
 } else {
   app.get('/api/driver/:driverid/applications',                           auth, api.proxyDriverApi);
   app.get('/api/driver/:driverid/applications/:appid/jobs',               auth, api.proxyDriverApi);
   app.get('/api/driver/:driverid/applications/:appid/jobs/:jobid',        auth, api.proxyDriverApi);
   app.get('/api/driver/:driverid/applications/:appid/executors',          auth, api.proxyDriverApi);
+  app.post('/api/submit/cook', auth, api.postCookJobs);
 }
 
 app.get('/api/driver/:driverid/applications/:appid/stages',                                         auth, api.proxyDriverApi);

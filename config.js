@@ -12,6 +12,10 @@ var config = {
 	spark: {
 		url: "spark.yarn",
 		port: 80
+	},
+	cook: {
+		url: "cook.framework.host",
+		port: 80
 	}
 };
 

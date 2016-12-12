@@ -15,7 +15,7 @@ angular.module('myApp.controllers', []).
       $scope.name = 'Error!';
     });
   }).
-  controller('JobCtrl', function ($scope, $http) {
+  controller('JobCtrl', function ($scope, $http, $location) {
     $scope.mainClass = "";
     $scope.arguments = "";
     $scope.ressource = "";
@@ -52,12 +52,13 @@ angular.module('myApp.controllers', []).
     $scope.submitJob = function() {
       var data = prepareJson($scope);
 
-      $http.post('/api/submit', data)
+      $http.post('/api/submit/spark', data)
       .then(
         // on success
         function(res) {
           console.log(res);
-          $scope.errorMessage = res.data.message;
+          var driverid = res.data.submissionId;
+          $location.path("/drivers/" + driverid);
         }, 
         // on error
         function(res) {

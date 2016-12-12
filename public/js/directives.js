@@ -19,7 +19,8 @@ angular.module('myApp.directives', ['myApp.controllers']).
       replace: true,
       controller: "ConfCtrl",
       controllerAs: 'ctrl',
-      bindToController: true
+      bindToController: true,
+      
     }
   }).
   directive('navelem', function() {
