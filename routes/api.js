@@ -65,10 +65,10 @@ exports.submitSparkjob = function(req,res) {
 exports.postCookJobs = function(req,res) {
 	var newbody = req.body;
 	var jobs = newbody.jobs;
-	jobs.forEach(function(idx, elem) {
+	jobs.forEach(function(elem) {
 		var jobuuid = uuid();
 		elem["uuid"] = jobuuid;
-		elem.envs["COIL_UUID"] = jobuuid
+		elem.envs["COIL_UUID"] = jobuuid;
 	});
     console.log(newbody);	
 
@@ -89,7 +89,7 @@ exports.postCookJobs = function(req,res) {
 	  res.setEncoding('utf8');
 	  res.on('data', function (body) {
 	  	var jobs = newbody.jobs;
-		jobs.forEach(function(idx, elem) {
+		jobs.forEach(function(elem) {
 			jobCache[elem.uuid] = elem;
 		});	  	
 	    _res.json(newbody);

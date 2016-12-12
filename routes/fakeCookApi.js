@@ -37,7 +37,39 @@ var jobInstance = {
 }
 
 exports.postCookJobs = function(req, res) {
-	res.json({});
+	var newbody = req.body;
+	var jobs = newbody.jobs;
+	jobs.forEach(function(elem) {
+		var jobuuid = uuid();
+		elem["uuid"] = jobuuid;
+		elem.envs["COIL_UUID"] = jobuuid;
+	});
+    console.log(newbody);	
+
+	var _res=res;
+	var options = {
+	  hostname: config.cook.url,
+	  port: config.cook.port,
+	  path: '/rawscheduler',
+	  method: 'POST',
+	  headers: {
+	      'Content-Type': 'application/json;charset=UTF-8',
+	  },
+	};
+
+	var fakerequest = function() {
+	  	var jobs = newbody.jobs;
+		jobs.forEach(function(elem) {
+			//jobCache[elem.uuid] = elem;
+		});	  	
+	    res.json(newbody);
+	};
+
+	fakerequest();
+	// write data to request body
+	//proxyreq.write(JSON.stringify(newbody));
+	//proxyreq.end(JSON.stringify(newbody));	
+	
 }
 
 exports.getJobStatus = function(req, res) {
