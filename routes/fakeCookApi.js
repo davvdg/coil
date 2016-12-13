@@ -56,12 +56,42 @@ exports.postCookJobs = function(req, res) {
 	      'Content-Type': 'application/json;charset=UTF-8',
 	  },
 	};
+	console.log(newbody.jobs.length);
+	if (newbody.jobs.length===0) {
+		res.status(400).json({
+			error: "malformed request: no jobs"
+		});
+		return;
+	} else {
+		console.log(newbody.jobs[0].name);
+		if (newbody.jobs[0].name === "malformed") {
+			console.log("malformed");
+			res.status(400).json({
+				error: "malformed request: fake malformed"
+			});
+			return;
+		}
+		if (newbody.jobs[0].name === "unauthorized") {
+			res.status(402).json({
+				error: "unauthorized: fake unauthorized"
+			});
+			return;
+		}
+		if (newbody.jobs[0].name === "unprocessable") {
+			res.status(422).json({
+				error: "Unprocessable Entity : Returned if there is an error committing jobs to the Cook database."
+			});
+			return;
+		}
+	}
+
 
 	var fakerequest = function() {
 	  	var jobs = newbody.jobs;
 		jobs.forEach(function(elem) {
 			//jobCache[elem.uuid] = elem;
-		});	  	
+		});
+		res.status(201);
 	    res.json(newbody);
 	};
 

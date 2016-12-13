@@ -58,7 +58,7 @@ angular.module('myApp.controllers', []).
         function(res) {
           console.log(res);
           var driverid = res.data.submissionId;
-          $location.path("/drivers/" + driverid);
+          $location.path("/driver/" + driverid);
         }, 
         // on error
         function(res) {

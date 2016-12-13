@@ -16,6 +16,7 @@ angular.module('myApp.controllers.cook', [])
     self.envs = {};
 
     self.errorMessage = "";
+    self.submitError = false;
 
     var prepareJson = function() {
     	var submitJson = {
@@ -46,14 +47,18 @@ angular.module('myApp.controllers.cook', [])
       	.then(
       	// on success
         function(res) {
-          console.log(res);
+          console.log("success");
+          self.submitError = false;
+          self.errorMessage = "";
           //var driverid = res.data.submissionId;
           //$location.path("/drivers/" + driverid);
         }, 
         // on error
         function(res) {
+          console.log("error");
           console.log(res);
-          $scope.errorMessage = res.data;
+          self.submitError = true;
+          self.errorMessage = res.data.error;
         });    	
     }
 

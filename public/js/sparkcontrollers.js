@@ -1,6 +1,22 @@
 'use strict';
 
 angular.module('myApp.sparkcontrollers', [])
+  .controller("SparkDriverCtrl", function($scope, $http, $routeParams) {
+  self.status = {};
+  self.load = function() {
+    $http.get('/api/driver/'+self.driverid+'/status')
+    .then(
+      // on success
+      function(res) {
+        self.status = res.data;
+      }, 
+      // on error
+      function(res) {
+        console.log(res);
+      });
+  }
+  self.load();
+  })
   .controller("SparkApplicationsCtrl", function($scope, $http, $routeParams) {
     var self = this;
     self.driverid = $routeParams.driverid;
