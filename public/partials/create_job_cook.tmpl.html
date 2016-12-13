@@ -26,31 +26,31 @@
 		</div>
 		<div id="priority" class='form-group'>
 			<label>Priority</label>
-			<input type="text" name="priority" ng-model='ctrl.priority' class="form-control" placeholder="priority of the job. Should be between 0 and 100, inclusive.">
+			<input type="number" name="priority" ng-model='ctrl.priority' min='0' max='100' class="form-control" placeholder="priority of the job. Should be between 0 and 100, inclusive.">
 		</div>
 		<div id="max_retries" class='form-group'>
 			<label>Max Retries</label>
-			<input type="text" name="max_retries" ng-model='ctrl.max_retries' class="form-control" placeholder="the maximum number of retries">
+			<input type="number" name="max_retries" min='0' ng-model='ctrl.max_retries' class="form-control" placeholder="the maximum number of retries">
 		</div>
 		<div id="max_runtime" class='form-group'>
 			<label>Max Runtime</label>
-			<input type="text" name="max_runtime" ng-model='ctrl.max_runtime' class="form-control" placeholder="the maximum running time of the job in milliseconds. An instance that runs for more than max_runtime will be killed and job will be retried.">
+			<input type="number" name="max_runtime" min='0' ng-model='ctrl.max_runtime' class="form-control" placeholder="the maximum running time of the job in milliseconds. An instance that runs for more than max_runtime will be killed and job will be retried.">
 		</div>
 		<div id="cpus" class='form-group'>
 			<label>Cpus</label>
-			<input type="text" name="cpus" ng-model='ctrl.cpus' class="form-control" placeholder="number of requested cpus.">
+			<input type="number" name="cpus" min='0' ng-model='ctrl.cpus' class="form-control" placeholder="number of requested cpus.">
 		</div>
 		<div id="mem" class='form-group'>
 			<label>Memory</label>
-			<input type="text" name="mem" ng-model='ctrl.mem' class="form-control" placeholder="MB of requested memory.">
+			<input type="number" name="mem" min='0' ng-model='ctrl.mem' class="form-control" placeholder="MB of requested memory.">
 		</div>
 		<div id="gpus" class='form-group'>
 			<label>Gpus</label>
-			<input type="text" name="gpus" ng-model='ctrl.gpus' class="form-control" placeholder="Number of requested GPUs. Must be a whole number and support must be enabled in the config.">
+			<input type="number" name="gpus" min='0' ng-model='ctrl.gpus' class="form-control" placeholder="Number of requested GPUs. Must be a whole number and support must be enabled in the config.">
 		</div>
 		<div id="ports" class='form-group'>
 			<label>Ports</label>
-			<input type="text" name="ports" ng-model='ctrl.ports' class="form-control" placeholder="Number of ports that should be opened for the job.">
+			<input type="number" name="ports" ng-model='ctrl.ports' class="form-control" placeholder="Number of ports that should be opened for the job.">
 		</div>		
 		<div id="uris" class='form-group'>
 			<label>Uris</label>

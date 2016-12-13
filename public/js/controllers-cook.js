@@ -5,13 +5,13 @@ angular.module('myApp.controllers.cook', [])
     var self = this;
     self.name ="";
     self.command ="";
-    self.priority ="50";
-    self.max_retries = "1";
-    self.max_runtime = "60";
-    self.cpus = "1";
-    self.mem = "1024";
-    self.gpus = "0";
-    self.ports = "0";
+    self.priority =50;
+    self.max_retries = 1;
+    self.max_runtime = 60;
+    self.cpus = 1;
+    self.mem = 1024;
+    self.gpus = 0;
+    self.ports = 0;
     self.uris = "";
     self.envs = {};
 
@@ -31,7 +31,7 @@ angular.module('myApp.controllers.cook', [])
     		cpus: self.cpus,
     		mem: self.mem,
     		gpus: self.gpus,
-    		ports: self.ports,
+    		//ports: self.ports,
     		uris: self.uris.split(","),
     		envs: self.envs
     	});
@@ -122,7 +122,18 @@ angular.module('myApp.controllers.cook', [])
     
 
     self.clearAll = function() {
-    	
+    	self.name ="";
+	    self.command ="";
+	    self.priority =50;
+	    self.max_retries = 1;
+	    self.max_runtime = 60;
+	    self.cpus = 1;
+	    self.mem = 1024;
+	    self.gpus = 0;
+	    self.ports = 0;
+	    self.uris = "";
+	    self.envs = {};
+	    $scope.$apply(); 
     }
 
   })
