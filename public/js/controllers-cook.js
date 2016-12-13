@@ -32,7 +32,8 @@ angular.module('myApp.controllers.cook', [])
     		mem: self.mem,
     		gpus: self.gpus,
     		//ports: self.ports,
-    		uris: self.uris.split(","),
+    		//uris: self.uris.split(","), while not using a uri object the mesos way, let's not use that
+    		uris: [],
     		envs: self.envs
     	});
     	return submitJson;

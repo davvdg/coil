@@ -79,8 +79,7 @@ exports.postCookJobs = function(req,res) {
 	  path: '/rawscheduler',
 	  method: 'POST',
 	  headers: {
-	      'Content-Type': 'application/json;charset=UTF-8',
-	  },
+	      'Content-Type': 'application/json'
 	};
 
 	var proxyreq = http.request(options, function(res) {
