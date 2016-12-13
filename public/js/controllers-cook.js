@@ -15,17 +15,18 @@ angular.module('myApp.controllers.cook', [])
     self.uris = [];
     self.envs = {};
 
+    self.useDocker = false;
+
     self.container = {
     	type: "docker",
     	docker: {
-    		image: "imageName",
-    		network: "bridge or host",
+    		image: "",
+    		network: "",
     		parameters : {},
     		port_mapping : []
-    	}
-	};
-    self.volumes = [];
-    self.dockerports = [];
+    	},
+      volumes: []
+	  };
 
     self.errorMessage = "";
     self.submitError = false;
@@ -34,20 +35,24 @@ angular.module('myApp.controllers.cook', [])
     	var submitJson = {
     		jobs: []
     	}
+      var job = {
+        name: self.name,
+        command: self.command,
+        priority : self.priority,
+        max_retries: self.max_retries,
+        max_runtime: self.max_runtime,
+        cpus: self.cpus,
+        mem: self.mem,
+        gpus: self.gpus,
+        //ports: self.ports,
+        uris: self.uris,
+        envs: self.envs
+      }
 
-    	submitJson.jobs.push({
-    		name: self.name,
-    		command: self.command,
-    		priority : self.priority,
-    		max_retries: self.max_retries,
-    		max_runtime: self.max_runtime,
-    		cpus: self.cpus,
-    		mem: self.mem,
-    		gpus: self.gpus,
-    		//ports: self.ports,
-    		uris: self.uris,
-    		envs: self.envs
-    	});
+      if (self.useDocker) {
+        job["container"] = self.container;
+      }
+    	submitJson.jobs.push(job);
     	return submitJson;
     }
 
@@ -130,6 +135,11 @@ angular.module('myApp.controllers.cook', [])
 				self.uris= jData.uris;
 				self.envs= jData.envs;
 
+        if (jData.container) {
+          self.container = jData.container;
+          self.useDocker = true;
+        }
+
 				$scope.$apply();    
 		      //send your binary data via $http or $resource or do anything else with it
 		    }
@@ -150,7 +160,8 @@ angular.module('myApp.controllers.cook', [])
 	    self.ports = 0;
 	    self.uris = [];
 	    self.envs = {};
-
+      self.useDocker = false;
+      self.container = {};
     }
 
   }).controller("MesosUrisCtrl", function($scope, $http, $routeParams) {

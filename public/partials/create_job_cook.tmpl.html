@@ -64,14 +64,29 @@
 			<label>Env variables</label>
 			<kvtable data-confs="ctrl.envs"/>
 		</div>
-		<div id="volumes" class='form-group'>
-			<label>Volumes</label>
-			<mesosvolumes data-rows="ctrl.volumes"/>
-		</div>		
-		<div id="ports" class='form-group'>
-			<label>Ports</label>
-			<mesosports data-rows="ctrl.dockerports"/>
-		</div>					
+		<div id="docker" class='form-group'>
+			<label>docker</label>
+			<input type="checkbox" ng-model="ctrl.useDocker"/>
+		</div>
+		<div ng-show="ctrl.useDocker">
+			<div id="image" class='form-group'>
+				<label>image</label>
+				<input type="text" name="image" class="form-control" ng-model="ctrl.container.docker.image">
+			</div>
+			<div id="parameters" class='form-group'>
+				<label>parameters</label>
+				<kvtable data-confs="ctrl.container.docker.parameters">
+			</div>
+			<div id="ports" class='form-group'>
+				<label>ports</label>
+				<mesosports data-rows="ctrl.container.docker.port_mapping">
+			</div>
+			<div id="volumes" class='form-group'>
+				<label>volumes</label>
+				<mesosvolumes data-rows="ctrl.container.volumes">
+			</div>
+		</div>
+					
 	</form>
 	</div>
 	<button class="btn btn-primary btn-lg btn-block" ng-click='ctrl.submitJob()'>submit</button>
