@@ -80,6 +80,7 @@ exports.postCookJobs = function(req,res) {
 	  method: 'POST',
 	  headers: {
 	      'Content-Type': 'application/json'
+	  }
 	};
 
 	var proxyreq = http.request(options, function(res) {
