@@ -1,0 +1,27 @@
+<div class="table-responsible">
+	<table class="table">
+		<thead>
+			<tr>
+				<td>Host Port</td>
+				<td>Container Port</td>
+				<td>Protocol</td>
+				<td>#</td>
+			</tr>						
+		</thead>	
+		<tbody >
+			<tr ng-repeat="(idx, row) in muctrl.rows">
+				<td><input type="text" ng-model='row.host_port' class="form-control"/></td>
+				<td><input type="text" ng-model="row.container_port" class="form-control"/></td>
+				<td><input type="text" ng-model="row.protocol" class="form-control"/></td>
+				<td><span class="btn glyphicon glyphicon-remove" ng-click="muctrl.delRow(idx)"></span></td>
+			</tr>	
+			<tr>
+				<td><input type="text" ng-model='muctrl.newRow.host_port' class="form-control"/></td>
+				<td><input type="text" ng-model='muctrl.newRow.container_port' class="form-control"/></td>
+				<td><input type="text" ng-model='muctrl.newRow.protocol' class="form-control"/></td>
+				<td><span class="btn glyphicon glyphicon-ok" ng-click="muctrl.addRow()"></span></td>
+			</tr>
+			
+		</tbody>
+	</table>
+</div>

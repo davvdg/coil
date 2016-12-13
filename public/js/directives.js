@@ -2,7 +2,7 @@
 
 /* Directives */
 
-angular.module('myApp.directives', ['myApp.controllers']).
+angular.module('myApp.directives', ['myApp.controllers', 'myApp.controllers.cook']).
   directive('appVersion', function (version) {
     return function(scope, elm, attrs) {
       elm.text(version);
@@ -35,5 +35,44 @@ angular.module('myApp.directives', ['myApp.controllers']).
       templateUrl: 'partials/drivers.tmpl.html',
       controller: "DriversCtrl",
       controllerAs: 'ctrl',
+    }
+  }).
+  directive('mesosuris', function() {
+    return {
+      scope: {
+        rows: '=',
+      },
+      restrict: 'EA',
+      replace: true,
+      bindToController: true,
+      controller:"MesosUrisCtrl",
+      controllerAs:'muctrl',
+      templateUrl: 'partials/cook/mesos_uris.tmpl.html',
+    }
+  }).
+    directive('mesosvolumes', function() {
+    return {
+      scope: {
+        rows: '=',
+      },
+      restrict: 'EA',
+      replace: true,
+      bindToController: true,
+      controller:"MesosVolumesCtrl",
+      controllerAs:'muctrl',
+      templateUrl: 'partials/cook/mesos_volumes.tmpl.html',
+    }
+  }).
+    directive('mesosports', function() {
+    return {
+      scope: {
+        rows: '=',
+      },
+      restrict: 'EA',
+      replace: true,
+      bindToController: true,
+      controller:"MesosPortsCtrl",
+      controllerAs:'muctrl',
+      templateUrl: 'partials/cook/mesos_ports.tmpl.html',
     }
   });

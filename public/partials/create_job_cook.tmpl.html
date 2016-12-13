@@ -52,13 +52,27 @@
 			<label>Ports</label>
 			<input type="number" name="ports" ng-model='ctrl.ports' class="form-control" placeholder="Number of ports that should be opened for the job.">
 		</div>		
-		<div id="uris" class='form-group'>
+		<!--<div id="uris" class='form-group'>
 			<label>Uris</label>
 			<input type="text" name="uris" ng-model='ctrl.uris' class="form-control" placeholder="Comma separated list of URIs that will be fetched into the container before launch.">
+		</div>-->
+		<div id="uris" class='form-group'>
+			<label>Uris</label>
+			<mesosuris data-rows="ctrl.uris"/>
+		</div>
+		<div id="envs" class='form-group'>
+			<label>Env variables</label>
+			<kvtable data-confs="ctrl.envs"/>
+		</div>
+		<div id="volumes" class='form-group'>
+			<label>Volumes</label>
+			<mesosvolumes data-rows="ctrl.volumes"/>
 		</div>		
+		<div id="ports" class='form-group'>
+			<label>Ports</label>
+			<mesosports data-rows="ctrl.dockerports"/>
+		</div>					
 	</form>
 	</div>
-	<h3>Envs</h3>
-	<kvtable data-confs="ctrl.envs"/>
 	<button class="btn btn-primary btn-lg btn-block" ng-click='ctrl.submitJob()'>submit</button>
 </div>

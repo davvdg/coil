@@ -1,0 +1,36 @@
+<div class="table-responsible">
+	<table class="table">
+		<thead>
+			<tr>
+				<td>Path</td>
+				<td>E</td>
+				<td>X</td>
+				<td>C</td>
+				<td>#</td>
+			</tr>						
+		</thead>	
+		<tbody >
+			<tr ng-repeat="(idx, row) in muctrl.rows">
+				<td>
+   					<input type="text" ng-model='row.value' class="form-control" value='row.value'/>
+
+   				</td>
+				<td><input type="checkbox" ng-model="row.extract"/></td>
+				<td><input type="checkbox" ng-model="row.executable"/></td>
+				<td><input type="checkbox" ng-model="row.cache"/></td>
+				<td><span class="btn glyphicon glyphicon-remove" ng-click="muctrl.delRow(idx)"></span></td>
+			</tr>	
+			<tr>
+				<td>
+   					<input type="text" ng-model='muctrl.newRow.value' class="form-control" 
+   					ng-keypress="$event.which === 13 && ctrl.addRow()"/>
+   				</td>
+				<td><input type="checkbox" ng-model="muctrl.newRow.extract"/></td>
+				<td><input type="checkbox" ng-model="muctrl.newRow.executable"/></td>
+				<td><input type="checkbox" ng-model="muctrl.newRow.cache"/></td>
+				<td><span class="btn glyphicon glyphicon-ok" ng-click="muctrl.addRow()"></span></td>
+			</tr>
+			
+		</tbody>
+	</table>
+</div>

@@ -12,8 +12,20 @@ angular.module('myApp.controllers.cook', [])
     self.mem = 1024;
     self.gpus = 0;
     self.ports = 0;
-    self.uris = "";
+    self.uris = [];
     self.envs = {};
+
+    self.container = {
+    	type: "docker",
+    	docker: {
+    		image: "imageName",
+    		network: "bridge or host",
+    		parameters : {},
+    		port_mapping : []
+    	}
+	};
+    self.volumes = [];
+    self.dockerports = [];
 
     self.errorMessage = "";
     self.submitError = false;
@@ -33,8 +45,7 @@ angular.module('myApp.controllers.cook', [])
     		mem: self.mem,
     		gpus: self.gpus,
     		//ports: self.ports,
-    		//uris: self.uris.split(","), while not using a uri object the mesos way, let's not use that
-    		uris: [],
+    		uris: self.uris,
     		envs: self.envs
     	});
     	return submitJson;
@@ -43,7 +54,7 @@ angular.module('myApp.controllers.cook', [])
 
     self.submitJob = function() {
 		var data = prepareJson();
-    	$http.post('/api/submit/cook', data)
+    	$http.post('/api/submit/cook', angular.toJson(data))
       	.then(
       	// on success
         function(res) {
@@ -68,7 +79,7 @@ angular.module('myApp.controllers.cook', [])
       var filename = 'job.json';
 
       if (typeof data === 'object') {
-        data = JSON.stringify(data, undefined, 2);
+        data = angular.toJson(data, 2);
       }
 
       var blob = new Blob([data], {type: 'text/json'});
@@ -116,7 +127,7 @@ angular.module('myApp.controllers.cook', [])
 				self.mem= jData.mem;
 				self.gpus= jData.gpus;
 				self.ports= jData.ports;
-				self.uris= jData.uris.join(",");
+				self.uris= jData.uris;
 				self.envs= jData.envs;
 
 				$scope.$apply();    
@@ -137,9 +148,82 @@ angular.module('myApp.controllers.cook', [])
 	    self.mem = 1024;
 	    self.gpus = 0;
 	    self.ports = 0;
-	    self.uris = "";
+	    self.uris = [];
 	    self.envs = {};
-	    $scope.$apply(); 
+
     }
 
-  })
+  }).controller("MesosUrisCtrl", function($scope, $http, $routeParams) {
+  	var self = this;
+  	self.rows = [];
+  	self.newRow = {};
+  	self.createNewRow = function() {
+  		self.newRow = {
+  			value: "",
+  			executable: false,
+  			extract: false,
+  			cache: false
+  		}
+  	}
+  	self.validateNewRow = function() {
+  		return self.newRow.value !== "";
+  	}
+  	self.addRow = function() {
+  		if (self.validateNewRow()) {
+	  		self.rows.push(self.newRow);
+	  		self.createNewRow();
+		}
+  	}
+  	self.delRow = function(idx) {
+  		self.rows.splice(idx, 1);
+  	}
+  	self.createNewRow();
+  }).controller("MesosVolumesCtrl", function($scope, $http, $routeParams) {
+  	var self = this;
+  	self.rows = [];
+  	self.newRow = {};
+  	self.createNewRow = function() {
+  		self.newRow = {
+  			host_path: "",
+  			container_path: "",
+  			mode: "rw"
+  		}
+  	}
+  	self.validateNewRow = function() {
+  		return (self.newRow.host_path !== "") && (self.newRow.container_path !== "");
+  	}
+  	self.addRow = function() {
+  		if (self.validateNewRow()) {
+	  		self.rows.push(self.newRow);
+	  		self.createNewRow();
+		}
+  	}
+  	self.delRow = function(idx) {
+  		self.rows.splice(idx, 1);
+  	}
+  	self.createNewRow();
+  }).controller("MesosPortsCtrl", function($scope, $http, $routeParams) {
+  	var self = this;
+  	self.rows = [];
+  	self.newRow = {};
+  	self.createNewRow = function() {
+  		self.newRow = {
+  			host_port: "",
+  			container_port: "",
+  			protocol: "tcp"
+  		}
+  	}
+  	self.validateNewRow = function() {
+  		return (self.newRow.host_port !== "") && (self.newRow.container_port !== "");
+  	}
+  	self.addRow = function() {
+  		if (self.validateNewRow()) {
+	  		self.rows.push(self.newRow);
+	  		self.createNewRow();
+		}
+  	}
+  	self.delRow = function(idx) {
+  		self.rows.splice(idx, 1);
+  	}
+  	self.createNewRow();
+  });
