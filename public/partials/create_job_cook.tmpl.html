@@ -75,14 +75,18 @@
 			</div>
 			<div id="parameters" class='form-group'>
 				<label>parameters</label>
-				<kvtable data-confs="ctrl.container.docker.parameters">
+				<itemlist data-rows="ctrl.container.docker.parameters">
 			</div>
+			<div id="network" class='form-group'>
+				<label>Network</label>
+				<input type="text" name="image" class="form-control" ng-model="ctrl.container.docker.network">
+			</div>			
 			<div id="ports" class='form-group'>
-				<label>ports</label>
-				<mesosports data-rows="ctrl.container.docker.port_mapping">
+				<label>Port-Mapping</label>
+				<mesosports data-rows="ctrl.container.docker['port-mapping']">
 			</div>
 			<div id="volumes" class='form-group'>
-				<label>volumes</label>
+				<label>Volumes</label>
 				<mesosvolumes data-rows="ctrl.container.volumes">
 			</div>
 		</div>

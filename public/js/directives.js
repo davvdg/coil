@@ -75,4 +75,17 @@ angular.module('myApp.directives', ['myApp.controllers', 'myApp.controllers.cook
       controllerAs:'muctrl',
       templateUrl: 'partials/cook/mesos_ports.tmpl.html',
     }
+  }).
+    directive('itemlist', function() {
+    return {
+      scope: {
+        rows: '=',
+      },
+      restrict: 'EA',
+      replace: true,
+      bindToController: true,
+      controller:"ItemListCtrl",
+      controllerAs:'ctrl',
+      templateUrl: 'partials/itemlist.tmpl.html',
+    }
   });

@@ -20,10 +20,10 @@ angular.module('myApp.controllers.cook', [])
     self.container = {
     	type: "docker",
     	docker: {
-    		image: "",
-    		network: "",
-    		parameters : {},
-    		port_mapping : []
+    		image: "ubuntu",
+    		network: "host", // or bridge
+    		parameters : [],
+    		"port-mapping" : []
     	},
       volumes: []
 	  };
@@ -226,6 +226,26 @@ angular.module('myApp.controllers.cook', [])
   	}
   	self.validateNewRow = function() {
   		return (self.newRow.host_port !== "") && (self.newRow.container_port !== "");
+  	}
+  	self.addRow = function() {
+  		if (self.validateNewRow()) {
+	  		self.rows.push(self.newRow);
+	  		self.createNewRow();
+		}
+  	}
+  	self.delRow = function(idx) {
+  		self.rows.splice(idx, 1);
+  	}
+  	self.createNewRow();
+  }).controller("ItemListCtrl", function($scope, $http, $routeParams) {
+  	var self = this;
+  	self.rows = [];
+  	self.newRow = "";
+  	self.createNewRow = function() {
+  		self.newRow = ""
+  	}
+  	self.validateNewRow = function() {
+  		return (self.newRow !== "");
   	}
   	self.addRow = function() {
   		if (self.validateNewRow()) {
