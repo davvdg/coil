@@ -230,7 +230,7 @@ exports.getDriverStatus = function(req, res) {
 var parseSparkDispatcherRawDatas = function (datas) {
 	var jmessage = {"state": "FAILED_PARSING"};
 	var jdata = JSON.parse(datas);
-	var rawmessage = "\n" + jdata.message;
+	var rawmessage = "" + jdata.message;
 	//console.log(rawmessage);
 
 	var dataMatches = rawmessage.match(/data\:\s.*\n/g); // remove data field for special parsing...
@@ -248,10 +248,11 @@ var parseSparkDispatcherRawDatas = function (datas) {
 	.replace(/uuid.*\n/g, '') 										// remove uuid
 	.replace(/data.*\n/g, '')
 	.replace(/([0-9a-z_]+)\s\{/g,'"$1": \{') 						// task_id { to task_id: {
-	.replace(/([0-9a-z_]+)\:\s(\".*\n)/g, '"$1": $2') 				// task_id: "blablabla" to "task_id": "blablabla"
-	.replace(/\n(\s*[0-9a-z_]+)\:\s([A-Z_]+)/g, '\n"$1": "$2"')			// task_id: BLA_BLA_BLA to "task_id": "BLA_BLA_BLA"
-	.replace(/([0-9a-z_]+)\:\s([0-9]+[\.]*[0-9A-Z]*)/g, '"$1": $2') // task_id: 1.12563E9 to "task_id": 1.12563E9
-	.replace(/([\}\"0-9]+)\n\"/g, '$1,\n\"');						// ...} or ..." at end of line with "... on next line to ...},"... or ...","...
+	.replace(/([0-9a-z_]+)\:\s\"(.*)\"\n/g, '"$1": "$2"\n') 		// task_id: "blablabla" to "task_id": "blablabla"
+	.replace(/\n(\s*[0-9a-z_]+)\:\s([A-Z_]+)/g, '\n"$1": "$2"')		// task_id: BLA_BLA_BLA to "task_id": "BLA_BLA_BLA"
+	.replace(/\n(\s*[0-9a-z_]+)\:\s([0-9]+[\.]*[0-9A-Z]*)/g, '\n"$1": $2') // task_id: 1.12563E9 to "task_id": 1.12563E9
+	.replace(/([\}\"0-9]+)\n\"/g, '$1,\n\"')
+	.replace(/\\/g, '');						// ...} or ...' at end of line with '... on next line to ...},"... or ...","...
 
 
 	//message = message.replace(/\"data\"\:\s(.*)\n/g, '');
