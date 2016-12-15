@@ -24,21 +24,18 @@ exports.registerJobType = function(jobType, callbacksObj) {
 	coilJobTypes[jobType] = callbacksObj;
 }
 var getJobsStatus = function(job) {
-	var uuid = job.uuid;
 	var jobType = job.type;
 	var statusCb = coilJobTypes[jobType].statusCb
 	console.log(statusCb);
-	var p = statusCb(uuid)
+	var p = statusCb(job)
 	p.then(
 		// success retrieving status
 		function(data) {			
-			job.status = data.status;
-			job.rawStatusData = data;
+			job.status = data;
 			console.log(data);
 		},
 		// failure retrieving status,
 		function(error) {
 			job.status = "Unknown";
-			job.rawStatusData = {};
 		});
 }

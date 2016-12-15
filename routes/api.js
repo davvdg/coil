@@ -225,7 +225,23 @@ exports.getDriverStatus = function(req, res) {
 	// when the spark application will be started, the hostname + port should become availables...
 	// ok, when it starts, the message dumped is a stringyfied json.
 
-
+var getSparkJobStatus = function(job) {
+	var driverid = job.payload.submissionId;
+	var options = {
+	  uri: 'http://'+ config.spark.url + ':' + config.spark.port + '/v1/submissions/status/' + driverid,
+	};
+	//console.log(options);
+	var promise = rp(options)
+	.then(function(data) {
+		var d = JSON.parse(data);
+		console.log(d)
+		return d.driverState;
+	})
+	.catch(function(err) {
+		console.log(err);
+	});	
+	return promise;
+}
 
 var parseSparkDispatcherRawDatas = function (datas) {
 	var jmessage = {"state": "FAILED_PARSING"};
@@ -424,6 +440,14 @@ exports.parseDriverPage = function() {
     	driverList.forEach(function(elem) {
     		var jobuuid = uuid();
     		jobCache[jobuuid] = {driver: elem};
+    		var job = {
+				uuid: jobuuid,
+				payload: {submissionId: elem},
+				submissionDate: Date.now(),
+				user: "unknow",
+				type: "spark"
+			}
+			db.storeJob(job);
     	})
     })
     .catch(function (err) {
@@ -431,6 +455,10 @@ exports.parseDriverPage = function() {
         // API call failed... 
     });
 }
+
+db.registerJobType("spark", {
+	statusCb:getSparkJobStatus,
+});
 
 // get logs from mesos...
 // mounted path:
