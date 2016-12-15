@@ -73,16 +73,73 @@ exports.postCookJobs = function(req,res) {
     console.log(newbody);	
 
 	var _res=res;
+	/*
 	var options = {
 	  hostname: config.cook.url,
 	  port: config.cook.port,
 	  path: '/rawscheduler',
-	  method: 'POST',
+	  
 	  headers: {
 	      'Content-Type': 'application/json'
 	  }
 	};
+	*/
+	var options = {
+	  uri: 'http://'+ config.cook.url + ':' + config.cook.port + '/rawscheduler',
+	  method: 'POST',
+	  headers: {
+	      'Content-Type': 'application/json'
+	  },
+	  json: true, 
+	  body: newbody
+	};
 
+	var proxyreq = request(options, function(error, response, body) {
+			console.log(error);
+			//console.log(response);
+			//console.log(body);
+
+		if (error) {
+		  	_res.status(504).json(
+				{
+					error: error
+				}	  		
+		  	);
+		} else {
+			if (response.statusCode === 400) {
+		  		_res.status(400).json({
+		  			error: "malformed json"
+		  		});
+		  		return;
+		  	}
+		  	if (response.statusCode === 401) {
+		  		_res.status(402).json({
+		  			error: "user is not authorized to submit to cook"
+		  		});
+		  		return;
+		  	}
+		  	if (response.statusCode === 422) {
+		  		_res.status(422).json({
+		  			error: "cook is not able to store job datas (unprocessable)"
+		  		});
+		  		return;
+		  	}
+		  	if (response.statusCode ===201) {
+			  	var jobs = newbody.jobs;
+				jobs.forEach(function(elem) {
+					jobCache[elem.uuid] = elem;
+				});	  	
+		    	_res.status(200).json(newbody);
+		    	return;
+		  	}
+		  	_res.status(response.statusCode).json(
+				{
+					error: response.body
+				}	  		
+		  	);
+		}
+	})
+	/*
 	var proxyreq = http.request(options, function(res) {
 	  console.log('Status: ' + res.statusCode);
 	  console.log('Headers: ' + JSON.stringify(res.headers));
@@ -132,6 +189,7 @@ exports.postCookJobs = function(req,res) {
 	// write data to request body
 	//proxyreq.write(JSON.stringify(newbody));
 	proxyreq.end(JSON.stringify(newbody));
+	*/
 };
 
 
