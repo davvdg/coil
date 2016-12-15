@@ -4,6 +4,7 @@
 			<thead>
 				<tr>
 					<th>coil id</th>
+					<th>type</th>
 					<th>user</th>
 					<th>submission date</th>
 					<th>status</th>
@@ -12,6 +13,7 @@
 			<tbody>
 				<tr ng-repeat='job in ctrl.jobs'>
 					<td>{{job.uuid}}</td>
+					<td>{{job.type}}</td>
 					<td>{{job.user}}</td>
 					<td>{{job.submissionDate}}</td>
 					<td>{{job.status}}</td>

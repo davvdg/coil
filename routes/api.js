@@ -23,6 +23,8 @@ var jobCache = {};
 var coilJobs = [];
 
 exports.submitSparkjob = function(req,res) {
+	var user = req.session.passport.user.username;
+
 	var newbody = req.body;
 	var jobuuid = uuid();
 	newbody.action = "CreateSubmissionRequest";
@@ -51,7 +53,14 @@ exports.submitSparkjob = function(req,res) {
 	  res.on('data', function (body) {
 	  	console.log(body);
 	  	jobCache[jobuuid] = {driver: body.submissionId};
-
+		var job = {
+			uuid: jobuuid,
+			payload: body,
+			submissionDate: Date.now(),
+			user: user,
+			type: "spark"
+		}
+		db.storeJob(job);
 	    _res.json(body);
 	  });
 	});
@@ -77,17 +86,7 @@ exports.postCookJobs = function(req,res) {
     console.log(newbody);	
 
 	var _res=res;
-	/*
-	var options = {
-	  hostname: config.cook.url,
-	  port: config.cook.port,
-	  path: '/rawscheduler',
-	  
-	  headers: {
-	      'Content-Type': 'application/json'
-	  }
-	};
-	*/
+
 	var options = {
 	  uri: 'http://'+ config.cook.url + ':' + config.cook.port + '/rawscheduler',
 	  method: 'POST',
@@ -153,6 +152,36 @@ exports.postCookJobs = function(req,res) {
 	})
 };
 
+
+var getCookJobStatus = function(uuid) {	
+	var options = {
+	  uri: 'http://'+ config.cook.url + ':' + config.cook.port + '/rawscheduler?job=' + uuid,
+	};
+	//console.log(options);
+	var promise = rp(options)
+	.then(function(data) {
+		return data.status;
+	})
+	.catch(function(err) {
+		console.log(err);
+	});
+    return promise;
+}
+
+var deleteCookJob = function(uuid) {
+	var options = {
+	  uri: 'http://'+ config.cook.url + ':' + config.cook.port + '/rawscheduler?job=' + uuid,
+	  method: 'DELETE'
+	};
+	var promise = rp(options);
+    return promise;
+}
+
+db.registerJobType("cook", {
+	statusCb:getCookJobStatus,
+	killCb:deleteCookJob
+});
+
 exports.getCoilJobs = function(req, res) {
 	res.json(db.getJobs());
 	
@@ -203,6 +232,10 @@ var parseSparkDispatcherRawDatas = function (datas) {
 	var jdata = JSON.parse(datas);
 	var rawmessage = "\n" + jdata.message;
 	//console.log(rawmessage);
+
+	var dataMatches = rawmessage.match(/data\:\s.*\n/g); // remove data field for special parsing...
+	rawmessage = "{" + rawmessage + "}"
+	/*
 	var message = rawmessage.
 					replace(/\n(\s*[a-z0-9_]*)\s\{/g, '\n$1: {').
 					replace(/\}\n([a-z0-9_]+)/g, "},\n$1").
@@ -210,13 +243,21 @@ var parseSparkDispatcherRawDatas = function (datas) {
 					replace(/([a-z0-9_]+)\:/g, '"$1":').
 					replace(/\:\s([A-Z0-9_.]+)/g, ': "$1"').
 					replace(/\"uuid\"\:\s.*\n/g, ''); // @todo: escape the uuid
+					*/
+	var message = rawmessage
+	.replace(/uuid.*\n/g, '') 										// remove uuid
+	.replace(/data.*\n/g, '')
+	.replace(/([0-9a-z_]+)\s\{/g,'"$1": \{') 						// task_id { to task_id: {
+	.replace(/([0-9a-z_]+)\:\s(\".*\n)/g, '"$1": $2') 				// task_id: "blablabla" to "task_id": "blablabla"
+	.replace(/\n(\s*[0-9a-z_]+)\:\s([A-Z_]+)/g, '\n"$1": "$2"')			// task_id: BLA_BLA_BLA to "task_id": "BLA_BLA_BLA"
+	.replace(/([0-9a-z_]+)\:\s([0-9]+[\.]*[0-9A-Z]*)/g, '"$1": $2') // task_id: 1.12563E9 to "task_id": 1.12563E9
+	.replace(/([\}\"0-9]+)\n\"/g, '$1,\n\"');						// ...} or ..." at end of line with "... on next line to ...},"... or ...","...
 
-	var dataMatches = rawmessage.match(/data\:\s.*\n/g);
 
-	message = message.replace(/\"data\"\:\s(.*)\n/g, '');
+	//message = message.replace(/\"data\"\:\s(.*)\n/g, '');
 					
 					//replace(/\}\,\n(\s*)/g, '}\n$1');
-	message = "{" + message + "}"
+	//message = "{" + message + "}"
 	try {
 		jmessage = JSON.parse(message);
 	} catch (e) {
@@ -239,7 +280,7 @@ var parseSparkDispatcherRawDatas = function (datas) {
     		//console.log(completedDatas.slice(11080,11090));
     		try {
 				var jcompletedDatas = JSON.parse(completedDatas);
-    			jmessage.data = jcompletedDatas.data;
+    			jmessage["data"] = jcompletedDatas.data;
     		} catch (e) {
     			console.log(jcompletedDatas);
     			console.log(e);

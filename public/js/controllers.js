@@ -440,7 +440,6 @@ self.states        = this.loadAll();
       );
     }
     self.load();
-
   });
 /*
 
