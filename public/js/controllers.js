@@ -405,6 +405,42 @@ self.states        = this.loadAll();
       }
     }
     self.loadDriverInfos();
+  }).controller('CoilJobsCtrl', function($scope, $http, $routeParams){
+    var self = this;
+    self.jobs = [];
+    self.page = 1;
+    self.perPage = 30;
+    self.load = function() {
+      $http.get('/api/coiljobs')
+      .then(
+        function(res) {
+          console.log(res.data);
+          self.jobs = res.data;
+        },
+        function(err) {
+          console.log(err);
+        }
+      );
+    }
+    self.load(); 
+  }).controller('CoilJobCtrl', function($scope, $http, $routeParams){
+    self.uuid = $routeParams.jobid;
+    var self = this;
+    self.job = null;
+    self.load = function() {
+      $http.get('/api/coiljobs/' + uuid);
+      .then(
+        function(res) {
+          console.log(res.data);
+          self.job = res.data;
+        },
+        function(err) {
+          console.log(err);
+        }
+      );
+    }
+    self.load();
+    
   });
 /*
 

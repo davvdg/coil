@@ -206,7 +206,8 @@ app.get('/api/driver/:driverid/applications/:appid/storage/rdd/rddid',          
 app.get('/api/driver/:driverid/applications/:appid/logs',                                           auth, api.proxyDriverApi);
 app.get('/api/driver/:driverid/applications/:appid/:attemptid/logs',                               auth, api.proxyDriverApi);
 
-
+app.get('/api/coiljobs', auth, api.getCoilJobs);
+app.get('/api/coiljobs/:jobid', auth, api.getCoilJob);
 
 
 app.get('*', routes.index);

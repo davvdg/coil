@@ -1,0 +1,22 @@
+<div class="container", ng-controller="CoilJobsCtrl as ctrl" >
+	<div class='table-responsible'>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>coil id</th>
+					<th>user</th>
+					<th>submission date</th>
+					<th>status</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat='job in ctrl.jobs'>
+					<td>{{job.uuid}}</td>
+					<td>{{job.user}}</td>
+					<td>{{job.submissionDate}}</td>
+					<td>{{job.status}}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>

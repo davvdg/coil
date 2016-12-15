@@ -10,6 +10,7 @@ var request = require('request');
 var rp = require('request-promise');
 var uuid = require('uuid/v4');
 var url = require('url');
+var db = require('../db.js');
 
 exports.name = function (req, res) {
   res.json({
@@ -18,6 +19,8 @@ exports.name = function (req, res) {
 };
 
 var jobCache = {};
+
+var coilJobs = [];
 
 exports.submitSparkjob = function(req,res) {
 	var newbody = req.body;
@@ -63,6 +66,7 @@ exports.submitSparkjob = function(req,res) {
 };
 
 exports.postCookJobs = function(req,res) {
+	var user = req.session.passport.user.username;
 	var newbody = req.body;
 	var jobs = newbody.jobs;
 	jobs.forEach(function(elem) {
@@ -125,9 +129,17 @@ exports.postCookJobs = function(req,res) {
 		  		return;
 		  	}
 		  	if (response.statusCode ===201) {
+		  		
 			  	var jobs = newbody.jobs;
 				jobs.forEach(function(elem) {
-					jobCache[elem.uuid] = elem;
+					var job = {
+						uuid: elem.uuid,
+						payload: elem,
+						submissionDate: Date.now(),
+						user: user,
+						type: "cook"
+					}
+					db.storeJob(job);
 				});	  	
 		    	_res.status(200).json(newbody);
 		    	return;
@@ -139,60 +151,16 @@ exports.postCookJobs = function(req,res) {
 		  	);
 		}
 	})
-	/*
-	var proxyreq = http.request(options, function(res) {
-	  console.log('Status: ' + res.statusCode);
-	  console.log('Headers: ' + JSON.stringify(res.headers));
-	  res.setEncoding('utf8');
-	  res.on('response', function(response) {
-	  	if (response.statusCode ===201) {
-		  	var jobs = newbody.jobs;
-			jobs.forEach(function(elem) {
-				jobCache[elem.uuid] = elem;
-			});	  	
-	    	_res.status(200).json(newbody);
-	    	return;
-	  	}
-	  	if (response.statusCode === 400) {
-	  		_res.status(400).json({
-	  			error: "malformed json"
-	  		});
-	  		return;
-	  	}
-	  	if (response.statusCode === 401) {
-	  		_res.status(402).json({
-	  			error: "user is not authorized to submit to cook"
-	  		});
-	  		return;
-	  	}
-	  	if (response.statusCode === 422) {
-	  		_res.status(422).json({
-	  			error: "cook is not able to store job datas (unprocessable)"
-	  		});
-	  		return;
-	  	}
-	  	_res.status(response.statusCode).json(
-			{
-				error: "",
-				message: response.body
-			}	  		
-	  	);
-  	  });
-	});
-	proxyreq.on('error', function(e) {
-	  	console.log('problem with request: ' + e.message);
-	  	_res.json({
-			error: e.message
-		});
-	});
-	
-	// write data to request body
-	//proxyreq.write(JSON.stringify(newbody));
-	proxyreq.end(JSON.stringify(newbody));
-	*/
 };
 
+exports.getCoilJobs = function(req, res) {
+	res.json(db.getJobs());
+	
+}
 
+exports.getCoilJob = function(req, res) {
+
+}
 
 exports.killJob = function(req, res) {
 	var driver = req.params.driverid;

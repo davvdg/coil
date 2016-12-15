@@ -5,6 +5,8 @@ var request = require('request');
 var rp = require('request-promise');
 var uuid = require('uuid/v4');
 var url = require('url');
+var db = require('../db.js');
+var Promise = require('promise');
 
 var oldjobuuid = uuid();
 var frameworkUuid = uuid();
@@ -14,7 +16,7 @@ var executor_id = uuid();
 var jobStatus = ["waiting", "running", "completed"];
 var instanceStatus = ["unknown", "running", "success", "failed"];
 
-var jobStatus = {
+var fakeJobStatus = {
 	uuid: oldjobuuid,
 	cpus: 1,
 	mem: 1024,
@@ -37,6 +39,7 @@ var jobInstance = {
 }
 
 exports.postCookJobs = function(req, res) {
+	var user = req.session.passport.user.username;
 	var newbody = req.body;
 	var jobs = newbody.jobs;
 	jobs.forEach(function(elem) {
@@ -90,6 +93,14 @@ exports.postCookJobs = function(req, res) {
 	  	var jobs = newbody.jobs;
 		jobs.forEach(function(elem) {
 			//jobCache[elem.uuid] = elem;
+			var job = {
+						uuid: elem.uuid,
+						payload: elem,
+						submissionDate: Date.now(),
+						user: user,
+						type: "cook"
+					}
+			db.storeJob(job);
 		});
 		res.status(201);
 	    res.json(newbody);
@@ -102,8 +113,27 @@ exports.postCookJobs = function(req, res) {
 	
 }
 
-exports.getJobStatus = function(req, res) {
-	res.json({});
+var getJobStatus = function(uuid) {
+	var status = {
+		uuid: oldjobuuid,
+		cpus: 1,
+		mem: 1024,
+		gpus: 0,
+		framework_id: frameworkUuid,
+		status: "waiting",
+		instances : []
+	};
+	status.uuid = uuid;
+	console.log(status);
+	var promise = new Promise(
+		function (resolve, reject) {
+			setTimeout(function() {
+				resolve(status);
+			}, 1000);
+		}
+	);	
+	
+	return promise;
 }
 
 exports.deleteKillCookJobs = function(res, res) {
@@ -113,3 +143,5 @@ exports.deleteKillCookJobs = function(res, res) {
 exports.postRetryCookJob = function(res, res) {
 	res.json({});
 }
+
+db.registerJobType("cook", {statusCb:getJobStatus})

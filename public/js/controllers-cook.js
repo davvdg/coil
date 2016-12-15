@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('myApp.controllers.cook', [])
-.controller("CookSubmitJobCtrl", function($scope, $http, $routeParams) {
+.controller("CookSubmitJobCtrl", function($scope, $http, $routeParams, $location) {
     var self = this;
     self.name ="";
     self.command ="";
@@ -67,7 +67,8 @@ angular.module('myApp.controllers.cook', [])
           self.submitError = false;
           self.errorMessage = "";
           //var driverid = res.data.submissionId;
-          //$location.path("/drivers/" + driverid);
+          $location.path("/coiljobs");
+
         }, 
         // on error
         function(res) {
