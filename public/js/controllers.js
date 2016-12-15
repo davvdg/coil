@@ -428,7 +428,7 @@ self.states        = this.loadAll();
     var self = this;
     self.job = null;
     self.load = function() {
-      $http.get('/api/coiljobs/' + uuid);
+      $http.get('/api/coiljobs/' + uuid)
       .then(
         function(res) {
           console.log(res.data);
@@ -440,7 +440,7 @@ self.states        = this.loadAll();
       );
     }
     self.load();
-    
+
   });
 /*
 
