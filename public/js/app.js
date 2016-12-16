@@ -52,7 +52,10 @@ config(function ($routeProvider, $locationProvider) {
     }).
     when('/coiljobs', {
       templateUrl: 'partials/coiljobs.tmpl.html'
-    }).    
+    }).
+    when('/coiljobs/:jobid', {
+      templateUrl: 'partials/coiljob.tmpl.html'
+    }).        
     otherwise({
       redirectTo: '/'
     });

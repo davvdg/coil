@@ -11,6 +11,7 @@
     "express-session": "^1.14.2",
     "jade": "~0.31.2",
     "method-override": "^1.0.0",
+    "mongoose": "^4.7.2",
     "morgan": "^1.0.0",
     "passport": "^0.3.2",
     "passport-ldapauth": "^0.6.0",

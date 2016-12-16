@@ -10,9 +10,12 @@ var express = require('express'),
   morgan = require('morgan'),
   routes = require('./routes'),
   api = require('./routes/api'),
+  sparkApi = require('./routes/api-spark'),
+  cookApi = require('./routes/api-cook'),
   fakeapi = require('./routes/fakeapi'),
   fakeCookApi = require('./routes/fakeCookApi'),
   http = require('http'),
+  db=require("./db");
   path = require('path');
 
 var cookieParser = require('cookie-parser');
@@ -158,29 +161,29 @@ app.get('/user/status', function(req, res) {
 });
 
 //app.get('/partials/:name', routes.partials);
-app.get("/drivergui/:driverid", auth, api.proxyDriver);
-app.get("/drivergui/:driverid/jobs", auth, api.proxyDriver);
-app.get("/drivergui/:driverid/stages", auth, api.proxyDriver);
-app.get("/drivergui/:driverid/storage", auth, api.proxyDriver);
-app.get("/drivergui/:driverid/environment", auth, api.proxyDriver);
-app.get("/drivergui/:driverid/executors", auth, api.proxyDriver);
-app.get("/drivergui/:driverid/threadDump", auth, api.proxyDriver);
+app.get("/drivergui/:driverid", auth, sparkApi.proxyDriver);
+app.get("/drivergui/:driverid/jobs", auth, sparkApi.proxyDriver);
+app.get("/drivergui/:driverid/stages", auth, sparkApi.proxyDriver);
+app.get("/drivergui/:driverid/storage", auth, sparkApi.proxyDriver);
+app.get("/drivergui/:driverid/environment", auth, sparkApi.proxyDriver);
+app.get("/drivergui/:driverid/executors", auth, sparkApi.proxyDriver);
+app.get("/drivergui/:driverid/threadDump", auth, sparkApi.proxyDriver);
 
-app.get("/drivergui/:driverid/jobs/job", auth, api.proxyDriver);
-app.get("/drivergui/:driverid/stages/stage", auth, api.proxyDriver);
-app.get("/drivergui/:driverid/stages/kill", auth, api.proxyDriver);
-app.get("/drivergui/:driverid/storage/rdd", auth, api.proxyDriver);
+app.get("/drivergui/:driverid/jobs/job", auth, sparkApi.proxyDriver);
+app.get("/drivergui/:driverid/stages/stage", auth, sparkApi.proxyDriver);
+app.get("/drivergui/:driverid/stages/kill", auth, sparkApi.proxyDriver);
+app.get("/drivergui/:driverid/storage/rdd", auth, sparkApi.proxyDriver);
 // JSON API
-app.get('/api/name', api.name);
+
 
 // redirect all others to the index (HTML5 history)
 
 
-app.post('/api/submit/spark', auth, api.submitSparkjob);
+app.post('/api/submit/spark', auth, sparkApi.submitSparkjob);
 
-app.post('/api/driver/:driverid/kill',  auth, api.killJob);
-app.get("/api/driver/:driverid/status", auth, api.getDriverStatus);
-app.get('/api/driver/list',       auth, api.getDriverList);
+app.post('/api/driver/:driverid/kill',  auth, sparkApi.killJob);
+app.get("/api/driver/:driverid/status", auth, sparkApi.getDriverStatus);
+app.get('/api/driver/list',       auth, sparkApi.getDriverList);
 
 if (simulate==="true") {
   app.get('/api/driver/:driverid/applications',                           auth, fakeapi.fakeApplications);
@@ -189,22 +192,22 @@ if (simulate==="true") {
   app.get('/api/driver/:driverid/applications/:appid/executors',          auth, fakeapi.fakeExecutors);
   app.post('/api/submit/cook', auth, fakeCookApi.postCookJobs);  
 } else {
-  app.get('/api/driver/:driverid/applications',                           auth, api.proxyDriverApi);
-  app.get('/api/driver/:driverid/applications/:appid/jobs',               auth, api.proxyDriverApi);
-  app.get('/api/driver/:driverid/applications/:appid/jobs/:jobid',        auth, api.proxyDriverApi);
-  app.get('/api/driver/:driverid/applications/:appid/executors',          auth, api.proxyDriverApi);
-  app.post('/api/submit/cook', auth, api.postCookJobs);
+  app.get('/api/driver/:driverid/applications',                           auth, sparkApi.proxyDriverApi);
+  app.get('/api/driver/:driverid/applications/:appid/jobs',               auth, sparkApi.proxyDriverApi);
+  app.get('/api/driver/:driverid/applications/:appid/jobs/:jobid',        auth, sparkApi.proxyDriverApi);
+  app.get('/api/driver/:driverid/applications/:appid/executors',          auth, sparkApi.proxyDriverApi);
+  app.post('/api/submit/cook', auth, cookApi.postCookJobs);
 }
 
-app.get('/api/driver/:driverid/applications/:appid/stages',                                         auth, api.proxyDriverApi);
-app.get('/api/driver/:driverid/applications/:appid/stages/:stageid',                               auth, api.proxyDriverApi);
-app.get('/api/driver/:driverid/applications/:appid/stages/:stageid/:stageattemptid',             auth, api.proxyDriverApi);
-app.get('/api/driver/:driverid/applications/:appid/stages/:stageid/:stageattemptid/taskSummary', auth, api.proxyDriverApi);
-app.get('/api/driver/:driverid/applications/:appid/stages/:stageid/:stageattemptid/taskList',    auth, api.proxyDriverApi);
-app.get('/api/driver/:driverid/applications/:appid/storage/rdd',                                    auth, api.proxyDriverApi);
-app.get('/api/driver/:driverid/applications/:appid/storage/rdd/rddid',                             auth, api.proxyDriverApi);
-app.get('/api/driver/:driverid/applications/:appid/logs',                                           auth, api.proxyDriverApi);
-app.get('/api/driver/:driverid/applications/:appid/:attemptid/logs',                               auth, api.proxyDriverApi);
+app.get('/api/driver/:driverid/applications/:appid/stages',                                         auth, sparkApi.proxyDriverApi);
+app.get('/api/driver/:driverid/applications/:appid/stages/:stageid',                               auth, sparkApi.proxyDriverApi);
+app.get('/api/driver/:driverid/applications/:appid/stages/:stageid/:stageattemptid',             auth, sparkApi.proxyDriverApi);
+app.get('/api/driver/:driverid/applications/:appid/stages/:stageid/:stageattemptid/taskSummary', auth, sparkApi.proxyDriverApi);
+app.get('/api/driver/:driverid/applications/:appid/stages/:stageid/:stageattemptid/taskList',    auth, sparkApi.proxyDriverApi);
+app.get('/api/driver/:driverid/applications/:appid/storage/rdd',                                    auth, sparkApi.proxyDriverApi);
+app.get('/api/driver/:driverid/applications/:appid/storage/rdd/rddid',                             auth, sparkApi.proxyDriverApi);
+app.get('/api/driver/:driverid/applications/:appid/logs',                                           auth, sparkApi.proxyDriverApi);
+app.get('/api/driver/:driverid/applications/:appid/:attemptid/logs',                               auth, sparkApi.proxyDriverApi);
 
 app.get('/api/coiljobs', auth, api.getCoilJobs);
 app.get('/api/coiljobs/:jobid', auth, api.getCoilJob);
@@ -222,5 +225,6 @@ app.get('*', routes.index);
 
 http.createServer(app).listen(app.get('port'), function () {
   console.log('Express server listening on port ' + app.get('port'));
-  api.parseDriverPage();
+  sparkApi.parseDriverPage();
+  db.watchSchedulers();
 });

@@ -12,7 +12,7 @@
 			</thead>
 			<tbody>
 				<tr ng-repeat='job in ctrl.jobs'>
-					<td>{{job.uuid}}</td>
+					<td><a href="/coiljobs/{{job.uuid}}">{{job.uuid}}</a></td>
 					<td>{{job.type}}</td>
 					<td>{{job.user}}</td>
 					<td>{{job.submissionDate}}</td>

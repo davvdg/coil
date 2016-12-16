@@ -424,15 +424,18 @@ self.states        = this.loadAll();
     }
     self.load(); 
   }).controller('CoilJobCtrl', function($scope, $http, $routeParams){
-    self.uuid = $routeParams.jobid;
     var self = this;
-    self.job = null;
+    self.uuid = $routeParams.jobid;
+
+    self.data = {};
+    self.runs = [];
     self.load = function() {
-      $http.get('/api/coiljobs/' + uuid)
+      $http.get('/api/coiljobs/' + self.uuid)
       .then(
         function(res) {
           console.log(res.data);
-          self.job = res.data;
+          self.data = res.data;
+          self.runs = res.data.runs;
         },
         function(err) {
           console.log(err);

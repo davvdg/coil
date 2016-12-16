@@ -16,6 +16,14 @@ var config = {
 	cook: {
 		url: "cook.framework.host",
 		port: 80
+	},
+	database: {
+		method: "local", //or mongo
+		mongo: {
+			host: "localhost",
+			port: 27017,
+			dbname: "coil"
+		}
 	}
 };
 
