@@ -39,3 +39,14 @@ exports.getCoilJob = function(req, res) {
 		res.json({});
 	});
 }
+
+exports.killCoilJob = function(req, res) {
+	var uuid = req.params.jobid;
+	db.killCoilJobByUuid(uuid).then( 
+		function(data) {
+			res.json(data);
+	}).catch(function(err) {
+		console.log("error killing Coil job :" + uuid);
+		res.status(424).json(err);
+	});	
+}

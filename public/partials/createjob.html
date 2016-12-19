@@ -1,4 +1,4 @@
-<div class="container" ng-controller='JobCtrl'>
+<div class="container-fluid" ng-controller='JobCtrl'>
 	<h1>Create and Submit Spark Job</h1>
 	<div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
 		<div class="btn-group" role="group" aria-label="First group">
@@ -13,7 +13,7 @@
 		</div>
 	</div>
 	<h3>Main options</h3>
-	<div ng-show="error" class="alert alert-danger">{{errorMessage}}</div>
+	<div ng-show="errorMessage" class="alert alert-danger">{{errorMessage}}</div>
 	<div>
 	<form>
 		<div id="mainclass" class='form-group'>

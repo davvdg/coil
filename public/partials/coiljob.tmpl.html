@@ -1,6 +1,39 @@
-<div class="container", ng-controller="CoilJobCtrl as ctrl" >
+<div class="container-fluid", ng-controller="CoilJobCtrl as ctrl" >
 	<h3>Job: {{ctrl.data.uuid}}</h3>
-	<div>Job Type: {{ctrl.data.type}}</div>
+	<div class="navbar navbar-default">
+	 	<div class="container-fluid">
+    		<div class="navbar-header">
+				<div class="navbar-brand">Job Type: {{ctrl.data.type}}</div>
+    		</div>
+    		<div >
+    		<ul class="nav navbar-nav navbar-right" >
+    		<li class="nav-item">
+    			<h3 class="navbar-text">Status: 
+    				<span class="nav-item label" ng-class="{
+    				'label-warning': ctrl.data.status == 'PENDING',
+    				'label-success': ctrl.data.status == 'RUNNING',
+    				'label-primary': ctrl.data.status == 'DONE'}"  >{{ctrl.data.status}}</span>
+    			</h3>
+    		</li>
+			</ul>
+			</div>
+  		</div>
+		
+
+	</div>
+	<div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+		<div class="btn-group" role="group" aria-label="First group">
+			<button type="button" class=" btn btn-default" ng-click='ctrl.kill()'>
+				<span class="glyphicon glyphicon-remove" aria-hidden="true"></span> kill job</button>
+		</div>
+		<div class="btn-group" role="group" aria-label="First group">
+			<button type="button" class=" btn btn-default" ng-click='ctrl.copyJob()'>
+				<span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span> copy job</button>
+		</div>
+	</div>
+
+	<div ng-show="ctrl.errorMessage" class="alert alert-danger">{{ctrl.errorMessage}}</div>
+
 	<div class='table-responsible'>
 		<table class="table">
 			<thead>

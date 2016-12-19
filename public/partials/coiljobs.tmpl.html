@@ -1,5 +1,50 @@
-<div class="container", ng-controller="CoilJobsCtrl as ctrl" >
+<div class="container-fluid", ng-controller="CoilJobsCtrl as ctrl" >
 	<div class='table-responsible'>
+		<h3>Pending jobs</h3>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>coil id</th>
+					<th>type</th>
+					<th>user</th>
+					<th>submission date</th>
+					<th>status</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat='job in ctrl.jobs | filter:{status:"PENDING"}'>
+					<td><a href="/coiljobs/{{job.uuid}}">{{job.uuid}}</a></td>
+					<td>{{job.type}}</td>
+					<td>{{job.user}}</td>
+					<td>{{job.submissionDate}}</td>
+					<td>{{job.status}}</td>
+				</tr>
+			</tbody>
+			
+		</table>
+		<h3>Running jobs</h3>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>coil id</th>
+					<th>type</th>
+					<th>user</th>
+					<th>submission date</th>
+					<th>status</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat='job in ctrl.jobs | filter:{status:"RUNNING"}'>
+					<td><a href="/coiljobs/{{job.uuid}}">{{job.uuid}}</a></td>
+					<td>{{job.type}}</td>
+					<td>{{job.user}}</td>
+					<td>{{job.submissionDate}}</td>
+					<td>{{job.status}}</td>
+				</tr>
+			</tbody>
+
+		</table>
+		<h3>Done jobs</h3>
 		<table class="table">
 			<thead>
 				<tr>
@@ -19,6 +64,8 @@
 					<td>{{job.status}}</td>
 				</tr>
 			</tbody>
+			
 		</table>
+
 	</div>
 </div>

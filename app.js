@@ -17,7 +17,6 @@ var express = require('express'),
   http = require('http'),
   db=require("./db");
   path = require('path');
-
 var cookieParser = require('cookie-parser');
 var passport = require('passport');
 
@@ -212,19 +211,30 @@ app.get('/api/driver/:driverid/applications/:appid/:attemptid/logs',            
 app.get('/api/coiljobs', auth, api.getCoilJobs);
 app.get('/api/coiljobs/:jobid', auth, api.getCoilJob);
 
+app.delete('/api/coiljobs/:jobid/kill', auth, api.killCoilJob);
+
 
 app.get('*', routes.index);
 
 
 
+var server = http.createServer(app);
 
 
 /**
  * Start Server
  */
 
-http.createServer(app).listen(app.get('port'), function () {
+server.listen(app.get('port'), function () {
   console.log('Express server listening on port ' + app.get('port'));
   sparkApi.parseDriverPage();
   db.watchSchedulers();
+});
+
+io = require('socket.io')(server);
+
+io.on('connection', function(client){
+    console.log("connection");
+    db.subscribe(client);
+    client.emit('info', { info: 'connected to real time stream' });
 });

@@ -3,6 +3,7 @@ var querystring = require("querystring");
 var config = require("../configMgmt.js").config;
 var request = require('request');
 var rp = require('request-promise');
+var Promise = require('promise');
 var uuid = require('uuid/v4');
 var url = require('url');
 var db = require('../db.js');
@@ -51,7 +52,7 @@ exports.submitSparkjob = function(req,res) {
 				submissionCmd: JSON.stringify(req.body, null, 2)
 			}
 			db.storeJob(job);
-	    	_res.json(body);
+	    	_res.json(job);
 		} else {
 			console.log('problem with request: ' + error.message);
 	  		_res.json(error);		
@@ -62,13 +63,12 @@ exports.submitSparkjob = function(req,res) {
 
 exports.killJob = function(req, res) {
 	var driver = req.params.driverid;
-	var newUrl = 'http://'+ config.spark.url + ':' + config.spark.port + '/v1/submissions/kill/' + driver
-	request.post(newUrl).
-	on('error', function(err) {
+	killSparkjob(driver)
+	.on('error', function(err) {
     	console.log(err)
     	res.json(err);
-    }).
-	pipe(res);
+    })
+    .pipe(res);
 }
 
 exports.getDriverStatus = function(req, res) {
@@ -137,6 +137,40 @@ var getSparkJobRunData = function(job) {
 	});	
 	return promise;
 
+}
+
+var killSparkjob = function(driverid, promise=false) {	
+	var newUrl = 'http://'+ config.spark.url + ':' + config.spark.port + '/v1/submissions/kill/' + driverid;
+	var options = {
+		url:'http://'+ config.spark.url + ':' + config.spark.port + '/v1/submissions/kill/' + driverid,
+		method: "POST"
+	}
+	var ret = undefined;
+	if (promise) {
+		ret = rp(options);
+		return ret
+	}
+	ret = request(options);
+	return ret;
+}
+
+
+var killCoilSparkJob = function(job) {
+	var driverid = job.internalId;
+	var p = killSparkjob(driverid, true).
+		then(
+			function(data) {
+				var data = JSON.parse(data);
+				if (data.success === false) {
+					return Promise.reject({
+						error: "Unable to kill Spark driver id "+ driverid + " : " + data.message
+					})
+				} else {
+					return Promise.resolve(data);
+				}				
+			}
+		);
+	return p;
 }
 
 var parseSparkDispatcherRawDatas = function (datas) {
@@ -367,7 +401,8 @@ exports.parseDriverPage = function() {
 
 db.registerJobType("spark", {
 	statusCb: getSparkJobStatus,
-	runStatusCb: getSparkJobRunData
+	runStatusCb: getSparkJobRunData,
+	killCb: killCoilSparkJob
 });
 
 

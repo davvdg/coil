@@ -118,7 +118,26 @@ var deleteCookJob = function(uuid) {
     return promise;
 }
 
+var deleteCoilCookJob = function(job) {
+	var cookId = job.internalId;
+	var p = deleteCookJob(cookId).
+		then(
+			function(data) {
+				return Promise.resolve(data);
+			}
+		).catch(function(err) {
+			console.log(err);
+			// todo error:
+			// 400 Malformed This will be returned if non UUID values are passed as jobs
+			// 403 Forbidden This will be returned the supplied UUIDs don’t correspond to valid jobs.
+			return Promise.reject({
+				error: "Unable to kill Cook Job id "+ cookId + " : " + data.message
+			})
+		});
+	return p;
+}
+
 db.registerJobType("cook", {
 	statusCb:getCookJobStatus,
-	killCb:deleteCookJob
+	killCb:deleteCoilCookJob
 });

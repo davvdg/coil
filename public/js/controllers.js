@@ -15,13 +15,13 @@ angular.module('myApp.controllers', []).
       $scope.name = 'Error!';
     });
   }).
-  controller('JobCtrl', function ($scope, $http, $location) {
+  controller('JobCtrl', function ($scope, $http, $location, PersistJobsService) {
     $scope.mainClass = "";
     $scope.arguments = "";
     $scope.ressource = "";
     $scope.confs = {};
     $scope.envs = {};
-    $scope.errorMessage = "";
+    $scope.errorMessage = null;
     // write Ctrl here
     /**
       Reset the controller
@@ -33,7 +33,7 @@ angular.module('myApp.controllers', []).
       $scope.ressource = "";
       $scope.confs = {};
       $scope.envs = {};
-      $scope.errorMessage = "";      
+      $scope.errorMessage = null      
     }
 
     var prepareJson= function($scope) {
@@ -56,9 +56,11 @@ angular.module('myApp.controllers', []).
       .then(
         // on success
         function(res) {
+
           console.log(res);
-          var driverid = res.data.submissionId;
-          $location.path("/driver/" + driverid);
+          PersistJobsService.resetData("spark");
+          var driverid = res.data.uuid;
+          $location.path("/coiljobs/" + driverid);
         }, 
         // on error
         function(res) {
@@ -96,6 +98,16 @@ angular.module('myApp.controllers', []).
       }
     }
 
+    var setFromJson = function(jData) {
+      console.log(jData);
+      var self = $scope;
+      self.ressource = jData.appResource;
+      self.arguments = jData.appArgs.join(" ");
+      self.mainClass = jData.mainClass;
+      self.confs = jData.sparkProperties;
+      self.envs =jData.environmentVariables;
+    }
+
     $scope.loadJson = function() {
       var x = document.createElement("INPUT");
       x.setAttribute("type", "file");
@@ -116,18 +128,18 @@ angular.module('myApp.controllers', []).
           var jData = JSON.parse(data);
           console.log(jData);
           console.log(self);
-          self.ressource = jData.appResource;
-          self.arguments = jData.appArgs.join(" ");
-          self.mainClass = jData.mainClass;
-          self.confs = jData.sparkProperties;
-          self.envs =jData.environmentVariables;
-          self.$apply();    
+          setFromJson(jData);
           //send your binary data via $http or $resource or do anything else with it
         }
         r.readAsText(f);        
       }
-      
     }
+    
+    var pData = PersistJobsService.getData();
+    if ( pData.spark) {
+      setFromJson(pData.spark)
+    }
+    
 
   }).
   controller("ConfCtrl", function($scope) {
@@ -405,7 +417,7 @@ self.states        = this.loadAll();
       }
     }
     self.loadDriverInfos();
-  }).controller('CoilJobsCtrl', function($scope, $http, $routeParams){
+  }).controller('CoilJobsCtrl', function($scope, $http, $routeParams, socket){
     var self = this;
     self.jobs = [];
     self.page = 1;
@@ -422,13 +434,23 @@ self.states        = this.loadAll();
         }
       );
     }
+    socket.on('job:changedStatus', function (info) {
+      self.jobs.forEach(function(job) {
+        if (job.uuid === info.uuid) {
+          job.status = info.status;
+        }
+      })
+    });
+
     self.load(); 
-  }).controller('CoilJobCtrl', function($scope, $http, $routeParams){
+  }).controller('CoilJobCtrl', function($scope, $http, $routeParams, socket, $location, PersistJobsService){
     var self = this;
     self.uuid = $routeParams.jobid;
 
     self.data = {};
     self.runs = [];
+    self.errorMessage = null;
+
     self.load = function() {
       $http.get('/api/coiljobs/' + self.uuid)
       .then(
@@ -442,6 +464,46 @@ self.states        = this.loadAll();
         }
       );
     }
+    self.kill = function() {
+      $http.delete('/api/coiljobs/' + self.uuid + '/kill')
+      .then(
+        function(res) {
+          console.log(res.data);
+        }
+      ).catch(
+      function(err) {
+        console.log(err);
+        self.errorMessage = err.data.error;
+      });
+      
+    }
+
+    socket.on('job:changedStatus', function (info) {
+      if (info.uuid === self.data.uuid) {
+        self.data.status = info.status;
+      }
+    });
+
+    self.copyJob = function() {
+      var jobTypeRoutes = {
+        spark: "/createjob/spark",
+        cook: "/createjob/cook"
+      }
+      var jobType = self.data.type;
+      var route = jobTypeRoutes[jobType];
+      if (route) {
+        if (self.data.submissionCmd) {
+          PersistJobsService.setData("spark", JSON.parse(self.data.submissionCmd));
+          $location.path(route);  
+        } else {
+          self.errorMessage = "Error: no submission command recorded for this job (maybe too old ?)";
+        }        
+      } else {
+        self.errorMessage = "Error: job type unknown. Cannot route to submit page";
+      }
+    }
+
+
     self.load();
   });
 /*
