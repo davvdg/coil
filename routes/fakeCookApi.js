@@ -144,4 +144,4 @@ exports.postRetryCookJob = function(res, res) {
 	res.json({});
 }
 
-db.registerJobType("cook", {statusCb:getJobStatus})
+//db.registerJobType("cook", {statusCb:getJobStatus})
