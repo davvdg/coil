@@ -107,14 +107,11 @@ var getCookJobStatus = function(uuid) {
 	var promise = rp(options)
 	.then(function(data) {
 		return cookToCoilStatusMap[data.status];
-	})
-	.catch(function(err) {
-		console.log(err);
 	});
     return promise;
 }
 
-var deleteCookJob = function(uuid) {
+var killCookJob = function(uuid) {
 	var options = {
 	  uri: 'http://'+ config.cook.url + ':' + config.cook.port + '/rawscheduler?job=' + uuid,
 	  method: 'DELETE'
@@ -123,9 +120,9 @@ var deleteCookJob = function(uuid) {
     return promise;
 }
 
-var deleteCoilCookJob = function(job) {
+var killCoilCookJob = function(job) {
 	var cookId = job.internalId;
-	var p = deleteCookJob(cookId).
+	var p = killCookJob(cookId).
 		then(
 			function(data) {
 				return Promise.resolve(data);
@@ -144,5 +141,5 @@ var deleteCoilCookJob = function(job) {
 
 db.registerJobType("cook", {
 	statusCb:getCoilCookJobStatus,
-	killCb:deleteCoilCookJob
+	killCb:killCoilCookJob
 });

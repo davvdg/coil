@@ -87,5 +87,10 @@ angular.module('myApp.directives', ['myApp.controllers', 'myApp.controllers.cook
       controller:"ItemListCtrl",
       controllerAs:'ctrl',
       templateUrl: 'partials/itemlist.tmpl.html',
+    }    
+  }).
+    directive('jobStatus', function() {
+    return {
     }
+    
   });

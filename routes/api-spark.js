@@ -104,9 +104,6 @@ var getSparkJobStatus = function(job) {
 		var d = JSON.parse(data);
 		console.log(d.driverState);
 		return sparkToCoiljobStatusMap[d.driverState];
-	})
-	.catch(function(err) {
-		console.log(err.message);
 	});	
 	return promise;
 }

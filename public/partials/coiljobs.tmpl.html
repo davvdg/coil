@@ -17,7 +17,13 @@
 					<td>{{job.type}}</td>
 					<td>{{job.user}}</td>
 					<td>{{job.submissionDate}}</td>
-					<td>{{job.status}}</td>
+					<td>
+						<span class="nav-item label" ng-class="{
+    				'label-warning': job.status == 'PENDING',
+    				'label-success': job.status == 'RUNNING',
+    				'label-primary': job.status == 'DONE'}"  >{{job.status}}
+    					</span>
+    				</td>
 				</tr>
 			</tbody>
 			
@@ -39,7 +45,13 @@
 					<td>{{job.type}}</td>
 					<td>{{job.user}}</td>
 					<td>{{job.submissionDate}}</td>
-					<td>{{job.status}}</td>
+					<td>
+						<span class="nav-item label" ng-class="{
+    				'label-warning': job.status == 'PENDING',
+    				'label-success': job.status == 'RUNNING',
+    				'label-primary': job.status == 'DONE'}"  >{{job.status}}
+    					</span>
+    				</td>
 				</tr>
 			</tbody>
 
@@ -61,7 +73,13 @@
 					<td>{{job.type}}</td>
 					<td>{{job.user}}</td>
 					<td>{{job.submissionDate}}</td>
-					<td>{{job.status}}</td>
+					<td>
+						<span class="nav-item label" ng-class="{
+    				'label-warning': job.status == 'PENDING',
+    				'label-success': job.status == 'RUNNING',
+    				'label-primary': job.status == 'DONE'}"  >{{job.status}}
+    					</span>
+    				</td>
 				</tr>
 			</tbody>
 			

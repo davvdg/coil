@@ -10,9 +10,7 @@ if (config.database.method === "mongo") {
 var coilJobTypes = {};
 
 exports.storeJob = function(job) {
-	console.log(job);
 	var Job = db.storeJob(job);
-	console.log(Job);
 }
 
 exports.getJobsByUser = function(username) {

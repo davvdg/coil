@@ -33,7 +33,6 @@ angular.module('myApp')
 		return $http.get('/user/status')
 		// handle success
 		.then(function (res) {
-			console.log(res);
 			if(res.data.status){
 				user = true;
 				userinfo = res.config.data.username;

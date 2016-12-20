@@ -426,7 +426,6 @@ self.states        = this.loadAll();
       $http.get('/api/coiljobs')
       .then(
         function(res) {
-          console.log(res.data);
           self.jobs = res.data;
         },
         function(err) {
@@ -479,7 +478,9 @@ self.states        = this.loadAll();
     }
 
     socket.on('job:changedStatus', function (info) {
-      if (info.uuid === self.data.uuid) {
+      var msgJobUuid = info.uuid;
+      var ctrlJobUuid = self.data.uuid
+      if (msgJobUuid === ctrlJobUuid) {
         self.data.status = info.status;
       }
     });
