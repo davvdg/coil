@@ -88,6 +88,11 @@ exports.postCookJobs = function(req,res) {
 };
 
 
+var getCoilCookJobStatus = function(job) {
+	var uuid = job.internalId;
+	return getCookJobStatus(uuid);
+}
+
 var getCookJobStatus = function(uuid) {
 	var cookToCoilStatusMap = {
 		waiting: "PENDING",
@@ -138,6 +143,6 @@ var deleteCoilCookJob = function(job) {
 }
 
 db.registerJobType("cook", {
-	statusCb:getCookJobStatus,
+	statusCb:getCoilCookJobStatus,
 	killCb:deleteCoilCookJob
 });
