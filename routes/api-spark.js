@@ -102,7 +102,6 @@ var getSparkJobStatus = function(job) {
 	var promise = rp(options)
 	.then(function(data) {
 		var d = JSON.parse(data);
-		console.log(d.driverState);
 		return sparkToCoiljobStatusMap[d.driverState];
 	});	
 	return promise;

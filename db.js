@@ -93,6 +93,7 @@ exports.watchSchedulers = function() {
 			}
 		).catch(
 			function(err) {
+				console.log("error retrieving uncompleted jobs");
 				console.log(err);
 			}
 		)
