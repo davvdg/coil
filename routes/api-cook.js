@@ -6,6 +6,7 @@ var rp = require('request-promise');
 var uuid = require('uuid/v4');
 var url = require('url');
 var db = require('../db.js');
+var Promise = require('promise');
 
 exports.postCookJobs = function(req,res) {
 	var user = req.session.passport.user.username;
@@ -107,6 +108,9 @@ var getCookJobStatus = function(uuid) {
 	var promise = rp(options)
 	.then(function(data) {
 		return cookToCoilStatusMap[data.status];
+	}).catch(function(err) {
+		// for some reason, we were unabled to get the job status.
+		return Promise.resolve("LOST");
 	});
     return promise;
 }
