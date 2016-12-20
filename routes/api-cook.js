@@ -108,7 +108,10 @@ var getCookJobStatus = function(uuid) {
 	var promise = rp(options)
 	.then(function(data) {
 		var d = JSON.parse(data);
-		return cookToCoilStatusMap[d.status];
+		if (d.length !== 1) {
+			return Promise.reject({error: "only one cook job should be returned. got 0 or many"});
+		}
+		return cookToCoilStatusMap[d[0].status];
 	}).catch(function(err) {
 		// for some reason, we were unabled to get the job status.
 		return Promise.resolve("LOST");
