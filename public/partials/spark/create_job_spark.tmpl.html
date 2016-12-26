@@ -1,0 +1,40 @@
+<div class="container-fluid">
+	<h1>Create and Submit Spark Job</h1>
+	<div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+		<div class="btn-group" role="group" aria-label="First group">
+			<button type="button" class=" btn btn-default " ng-click='ctrl.downloadJson()'>
+				<span class="glyphicon glyphicon-save" aria-hidden="true"></span> save as json</button>
+			<button type="button" class=" btn btn-default" ng-click='ctrl.loadJson()'>
+				<span class="glyphicon glyphicon-open" aria-hidden="true"></span> load from json</button>
+		</div>
+		<div class="btn-group" role="group" aria-label="First group">
+			<button type="button" class=" btn btn-default" ng-click='ctrl.clearAll()'>
+				<span class="glyphicon glyphicon-remove" aria-hidden="true"></span> clear all</button>
+		</div>
+	</div>
+	<h3>Main options</h3>
+	<div ng-show="errorMessage" class="alert alert-danger">{{errorMessage}}</div>
+	<div>
+	<form>
+		<div id="mainclass" class='form-group'>
+			<label>Main Class</label>
+			<input type="text" name="mainClass" ng-model='ctrl.mainClass' class="form-control" placeholder="main class to use for java or scala jobs">
+		</div>
+
+		<div id="arguments" class='form-group'>
+			<label>Arguments</label>
+			<input type="text" name="arguments" ng-model='ctrl.arguments', class="form-control" placeholder="space separated arguments">
+		</div>
+
+		<div id="ressource" class='form-group'>
+			<label>Ressources</label>
+			<input type="text" name="ressource" ng-model='ctrl.ressource', class="form-control" placeholder="path (hdfs or http) to the jar or py file">
+		</div>
+	</form>
+	</div>
+	<h3>Spark Conf</h3>
+	<kvtable data-confs="ctrl.confs"/>
+	<h3>Spark Env</h3>
+	<kvtable data-confs="ctrl.envs"/>
+	<button class="btn btn-primary btn-lg btn-block" ng-click='ctrl.submitJob()'>submit</button>
+</div>

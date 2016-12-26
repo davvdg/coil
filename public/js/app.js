@@ -8,6 +8,7 @@ angular.module('myApp', [
   'myApp.controllers',
   'myApp.sparkcontrollers',
   'myApp.controllers.cook',
+  'myApp.controllers.spark',
   'myApp.filters',
   'myApp.services',
   'myApp.directives',
@@ -26,8 +27,9 @@ config(function ($routeProvider, $locationProvider) {
       controller: 'LogoutCtrl'
     }).
     when('/createjob/spark', {
-      templateUrl: 'partials/createjob.html',
-      controller: 'JobCtrl'
+      templateUrl: 'partials/spark/create_job_spark.tmpl.html',
+      controller: 'SparkSubmitJobCtrl',
+      controllerAs: 'ctrl'
     }).
     when('/createjob/cook', {
       templateUrl: 'partials/create_job_cook.tmpl.html',

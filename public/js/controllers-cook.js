@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('myApp.controllers.cook', [])
-.controller("CookSubmitJobCtrl", function($scope, $http, $routeParams, $location) {
+.controller("CookSubmitJobCtrl", function($scope, $http, $routeParams, $location, PersistJobsService) {
     var self = this;
     self.name ="";
     self.command ="";
@@ -67,6 +67,7 @@ angular.module('myApp.controllers.cook', [])
           self.submitError = false;
           self.errorMessage = "";
           //var driverid = res.data.submissionId;
+          PersistJobsService.resetData("cook");
           $location.path("/coiljobs");
 
         }, 
@@ -108,6 +109,25 @@ angular.module('myApp.controllers.cook', [])
       }    	
     }
 
+    var setFromJson = function(jDataAll) {
+      var jData = jDataAll.jobs[0];
+      self.name = jData.name;
+      self.command = jData.command;
+      self.priority= jData.priority;
+      self.max_retries= jData.max_retries;
+      self.max_runtime= jData.max_runtime;
+      self.cpus= jData.cpus;
+      self.mem= jData.mem;
+      self.gpus= jData.gpus;
+      self.ports= jData.ports;
+      self.uris= jData.uris;
+      self.envs= jData.envs;
+
+      if (jData.container) {
+        self.container = jData.container;
+        self.useDocker = true;
+      }      
+    }
     self.loadJson = function() {
 		var x = document.createElement("INPUT");
 		x.setAttribute("type", "file");
@@ -121,26 +141,10 @@ angular.module('myApp.controllers.cook', [])
 		    r.onloadend = function(e) {
 				var data = e.target.result;
 
-				var jData = JSON.parse(data).jobs[0];
+				var jData = JSON.parse(data);
 				console.log(jData);
-				console.log(self);
-				self.name = jData.name;
-				self.command = jData.command;
-				self.priority= jData.priority;
-				self.max_retries= jData.max_retries;
-				self.max_runtime= jData.max_runtime;
-				self.cpus= jData.cpus;
-				self.mem= jData.mem;
-				self.gpus= jData.gpus;
-				self.ports= jData.ports;
-				self.uris= jData.uris;
-				self.envs= jData.envs;
-
-        if (jData.container) {
-          self.container = jData.container;
-          self.useDocker = true;
-        }
-
+        PersistJobsService.setData('cook', jData);
+        setFromJson(jData);
 				$scope.$apply();    
 		      //send your binary data via $http or $resource or do anything else with it
 		    }
@@ -163,8 +167,21 @@ angular.module('myApp.controllers.cook', [])
 	    self.envs = {};
       self.useDocker = false;
       self.container = {};
+      PersistJobsService.resetData("cook");
     }
 
+    $scope.$on('$locationChangeStart', function(event, next, current) {
+      var jData = prepareJson();
+      console.log(jData);
+      PersistJobsService.setData('cook', jData);
+    });
+
+
+    var pData = PersistJobsService.getData();
+    console.log(pData);
+    if ( pData.cook) {
+      setFromJson(pData.cook);
+    }
   }).controller("MesosUrisCtrl", function($scope, $http, $routeParams) {
   	var self = this;
   	self.rows = [];

@@ -1,7 +1,7 @@
   'use strict';
 
 angular.module('myApp.controllers.spark', [])
-  controller('SparkSubmitJobCtrl', function ($scope, $http, $location, PersistJobsService) {
+  .controller('SparkSubmitJobCtrl', function ($scope, $http, $location, PersistJobsService) {
     var self = this;
     self.mainClass = "";
     self.arguments = "";
@@ -20,7 +20,8 @@ angular.module('myApp.controllers.spark', [])
       self.ressource = "";
       self.confs = {};
       self.envs = {};
-      self.errorMessage = null      
+      self.errorMessage = null
+      PersistJobsService.resetData("spark");
     }
 
     var prepareJson= function() {
@@ -84,12 +85,12 @@ angular.module('myApp.controllers.spark', [])
     }
 
     var setFromJson = function(jData) {
-      console.log(jData);
       self.ressource = jData.appResource;
       self.arguments = jData.appArgs.join(" ");
       self.mainClass = jData.mainClass;
       self.confs = jData.sparkProperties;
       self.envs =jData.environmentVariables;
+      //$scope.$apply();
     }
 
     self.loadJson = function() {
@@ -103,26 +104,29 @@ angular.module('myApp.controllers.spark', [])
         var f = x.files[0];
       //var f = document.getElementById('file').files[0];
         console.log(f);
-        var self = $scope;
         console.log(self);
         var r = new FileReader();
         r.onloadend = function(e){
           var data = e.target.result;
           
           var jData = JSON.parse(data);
-          console.log(jData);
-          console.log(self);
+          PersistJobsService.setData('spark', jData);
           setFromJson(jData);
+          $scope.$apply();    
           //send your binary data via $http or $resource or do anything else with it
         }
         r.readAsText(f);        
       }
     }
+
+    $scope.$on('$locationChangeStart', function(event, next, current) {
+      var jData = prepareJson();
+      PersistJobsService.setData('spark', jData);
+    });
     
     var pData = PersistJobsService.getData();
+    console.log(pData);
     if ( pData.spark) {
       setFromJson(pData.spark)
     }
-    
-
   });
