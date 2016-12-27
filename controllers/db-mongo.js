@@ -33,7 +33,7 @@ var RunSchema = new Schema({
 	status: String,
 	startDate: Date,
 	endDate: Date
-})
+});
 
 
 JobSchema.statics.getJobsByUser = function(user, cb) {

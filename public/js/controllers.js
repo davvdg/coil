@@ -367,7 +367,7 @@ self.states        = this.loadAll();
       var route = jobTypeRoutes[jobType];
       if (route) {
         if (self.data.submissionCmd) {
-          PersistJobsService.setData("spark", JSON.parse(self.data.submissionCmd));
+          PersistJobsService.setData(jobType, JSON.parse(self.data.submissionCmd));
           $location.path(route);  
         } else {
           self.errorMessage = "Error: no submission command recorded for this job (maybe too old ?)";
