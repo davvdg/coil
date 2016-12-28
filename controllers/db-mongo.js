@@ -105,7 +105,7 @@ exports.getJobRunsByJobUuid = function(uuid) {
 	var p = JobModel.getJobByUuid(uuid);
 	p.then(
 		function(data) {
-			return Promise.resolve(data.runs);
+			return promise.resolve(data.runs);
 		});
 	return p;
 }

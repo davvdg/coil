@@ -1,6 +1,6 @@
 var config = require("./configMgmt.js").config;
 var db = require('./controllers/db-local.js');
-var Promise = require('Promise');
+var Promise = require('promise');
 
 if (config.database.method === "mongo") {
 	db = require("./controllers/db-mongo.js");
