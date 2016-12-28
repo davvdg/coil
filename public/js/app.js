@@ -9,6 +9,7 @@ angular.module('myApp', [
   'myApp.sparkcontrollers',
   'myApp.controllers.cook',
   'myApp.controllers.spark',
+  'myApp.controllers.coil',
   'myApp.filters',
   'myApp.services',
   'myApp.directives',
@@ -57,7 +58,12 @@ config(function ($routeProvider, $locationProvider) {
     }).
     when('/coiljobs/:jobid', {
       templateUrl: 'partials/coiljob.tmpl.html'
-    }).        
+    }).
+    when('/coiljobs/:jobid/runs/:runid/files', {
+      templateUrl: 'partials/coiljob_run_browse.tmpl.html',
+      controller: 'CoilRunLogBrowserCtrl',
+      controllerAs: 'ctrl'
+    }).            
     otherwise({
       redirectTo: '/'
     });

@@ -12,6 +12,8 @@ var uuid = require('uuid/v4');
 var url = require('url');
 var db = require('../db.js');
 
+//var browsejson = require("../samplejson/browsepp.json");
+
 
 exports.getCoilJobs = function(req, res) {
 	db.getJobs()
@@ -40,6 +42,18 @@ exports.getCoilJob = function(req, res) {
 	});
 }
 
+exports.getCoilJobRuns = function(req, req) {
+	var uuid = req.params.jobid;
+	db.getJobRunsByJobUuid(uuid).then(
+		function(data) {
+			res.json(data);
+		}
+	.catch(
+		function(err) {
+			res.json([]);
+		})
+	);
+}
 exports.killCoilJob = function(req, res) {
 	var uuid = req.params.jobid;
 	db.killCoilJobByUuid(uuid).then( 
@@ -49,4 +63,36 @@ exports.killCoilJob = function(req, res) {
 		console.log("error killing Coil job :" + uuid);
 		res.status(424).json(err);
 	});	
+}
+
+exports.browseCoilJobRun = function(req, res) {
+	var jobuuid = req.params.jobid;
+	var runid = req.params.runid;
+	db.getJobRunsByJobUuid(jobuuid)
+	.then(
+		function(runs) {
+			console.log(runs);
+			var run = runs.find(function(elem) {
+				return elem.task_id === runid;
+			});
+			if (run) {
+				var outputUrl = run.outputUrl;
+				var options = {
+					url:'http://'+ config.mesos.master.url + ':' + config.mesos.master.port + '/files/browse?path=' + outputUrl,
+				}
+				//var json = browsejson;
+				ret = request(options);
+				ret.pipe(res);
+				res.json(json);
+			} else {
+				res.json({});
+			}
+		})
+	.catch(
+		function(err) {
+			console.log(err);
+			res.json({});
+		});
+	
+
 }

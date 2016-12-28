@@ -28,21 +28,37 @@ exports.getJobs = function() {
 	}); 
 }
 
-exports.getJobByUuid = function(uuid) {
+var getJobByUuid = function(uuid) {
+	console.log(uuid);
 	return new Promise(function(resolve, reject) {
-		var f = coilJobs.filter(
+		var f = coilJobs.find(
 			function(elem) {
 				return elem.uuid === uuid;
 			}
 		);
-		resolve(f);
+		if (f) {
+			resolve(f);
+		} else {
+			reject();
+		}
 	});
+}
+
+exports.getJobByUuid = getJobByUuid;
+
+exports.getJobRunsByJobUuid = function(uuid) {
+	var p = getJobByUuid(uuid);
+	p.then(
+		function(data) {
+			return Promise.resolve(data.runs);
+		});
+	return p;
 }
 
 exports.setJobStatus = function(Job, status) {
 	return new Promise(function(resolve, reject) {
 
-		var lJob = coilJobs.findOne(function(elem) {
+		var lJob = coilJobs.find(function(elem) {
 			return elem.uuid === Job.uuid;
 		});
 		lJob.status = status;
@@ -65,4 +81,11 @@ exports.getUncompletedJobs = function() {
 	return new Promise(function(resolve, reject) {
 		resolve(f);
 	});
+}
+
+exports.setRuns = function(Job, runs) {
+	Job["runs"] = runs;
+	return new Promise(function(resolve, reject) {
+		resolve(Job);
+	});	
 }

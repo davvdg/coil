@@ -1,0 +1,92 @@
+[
+   {
+      "path" : "/var/lib/mesos/slave/slaves/e9456879-2194-49fe-b79f-cf94c4d8f439-S50/frameworks/899ee57a-3c9e-425e-b4ff-f42393b08721-0003/executors/0/runs/614b2124-4535-45b3-8171-5ead4898203c/database_things2do_angle.csv",
+      "size" : 38694900,
+      "mode" : "-rw-r--r--",
+      "uid" : "root",
+      "gid" : "root",
+      "mtime" : 1482343474,
+      "nlink" : 1
+   },
+   {
+      "nlink" : 1,
+      "mtime" : 1482343477,
+      "gid" : "root",
+      "uid" : "root",
+      "path" : "/var/lib/mesos/slave/slaves/e9456879-2194-49fe-b79f-cf94c4d8f439-S50/frameworks/899ee57a-3c9e-425e-b4ff-f42393b08721-0003/executors/0/runs/614b2124-4535-45b3-8171-5ead4898203c/database_things2do_angle_query_10k.csv",
+      "size" : 1249417,
+      "mode" : "-rw-r--r--"
+   },
+   {
+      "mtime" : 1482847158,
+      "nlink" : 1,
+      "uid" : "root",
+      "gid" : "root",
+      "size" : 1557687,
+      "path" : "/var/lib/mesos/slave/slaves/e9456879-2194-49fe-b79f-cf94c4d8f439-S50/frameworks/899ee57a-3c9e-425e-b4ff-f42393b08721-0003/executors/0/runs/614b2124-4535-45b3-8171-5ead4898203c/stderr",
+      "mode" : "-rw-r--r--"
+   },
+   {
+      "mtime" : 1482736918,
+      "nlink" : 1,
+      "uid" : "root",
+      "gid" : "root",
+      "size" : 2097068,
+      "mode" : "-rw-r--r--",
+      "path" : "/var/lib/mesos/slave/slaves/e9456879-2194-49fe-b79f-cf94c4d8f439-S50/frameworks/899ee57a-3c9e-425e-b4ff-f42393b08721-0003/executors/0/runs/614b2124-4535-45b3-8171-5ead4898203c/stderr.1"
+   },
+   {
+      "path" : "/var/lib/mesos/slave/slaves/e9456879-2194-49fe-b79f-cf94c4d8f439-S50/frameworks/899ee57a-3c9e-425e-b4ff-f42393b08721-0003/executors/0/runs/614b2124-4535-45b3-8171-5ead4898203c/stderr.2",
+      "size" : 2097097,
+      "mode" : "-rw-r--r--",
+      "uid" : "root",
+      "gid" : "root",
+      "mtime" : 1482618180,
+      "nlink" : 1
+   },
+   {
+      "mode" : "-rw-r--r--",
+      "size" : 2100333,
+      "path" : "/var/lib/mesos/slave/slaves/e9456879-2194-49fe-b79f-cf94c4d8f439-S50/frameworks/899ee57a-3c9e-425e-b4ff-f42393b08721-0003/executors/0/runs/614b2124-4535-45b3-8171-5ead4898203c/stderr.3",
+      "uid" : "root",
+      "gid" : "root",
+      "mtime" : 1482475444,
+      "nlink" : 1
+   },
+   {
+      "mode" : "-rw-r--r--",
+      "size" : 210,
+      "path" : "/var/lib/mesos/slave/slaves/e9456879-2194-49fe-b79f-cf94c4d8f439-S50/frameworks/899ee57a-3c9e-425e-b4ff-f42393b08721-0003/executors/0/runs/614b2124-4535-45b3-8171-5ead4898203c/stderr.logrotate.conf",
+      "uid" : "root",
+      "gid" : "root",
+      "mtime" : 1482343478,
+      "nlink" : 1
+   },
+   {
+      "uid" : "root",
+      "gid" : "root",
+      "mtime" : 1482736943,
+      "nlink" : 1,
+      "size" : 233,
+      "path" : "/var/lib/mesos/slave/slaves/e9456879-2194-49fe-b79f-cf94c4d8f439-S50/frameworks/899ee57a-3c9e-425e-b4ff-f42393b08721-0003/executors/0/runs/614b2124-4535-45b3-8171-5ead4898203c/stderr.logrotate.state",
+      "mode" : "-rw-r--r--"
+   },
+   {
+      "size" : 1314,
+      "mode" : "-rw-r--r--",
+      "path" : "/var/lib/mesos/slave/slaves/e9456879-2194-49fe-b79f-cf94c4d8f439-S50/frameworks/899ee57a-3c9e-425e-b4ff-f42393b08721-0003/executors/0/runs/614b2124-4535-45b3-8171-5ead4898203c/stdout",
+      "mtime" : 1482343478,
+      "nlink" : 1,
+      "uid" : "root",
+      "gid" : "root"
+   },
+   {
+      "size" : 210,
+      "mode" : "-rw-r--r--",
+      "path" : "/var/lib/mesos/slave/slaves/e9456879-2194-49fe-b79f-cf94c4d8f439-S50/frameworks/899ee57a-3c9e-425e-b4ff-f42393b08721-0003/executors/0/runs/614b2124-4535-45b3-8171-5ead4898203c/stdout.logrotate.conf",
+      "uid" : "root",
+      "gid" : "root",
+      "mtime" : 1482343478,
+      "nlink" : 1
+   }
+]

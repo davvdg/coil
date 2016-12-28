@@ -8,6 +8,8 @@ var uuid = require('uuid/v4');
 var url = require('url');
 var db = require('../db.js');
 
+var frameworkId = null;
+
 exports.submitSparkjob = function(req,res) {
 	var user = req.session.passport.user.username;
 
@@ -49,7 +51,8 @@ exports.submitSparkjob = function(req,res) {
 				user: user,
 				type: "spark",
 				internalId: body.submissionId,
-				submissionCmd: JSON.stringify(req.body, null, 2)
+				submissionCmd: JSON.stringify(req.body, null, 2),
+				runs : []
 			}
 			db.storeJob(job);
 	    	_res.json(job);
@@ -124,8 +127,15 @@ var getSparkJobRunData = function(job) {
 	.then(function(data) {
 		var d = JSON.parse(data);
 		var parsedData = parseSparkDispatcherRawDatas(data);
-		console.log(JSON.stringify(parsedData, null, 2));
-		var runMsg = {host: parsedData.container_status.network_infos.ip_addresses.ip_address};
+		var mesosStatusMappedToCoil = mesosToRunStatusMap[parsedData.state];
+		//console.log(JSON.stringify(parsedData, null, 2));
+		var path = computePathUrl(parsedData.slave_id.value, driverid);
+		var runMsg = [{ 
+			host: parsedData.container_status.network_infos.ip_addresses.ip_address,
+			task_id: driverid,
+			status: mesosStatusMappedToCoil,
+			outputUrl: path
+		}];
 		return runMsg;
 	})
 	.catch(function(err) {
@@ -133,6 +143,12 @@ var getSparkJobRunData = function(job) {
 	});	
 	return promise;
 
+}
+
+var computePathUrl = function(slaveId, driverId) {
+	var path = "/var/lib/mesos/slave/slaves/" + slaveId + "/frameworks/" + frameworkId + "/executors/" + driverId + "/runs/latest";
+	//var epath =querystring.escape(path);
+	return path;
 }
 
 var killSparkjob = function(driverid, promise=false) {	
@@ -256,6 +272,9 @@ var getDriverIpPort = function(driver) {
     return promise;
 }
 
+
+
+
 var getDriverIpPortFromJob = function(driverjob) {
 	var driver = jobCache[driverjob].driver;
 	var options = {
@@ -353,6 +372,16 @@ exports.parseDriverPage = function() {
 	var promise = rp(options)
     .then(function(data) {
     	var $ = cheerio.load(data);
+    	// capture the framework id
+    	var pSS = $('p');
+    	var pSStext = pSS.map(function(idx, elem) {
+    		return $(elem).text();
+    	}).get();
+    	var mframework = data.match(/Mesos\sFramework\sID\:\s([a-f0-9\-]*)/);
+
+    	frameworkId = mframework[1];
+
+    	// detect all a href. they link to driver infos
     	var aSS = $('a');
     	var aSStext = aSS.map(function(idx, elem) {
     		return $(elem).text();
@@ -375,7 +404,8 @@ exports.parseDriverPage = function() {
 							internalId: elem,
 							submissionDate: Date.now(),
 							user: "unknow",
-							type: "spark"
+							type: "spark",
+							runs: []
 						}
 						db.storeJob(job);						
     				} else {
@@ -397,7 +427,7 @@ exports.parseDriverPage = function() {
 
 db.registerJobType("spark", {
 	statusCb: getSparkJobStatus,
-	runStatusCb: getSparkJobRunData,
+	runsCb: getSparkJobRunData,
 	killCb: killCoilSparkJob
 });
 

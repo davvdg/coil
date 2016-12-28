@@ -39,17 +39,23 @@
 			<thead>
 				<tr>
 					<th>#</th>
-					<th>Run Status</th>
+					<th>Id</th>
+					<th>Host</th>
 					<th>Start Date</th>
 					<th>End Date</th>
+					<th>Run Logs</th>
+					<th>Run Status</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr ng-repeat='(idx, run) in ctrl.runs'>
 					<td>{{idx}}</td>
-					<td>{{run.status}}</td>
+					<td>{{run.task_id}}</td>
+					<td>{{run.host}}</td>
 					<td>{{run.startDate}}</td>
 					<td>{{run.endDate}}</td>
+					<td><a href="/coiljobs/{{ctrl.data.uuid}}/runs/{{run.task_id}}/files">logs</a></td>
+					<td>{{run.status}}</td>
 				</tr>
 			</tbody>
 		</table>

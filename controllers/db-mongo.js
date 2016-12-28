@@ -29,10 +29,12 @@ var JobSchema = new Schema({
 });
 
 var RunSchema = new Schema({
+	task_id: String,
 	host: String,
 	status: String,
 	startDate: Date,
-	endDate: Date
+	endDate: Date,
+	outputUrl: String
 });
 
 
@@ -93,3 +95,17 @@ exports.getJobByInternalIds = JobModel.getJobByInternalIds.bind(JobModel);
 exports.getJobByUuid = JobModel.getJobByUuid.bind(JobModel);
 
 exports.getUncompletedJobs = JobModel.getUncompletedJobs.bind(JobModel);
+
+exports.setRuns = function(Job, runs) {
+	Job["runs"] = runs;
+	return Job.save();
+}
+
+exports.getJobRunsByJobUuid = function(uuid) {
+	var p = JobModel.getJobByUuid(uuid);
+	p.then(
+		function(data) {
+			return Promise.resolve(data.runs);
+		});
+	return p;
+}

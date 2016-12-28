@@ -119,6 +119,22 @@ var getCookJobStatus = function(uuid) {
     return promise;
 }
 
+var getCoilCookRuns = function(job) {
+	var uuid = job.internalId;
+	var options = {
+	  uri: 'http://'+ config.cook.url + ':' + config.cook.port + '/rawscheduler?job=' + uuid,
+	};
+	var promise = rp(options)
+	.then(function(data) {
+		var d = JSON.parse(data);
+		if (d.length !== 1) {
+			return Promise.reject({error: "only one cook job should be returned. got 0 or many"});
+		}
+		return Promise.resolve(data.instances);
+	})
+	return promise;		
+}
+
 var killCookJob = function(uuid) {
 	var options = {
 	  uri: 'http://'+ config.cook.url + ':' + config.cook.port + '/rawscheduler?job=' + uuid,
@@ -149,5 +165,6 @@ var killCoilCookJob = function(job) {
 
 db.registerJobType("cook", {
 	statusCb:getCoilCookJobStatus,
-	killCb:killCoilCookJob
+	killCb:killCoilCookJob,
+	runsCb:getCoilCookRuns
 });

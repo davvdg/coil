@@ -1,0 +1,34 @@
+
+<div class="container-fluid" >
+	<div class='table-responsible'>
+		<h2>Job <a href="/coiljobs/{{ctrl.jobid}}">{{ctrl.jobid}}</a></h2>
+		<h3>Files for run {{ctrl.runid}}</h3>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>nlink</th>
+					<th>mtime</th>
+					<th>gid</th>
+					<th>uid</th>
+					<th>path</th>
+					<th>size</th>
+					<th>mode</th>
+					
+
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat='item in ctrl.items'>
+					<td>{{item.nlink}}</td>
+					<td>{{item.mtime}}</td>
+					<td>{{item.gid}}</td>
+					<td>{{item.uid}}</td>
+					<td>{{item.path}}</td>
+					<td>{{item.size}}</td>
+					<td>{{item.mode}}</td>
+				</tr>
+			</tbody>
+			
+		</table>
+	</div>
+</div>

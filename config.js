@@ -24,6 +24,15 @@ var config = {
 			port: 27017,
 			dbname: "coil"
 		}
+	},
+	mesos: {
+		master: {
+			url: "leader.mesos",
+			port: "5050"
+		},
+		slaves: {
+			port: "5051"
+		}
 	}
 };
 

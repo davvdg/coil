@@ -1,5 +1,6 @@
 var config = require("./configMgmt.js").config;
 var db = require('./controllers/db-local.js');
+var Promise = require('Promise');
 
 if (config.database.method === "mongo") {
 	db = require("./controllers/db-mongo.js");
@@ -25,6 +26,14 @@ exports.getJobByUuid = function(uuid) {
 	return db.getJobByUuid(uuid);
 }
 
+exports.getJobRunsByJobUuid = function(uuid) {
+	return db.getJobByUuid(uuid).then(
+		function(job) {
+			console.log(job);
+			return Promise.resolve(job.runs);
+		}
+	);	
+}
 exports.setJobStatus = function(job, status) {
 	return db.setJobStatus(job, status);
 }
@@ -49,6 +58,7 @@ var syncJobStatusFromFrameworkToDb = function(job) {
 	p.then(
 		// success retrieving status. sync it.
 		function(data) {
+
 			return db.setJobStatus(job, data)
 		},
 		// failure retrieving status,
@@ -58,6 +68,24 @@ var syncJobStatusFromFrameworkToDb = function(job) {
 	);
 	return p;
 }
+
+
+var getRunsFromFramework = function(job) {
+	var jobType = job.type;
+	var runsCb = coilJobTypes[jobType].runsCb
+	var p = runsCb(job)
+	return p;	
+}
+
+var syncRunsStatusFromFrameworkToDb = function(job) {
+	var p = getRunsFromFramework(job);
+	p.then(
+		function(data) {
+			db.setRuns(job, data);
+		});
+	return p;
+}
+
 
 exports.getJobByInternalIds = function(id) {
 	return db.getJobByInternalIds(id);
@@ -88,6 +116,15 @@ exports.watchSchedulers = function() {
 								});
 							})
 						});
+						syncRunsStatusFromFrameworkToDb(job)
+						.then(function(data) {
+							clients.forEach(function(client) {
+								client.emit('job:changedRunsStatus', {
+									uuid: job.uuid,
+									runs: job.runs
+								})
+							})
+						})
 					}
 				);
 			}
