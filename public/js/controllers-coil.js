@@ -15,8 +15,10 @@ function CoilRunLogBrowserCtrl($routeParams, coilDataService) {
 
 	load();
 
+	//////////////
+
     function load() {
-      getJobRunFiles(vm.jobid, vm.runid)
+      coilDataService.getJobRunFiles(vm.jobid, vm.runid)
       .then(
         function(res) {
           vm.items = res.data;
@@ -31,8 +33,6 @@ function CoilRunLogBrowserCtrl($routeParams, coilDataService) {
 CoilJobsCtrl.$inject = ["socket", "coilDataService"];
 
 function CoilJobsCtrl(socket, coilDataService) {
-	console.log(coilDataService);
-	console.log(socket);
 
 	var vm = this;
 	vm.jobs = [];
@@ -40,6 +40,8 @@ function CoilJobsCtrl(socket, coilDataService) {
 	vm.perPage = 30;
 
 	load();
+
+	//////////////
 
 	function load() {
 	  coilDataService.getJobs()
@@ -76,6 +78,7 @@ function CoilJobCtrl($routeParams, socket, $location, PersistJobsService, coilDa
 
 	load();
 
+	//////////////
 
 	function load() {
 	  coilDataService.getJob(vm.uuid)
