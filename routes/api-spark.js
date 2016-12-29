@@ -126,20 +126,26 @@ var getSparkJobRunData = function(job) {
 	var promise = rp(options)
 	.then(function(data) {
 		var d = JSON.parse(data);
+		var run = { 
+				host: "unknonw",
+				task_id: driverid,
+				status: "UNKNONW",
+				outputUrl: "";
+			}
+		// the status contains no information about the run.
+		if (d.message === undefined) {
+			return [run];
+		}
 		var parsedData = parseSparkDispatcherRawDatas(data);
 		var mesosStatusMappedToCoil = mesosToRunStatusMap[parsedData.state];
 		//console.log(JSON.stringify(parsedData, null, 2));
-		var path = "";
+
 		if (mesosStatusMappedToCoil === "RUNNING") {
-			path = computePathUrl(parsedData.slave_id.value, driverid);	
+			run.path = computePathUrl(parsedData.slave_id.value, driverid);
+			run.host = parsedData.container_status.network_infos.ip_addresses.ip_address;
 		}
-		var runMsg = [{ 
-			host: parsedData.container_status.network_infos.ip_addresses.ip_address,
-			task_id: driverid,
-			status: mesosStatusMappedToCoil,
-			outputUrl: path
-		}];
-		return runMsg;
+		run.status = mesosStatusMappedToCoil;		
+		return [run];
 	})
 	.catch(function(err) {
 		console.log(err);
@@ -191,6 +197,9 @@ var killCoilSparkJob = function(job) {
 var parseSparkDispatcherRawDatas = function (datas) {
 	var jmessage = {"state": "FAILED_PARSING"};
 	var jdata = JSON.parse(datas);
+	if (!jdata.message) {
+		return {};
+	}
 	var rawmessage = "" + jdata.message;
 	//console.log(rawmessage);
 
