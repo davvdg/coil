@@ -130,7 +130,7 @@ var getSparkJobRunData = function(job) {
 				host: "unknonw",
 				task_id: driverid,
 				status: "UNKNONW",
-				outputUrl: "";
+				outputUrl: ""
 			}
 		// the status contains no information about the run.
 		if (d.message === undefined) {
@@ -141,7 +141,7 @@ var getSparkJobRunData = function(job) {
 		//console.log(JSON.stringify(parsedData, null, 2));
 
 		if (mesosStatusMappedToCoil === "RUNNING") {
-			run.path = computePathUrl(parsedData.slave_id.value, driverid);
+			run.outputUrl = computePathUrl(parsedData.slave_id.value, driverid);
 			run.host = parsedData.container_status.network_infos.ip_addresses.ip_address;
 		}
 		run.status = mesosStatusMappedToCoil;		
