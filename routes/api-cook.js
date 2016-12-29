@@ -130,6 +130,7 @@ var getCoilCookRuns = function(job) {
 		if (d.length !== 1) {
 			return Promise.reject({error: "only one cook job should be returned. got 0 or many"});
 		}
+		console.log(data.instances);
 		return Promise.resolve(data.instances);
 	})
 	return promise;		

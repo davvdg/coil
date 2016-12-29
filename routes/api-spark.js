@@ -129,7 +129,10 @@ var getSparkJobRunData = function(job) {
 		var parsedData = parseSparkDispatcherRawDatas(data);
 		var mesosStatusMappedToCoil = mesosToRunStatusMap[parsedData.state];
 		//console.log(JSON.stringify(parsedData, null, 2));
-		var path = computePathUrl(parsedData.slave_id.value, driverid);
+		var path = "";
+		if (mesosStatusMappedToCoil === "RUNNING") {
+			path = computePathUrl(parsedData.slave_id.value, driverid);	
+		}
 		var runMsg = [{ 
 			host: parsedData.container_status.network_infos.ip_addresses.ip_address,
 			task_id: driverid,

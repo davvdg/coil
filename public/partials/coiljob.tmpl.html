@@ -43,6 +43,7 @@
 					<th>Host</th>
 					<th>Start Date</th>
 					<th>End Date</th>
+					<th>Log Path</th>
 					<th>Run Logs</th>
 					<th>Run Status</th>
 				</tr>
@@ -54,6 +55,7 @@
 					<td>{{run.host}}</td>
 					<td>{{run.startDate}}</td>
 					<td>{{run.endDate}}</td>
+					<td>{{run.outputUrl}}</td>
 					<td><a href="/coiljobs/{{ctrl.data.uuid}}/runs/{{run.task_id}}/files">logs</a></td>
 					<td>{{run.status}}</td>
 				</tr>
