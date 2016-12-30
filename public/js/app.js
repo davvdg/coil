@@ -53,21 +53,6 @@ config(function ($routeProvider, $locationProvider) {
     when('/driver/:driverid/applications/:appid/executors', {
       templateUrl: 'partials/executors.tmpl.html'
     }).
-    when('/coiljobs', {
-      templateUrl: 'partials/coiljobs.tmpl.html',
-      controller: 'CoilJobsCtrl',
-      controllerAs: 'ctrl'
-    }).
-    when('/coiljobs/:jobid', {
-      templateUrl: 'partials/coiljob.tmpl.html',
-      controller: 'CoilJobCtrl',
-      controllerAs: 'ctrl'
-    }).
-    when('/coiljobs/:jobid/runs/:runid/files', {
-      templateUrl: 'partials/coiljob_run_browse.tmpl.html',
-      controller: 'CoilRunLogBrowserCtrl',
-      controllerAs: 'ctrl'
-    }).            
     otherwise({
       redirectTo: '/'
     });
