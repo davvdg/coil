@@ -120,6 +120,14 @@ var getCookJobStatus = function(uuid) {
 }
 
 var getCoilCookRuns = function(job) {
+	var mesosToRunStatusMap= {
+		failed:"FAILED",
+		running:"RUNNING",
+		success :"COMPLETE",
+		unknown: "UNKNONW"
+	}
+
+
 	var uuid = job.internalId;
 	var options = {
 	  uri: 'http://'+ config.cook.url + ':' + config.cook.port + '/rawscheduler?job=' + uuid,
@@ -130,8 +138,20 @@ var getCoilCookRuns = function(job) {
 		if (d.length !== 1) {
 			return Promise.reject({error: "only one cook job should be returned. got 0 or many"});
 		}
-		console.log(data.instances);
-		return Promise.resolve(data.instances);
+
+		var instances = data[0].instances;
+		var runs = instances.map(function(elem) {
+			return {
+				host: elem.hostname,
+				task_id: elem.task_id,
+				status: mesosToRunStatusMap[elem.status],
+				outputUrl: ""
+			}
+		});
+		console.log("runs");
+		console.log(runs);
+
+		return Promise.resolve(runs);
 	})
 	return promise;		
 }
