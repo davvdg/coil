@@ -83,15 +83,15 @@ exports.browseCoilJobRun = function(req, res) {
 				//var json = browsejson;
 				ret = request(options);
 				ret.pipe(res);
-				res.json(json);
 			} else {
-				res.json({});
+				// todo: error code: run not found
+				res.status(424).json({error: "run not found"});
 			}
 		})
 	.catch(
 		function(err) {
 			console.log(err);
-			res.json({});
+			res.status(424).json({error: err});
 		});
 	
 
