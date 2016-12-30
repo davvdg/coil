@@ -22,10 +22,12 @@ config(function ($routeProvider, $locationProvider) {
     }).
     when('/login', {
       templateUrl: 'partials/login.html',
-      controller: 'LoginCtrl'
+      controller: 'LoginCtrl',
+      controllerAs: "ctrl"
     }).
     when('/logout', {
-      controller: 'LogoutCtrl'
+      controller: 'LogoutCtrl',
+      controllerAs: "ctrl"
     }).
     when('/createjob/spark', {
       templateUrl: 'partials/spark/create_job_spark.tmpl.html',

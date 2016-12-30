@@ -29,6 +29,6 @@
       <li ng-class="{active:isActive('/signup')}"><a ng-href="#/signup">Sign Up</a></li>
       -->
       <li><a>Logged as {{ctrl.getUserName()}}</a></li>
-      <li><a ng-controller="LogoutCtrl" ng-click='logout()' class="btn">Logout</a></li>
+      <li><a ng-controller="LogoutCtrl as logoutCtrl" ng-click='logoutCtrl.logout()' class="btn">Logout</a></li>
     </ul>
   </nav>

@@ -140,7 +140,7 @@ var getCoilCookRuns = function(job) {
 		}
 		console.log("cook data");
 		console.log(data);
-		var instances = data[0].instances;
+		var instances = d[0].instances;
 		var runs = instances.map(function(elem) {
 			return {
 				host: elem.hostname,
