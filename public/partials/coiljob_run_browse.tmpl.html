@@ -29,11 +29,11 @@
 					<td>{{item.mtime}}</td>
 					<td>{{item.gid}}</td>
 					<td>{{item.uid}}</td>
-					<td ng-click="if (item.nlink == 1) { ctrl.goToPath(item.path); } else { ctrl.downloadPath(item.path); }" >
+					<td>
 						<span class="glyphicon" ng-class="{
 							glyphicon-folder-open : item.nlink > 1,
 							glyphicon glyphicon-file: item.nlink == 1
-						}"/>
+						}" ng-click="if (item.nlink > 1) { ctrl.goToPath(item.path); } else { ctrl.downloadPath(item.path); }" aria-hidden="true"/>
 						{{item.path.split("/").pop()}}
 					</td>
 					<td>{{item.size}}</td>
