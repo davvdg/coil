@@ -9,7 +9,7 @@ angular.module('myApp.services', []).
   value('version', '0.1');
 
 angular.module('myApp')
-.factory('AuthService',
+.factory('AuthService', 
   ['$q', '$timeout', '$http',
   function ($q, $timeout, $http) {
 
@@ -111,44 +111,33 @@ angular.module('myApp')
 
 }])
 .factory('socket', function ($rootScope) {
-  var socket = io.connect();
-  return {
-    on: function (eventName, callback) {
+  
+	var socket = io.connect();
+	return {
+		on: on,
+		emit: emit
+	}
+
+	///////////
+
+    function on(eventName, callback) {
       socket.on(eventName, function () {  
         var args = arguments;
         $rootScope.$apply(function () {
           callback.apply(socket, args);
         });
       });
-    },
-    emit: function (eventName, data, callback) {
-      socket.emit(eventName, data, function () {
-        var args = arguments;
-        $rootScope.$apply(function () {
-          if (callback) {
-            callback.apply(socket, args);
-          }
-        });
-      })
     }
-  };
-})
-.factory('PersistJobsService', function () {
-    var job = {};
 
-    return {
-        getData: function () {
-            //You could also return specific attribute of the form data instead
-            //of the entire data
-            return job;
-        },
-        setData: function (key, newJobData) {
-            //You could also set specific attribute of the form data instead
-            job[key] = newJobData;
-        },
-        resetData: function (key) {
-            //To be called when the data stored needs to be discarded
-            delete job[key];
-        }
-    };
+	function emit(eventName, data, callback) {
+	  socket.emit(eventName, data, function () {
+	    var args = arguments;
+	    $rootScope.$apply(function () {
+	      if (callback) {
+	        callback.apply(socket, args);
+	      }
+	    });
+	  })
+	}
+
 });

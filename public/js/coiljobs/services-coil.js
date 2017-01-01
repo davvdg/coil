@@ -1,6 +1,7 @@
 angular
 	.module('myApp.coiljobs')
-	.factory('coilDataService', coilDataService);
+	.factory('coilDataService', coilDataService)
+	.factory('PersistJobsService', PersistJobsService);
 
 coilDataService.$inject = ['$http'];
 
@@ -11,6 +12,8 @@ function coilDataService($http) {
 		getJobRunFiles:getJobRunFiles,
 		killJob: killJob
 	}
+
+	/////////////////////////
 
 	function getJobRunFiles(jobid, runid) {
 		return $http.get('/api/coiljobs/'+ jobid +'/runs/'+ runid +'/browse');
@@ -26,5 +29,30 @@ function coilDataService($http) {
 	
 	function killJob(jobid) {
 		return $http.delete('/api/coiljobs/' + vm.uuid + '/kill');
+	}
+}
+
+function PersistJobsService() {
+    var job = {};
+    return {
+    	getData: getData,
+    	setData: setData,
+    	resetData: resetData
+    }
+
+    /////////////////////////
+    
+	function getData() {
+	    //You could also return specific attribute of the form data instead
+	    //of the entire data
+	    return job;
+	}
+	function setData(key, newJobData) {
+	    //You could also set specific attribute of the form data instead
+	    job[key] = newJobData;
+	}
+	function resetData(key) {
+	    //To be called when the data stored needs to be discarded
+	    delete job[key];
 	}
 }

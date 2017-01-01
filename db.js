@@ -53,7 +53,7 @@ var getJobsStatusFromFramework = function(job) {
 	return p;
 }
 
-var syncJobStatusFromFrameworkToDb = function(job) {
+var p_syncJobStatusFromFrameworkToDb = function(job) {
 	var p = getJobsStatusFromFramework(job);
 	p.then(
 		// success retrieving status. sync it.
@@ -70,18 +70,18 @@ var syncJobStatusFromFrameworkToDb = function(job) {
 }
 
 
-var getRunsFromFramework = function(job) {
+var p_getRunsFromFramework = function(job) {
 	var jobType = job.type;
 	var runsCb = coilJobTypes[jobType].runsCb
 	var p = runsCb(job)
 	return p;	
 }
 
-var syncRunsStatusFromFrameworkToDb = function(job) {
-	var p = getRunsFromFramework(job);
+var p_syncRunsStatusFromFrameworkToDb = function(job) {
+	var p = p_getRunsFromFramework(job);
 	p.then(
 		function(data) {
-			db.setRuns(job, data);
+			return db.setRuns(job, data);
 		});
 	return p;
 }
@@ -105,9 +105,10 @@ exports.watchSchedulers = function() {
 		db.getUncompletedJobs()
 		.then(
 			function(jobs) {
+				error = "";
 				jobs.forEach(
 					function(job) {
-						syncJobStatusFromFrameworkToDb(job)
+						p_syncJobStatusFromFrameworkToDb(job)
 						.then(function(data) {
 							clients.forEach(function(client) {
 								client.emit('job:changedStatus', {
@@ -115,8 +116,10 @@ exports.watchSchedulers = function() {
 									status: job.status
 								});
 							})
+						}, function(err) {
+							error = "ERROR syncing Job Status to DB";
 						});
-						syncRunsStatusFromFrameworkToDb(job)
+						p_syncRunsStatusFromFrameworkToDb(job)
 						.then(function(data) {
 							clients.forEach(function(client) {
 								client.emit('job:changedRunsStatus', {
@@ -125,8 +128,14 @@ exports.watchSchedulers = function() {
 								})
 							})
 						})
+						.catch(function(err) {
+							error = "ERROR syncing Runs Status to DB";
+						});
 					}
 				);
+				if (error !== "") {
+					throw error;
+				}
 			}
 		).catch(
 			function(err) {

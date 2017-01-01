@@ -49,6 +49,8 @@ function LogoutCtrl($location, AuthService) {
 	var vm = this;
 	vm.logout = logout;
 
+	//////////////////
+
     function logout() {
 
 	    // call logout from service

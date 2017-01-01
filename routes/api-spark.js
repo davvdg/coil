@@ -7,6 +7,7 @@ var Promise = require('promise');
 var uuid = require('uuid/v4');
 var url = require('url');
 var db = require('../db.js');
+var mesos = require("./api-mesos.js");
 
 var frameworkId = null;
 
@@ -100,12 +101,12 @@ var getSparkJobStatus = function(job) {
 	var driverid = job.internalId;
 	var options = {
 	  uri: 'http://'+ config.spark.url + ':' + config.spark.port + '/v1/submissions/status/' + driverid,
+	  json: true
 	};
 	//console.log(options);
 	var promise = rp(options)
 	.then(function(data) {
-		var d = JSON.parse(data);
-		return sparkToCoiljobStatusMap[d.driverState];
+		return sparkToCoiljobStatusMap[data.driverState];
 	});	
 	return promise;
 }
@@ -121,11 +122,11 @@ var getSparkJobRunData = function(job) {
 	var driverid = job.internalId;
 	var options = {
 	  uri: 'http://'+ config.spark.url + ':' + config.spark.port + '/v1/submissions/status/' + driverid,
+	  json: true
 	};
 	//console.log(options);
-	var promise = rp(options)
+	return rp(options)
 	.then(function(data) {
-		var d = JSON.parse(data);
 		var run = { 
 				host: "unknonw",
 				task_id: driverid,
@@ -133,28 +134,32 @@ var getSparkJobRunData = function(job) {
 				outputUrl: ""
 			}
 		// the status contains no information about the run.
-		if (d.message === undefined) {
+		if (data.message === undefined) {
 			return [run];
 		}
 		var parsedData = parseSparkDispatcherRawDatas(data);
 		var mesosStatusMappedToCoil = mesosToRunStatusMap[parsedData.state];
 		//console.log(JSON.stringify(parsedData, null, 2));
+		run.status = mesosStatusMappedToCoil;		
 
 		if (mesosStatusMappedToCoil === "RUNNING") {
-			run.outputUrl = computePathUrl(parsedData.slave_id.value, driverid);
 			run.host = parsedData.container_status.network_infos.ip_addresses.ip_address;
+		} else {
+			return [run];
 		}
-		run.status = mesosStatusMappedToCoil;		
-		return [run];
-	})
-	.catch(function(err) {
-		console.log(err);
-	});	
-	return promise;
 
+		return mesos.p_getDirectoryForTaskIdFromMesos(run.host, run.task_id).then(
+			function (directory) {
+				run.outputUrl = directory;
+				return [run];
+			}
+		);
+	});
 }
 
 var computePathUrl = function(slaveId, driverId) {
+	// need to complete informations from mesos state
+	// 
 	var path = "/var/lib/mesos/slave/slaves/" + slaveId + "/frameworks/" + frameworkId + "/executors/" + driverId + "/runs/latest";
 	//var epath =querystring.escape(path);
 	return path;
@@ -196,7 +201,7 @@ var killCoilSparkJob = function(job) {
 
 var parseSparkDispatcherRawDatas = function (datas) {
 	var jmessage = {"state": "FAILED_PARSING"};
-	var jdata = JSON.parse(datas);
+	var jdata = datas;
 	if (!jdata.message) {
 		return {};
 	}
@@ -274,6 +279,8 @@ var getDriverIpPort = function(driver) {
 	var options = {
 	  uri: 'http://'+ config.spark.url + ':' + config.spark.port + '/v1/submissions/status/' + driver,
 	};
+
+
 	//console.log(options);
 	var promise = rp(options)
     .then(getDriverIpPortFromRawDatas)
@@ -430,10 +437,6 @@ exports.parseDriverPage = function() {
     			}
     		);
     	})
-    })
-    .catch(function (err) {
-    	console.log(err);
-        // API call failed... 
     });
 }
 
