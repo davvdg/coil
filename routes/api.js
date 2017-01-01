@@ -79,17 +79,22 @@ exports.browseCoilJobRun = function(req, res) {
 			if (run) {
 				var outputUrl = run.outputUrl;
 				var options = {
-					url:'http://'+ run.host + ':' + config.mesos.slaves.port + '/files/browse?path=' + outputUrl + path,
+					url:'http://'+ run.host + ':' + config.mesos.slaves.port + '/files/browse?path=' + outputUrl,
 					json: true
 				}
 				//var json = browsejson;
-				ret = request(options);
-				ret.on("response", function(data) {
-					return data.map(function(item) {
-						item.path = item.path.replace(outputUrl, "");
-					});
+				ret = request(options, function(error, response, data) {
+					if (!error && response.statusCode === 200) {
+						var newData = data.map(
+							function(item) {
+								item.path = item.path.replace(outputUrl, "");
+							}
+						);
+						res.json(data);
+					} else {
+						res.status(response.statusCode).json({error: error});
+					}
 				});
-				ret.pipe(res);
 			} else {
 				// todo: error code: run not found
 				res.status(424).json({error: "run not found"});
