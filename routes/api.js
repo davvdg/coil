@@ -78,7 +78,7 @@ exports.browseCoilJobRun = function(req, res) {
 			if (run) {
 				var outputUrl = run.outputUrl;
 				var options = {
-					url:'http://'+ config.mesos.master.url + ':' + config.mesos.master.port + '/files/browse?path=' + outputUrl,
+					url:'http://'+ run.host + ':' + config.mesos.slaves.port + '/files/browse?path=' + outputUrl,
 				}
 				//var json = browsejson;
 				ret = request(options);

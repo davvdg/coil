@@ -149,10 +149,21 @@ var getCoilCookRuns = function(job) {
 				outputUrl: ""
 			}
 		});
-		console.log("runs");
-		console.log(runs);
 
-		return Promise.resolve(runs);
+		var p = runs.map(function(run) {
+			return mesos.p_getDirectoryForTaskIdFromMesos(run.host, run.task_id).then(
+				function (directory) {
+					run.outputUrl = directory;
+					return run;
+				}
+			).catch(
+				function (err) {
+					console.log("Unable to retrieve the directory for run" + run.task_id);
+					return run;
+				}
+			);
+		});
+		return Promise.all(p);
 	})
 	return promise;		
 }

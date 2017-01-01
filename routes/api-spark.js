@@ -148,9 +148,16 @@ var getSparkJobRunData = function(job) {
 			return [run];
 		}
 
-		return mesos.p_getDirectoryForTaskIdFromMesos(run.host, run.task_id).then(
+		return mesos.p_getDirectoryForTaskIdFromMesos(run.host, run.task_id)
+		.then(
 			function (directory) {
 				run.outputUrl = directory;
+				return [run];
+			}
+		)
+		.catch(
+			function (err) {
+				console.log("Unable to retrieve the directory for run" + run.task_id);
 				return [run];
 			}
 		);
