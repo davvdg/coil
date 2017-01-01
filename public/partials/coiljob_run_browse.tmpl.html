@@ -33,7 +33,7 @@
 						<span class="glyphicon" ng-class="{
 							glyphicon-folder-open : item.nlink > 1,
 							glyphicon glyphicon-file: item.nlink == 1
-						}" ng-click="if (item.nlink > 1) { ctrl.goToPath(item.path); } else { ctrl.downloadPath(item.path); }" aria-hidden="true"/>
+						}" ng-click="if (item.nlink > 1) { ctrl.goToPath(item.path); } else { ctrl.downloadPath(item.path); }" aria-hidden="true"></span>
 						{{item.path.split("/").pop()}}
 					</td>
 					<td>{{item.size}}</td>
