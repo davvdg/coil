@@ -1,8 +1,14 @@
 
 <div class="container-fluid" >
+	<h2>Job <a href="/coiljobs/{{ctrl.jobid}}">{{ctrl.jobid}}</a></h2>
+	<h3>Files for run {{ctrl.runid}}</h3>
+	<ul class="breadcrumb">
+		<li ng-repeat='path_idx, path_elem in ctrl.path.split("/")'>
+			<a ng-click='ctrl.goToPath(ctrl.path.split("/").slice(0,path_idx+1).join("/"))'>{{path_elem}}</a>
+		</li>
+	</ul> 
 	<div class='table-responsible'>
-		<h2>Job <a href="/coiljobs/{{ctrl.jobid}}">{{ctrl.jobid}}</a></h2>
-		<h3>Files for run {{ctrl.runid}}</h3>
+
 		<table class="table">
 			<thead>
 				<tr>
@@ -23,7 +29,13 @@
 					<td>{{item.mtime}}</td>
 					<td>{{item.gid}}</td>
 					<td>{{item.uid}}</td>
-					<td>{{item.path}}</td>
+					<td ng-click="if (item.nlink == 1) { ctrl.goToPath(item.path); } else { ctrl.downloadPath(item.path); }" >
+						<span class="glyphicon" ng-class="{
+							glyphicon-folder-open : item.nlink > 1,
+							glyphicon glyphicon-file: item.nlink == 1
+						}"/>
+						{{item.path.split("/").pop()}}
+					</td>
 					<td>{{item.size}}</td>
 					<td>{{item.mode}}</td>
 				</tr>

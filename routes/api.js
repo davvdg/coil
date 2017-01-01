@@ -119,6 +119,13 @@ exports.downloadCoilJobRunFile = function(req, res) {
 	var jobuuid = req.params.jobid;
 	var runid = req.params.runid;
 	var path = req.params.path;
+
+	if (path === undefined) {
+		path = "";
+	}
+	if (path === "/") {
+		path = "";
+	}
 	db.getJobRunsByJobUuid(jobuuid)
 	.then(
 		function(runs) {
