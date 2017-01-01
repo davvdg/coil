@@ -15,8 +15,12 @@ function coilDataService($http) {
 
 	/////////////////////////
 
-	function getJobRunFiles(jobid, runid) {
-		return $http.get('/api/coiljobs/'+ jobid +'/runs/'+ runid +'/browse');
+	function getJobRunFiles(jobid, runid, path) {
+		return $http.get('/api/coiljobs/'+ jobid +'/runs/'+ runid +'/browse/' + path);
+    }
+
+    function downloadFile(jobid, runid, path) {
+    	return $http.get('/api/coiljobs/'+ jobid +'/runs/'+ runid +'/download/' + path);	
     }
 
     function getJobs() {

@@ -7,6 +7,8 @@ var uuid = require('uuid/v4');
 var url = require('url');
 var db = require('../db.js');
 var Promise = require('promise');
+var mesos = require("./api-mesos.js");
+
 
 exports.postCookJobs = function(req,res) {
 	var user = req.session.passport.user.username;

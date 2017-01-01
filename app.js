@@ -212,8 +212,8 @@ app.get('/api/coiljobs', auth, api.getCoilJobs);
 app.get('/api/coiljobs/:jobid', auth, api.getCoilJob);
 app.get('/api/coiljobs/:jobid/runs', auth, api.getCoilJobRuns);
 
-app.get('/api/coiljobs/:jobid/runs/:runid/browse', auth, api.browseCoilJobRun);
-
+app.get('/api/coiljobs/:jobid/runs/:runid/browse/:path', auth, api.browseCoilJobRun);
+app.get('/api/coiljobs/:jobid/runs/:runid/download/:path', auth, api.downloadCoilJobRunFile);
 
 
 app.delete('/api/coiljobs/:jobid/kill', auth, api.killCoilJob);

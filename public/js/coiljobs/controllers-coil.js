@@ -11,14 +11,18 @@ function CoilRunLogBrowserCtrl($routeParams, coilDataService) {
 	var vm = this;
 	vm.jobid = $routeParams.jobid;
 	vm.runid = $routeParams.runid;
+	vm.path = "/"
 	vm.items = [];
+
+	vm.goToPath = goToPath;
+	vm.downloadFile = downloadFile;
 
 	load();
 
 	//////////////
 
     function load() {
-      coilDataService.getJobRunFiles(vm.jobid, vm.runid)
+      coilDataService.getJobRunFiles(vm.jobid, vm.runid, vm.path)
       .then(
         function(res) {
           vm.items = res.data;
@@ -27,6 +31,23 @@ function CoilRunLogBrowserCtrl($routeParams, coilDataService) {
           console.log(err);
         }
       );
+    }
+
+    function goToPath(path) {
+    	vm.path = path;
+    	coilDataService.getJobRunFiles(vm.jobid, vm.runid, path)
+      	.then(
+        	function(res) {
+          		vm.items = res.data;
+        	},
+        	function(err) {
+          		console.log(err);
+        	}
+      	);
+    }
+
+    function downloadFile(path) {
+    	coilDataService.downloadFile(vm.jobid, vm.runid, path);
     }
 }
 

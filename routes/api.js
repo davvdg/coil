@@ -68,6 +68,7 @@ exports.killCoilJob = function(req, res) {
 exports.browseCoilJobRun = function(req, res) {
 	var jobuuid = req.params.jobid;
 	var runid = req.params.runid;
+	var path = req.params.path;
 	db.getJobRunsByJobUuid(jobuuid)
 	.then(
 		function(runs) {
@@ -78,7 +79,44 @@ exports.browseCoilJobRun = function(req, res) {
 			if (run) {
 				var outputUrl = run.outputUrl;
 				var options = {
-					url:'http://'+ run.host + ':' + config.mesos.slaves.port + '/files/browse?path=' + outputUrl,
+					url:'http://'+ run.host + ':' + config.mesos.slaves.port + '/files/browse?path=' + outputUrl + path,
+					json: true
+				}
+				//var json = browsejson;
+				ret = request(options);
+				ret.on("response", function(data) {
+					return data.map(function(item) {
+						item.path = item.path.replace(outputUrl, "");
+					});
+				});
+				ret.pipe(res);
+			} else {
+				// todo: error code: run not found
+				res.status(424).json({error: "run not found"});
+			}
+		})
+	.catch(
+		function(err) {
+			console.log(err);
+			res.status(424).json({error: err});
+		});
+}
+
+exports.downloadCoilJobRunFile = function(req, res) {
+	var jobuuid = req.params.jobid;
+	var runid = req.params.runid;
+	var path = req.params.path;
+	db.getJobRunsByJobUuid(jobuuid)
+	.then(
+		function(runs) {
+			console.log(runs);
+			var run = runs.find(function(elem) {
+				return elem.task_id === runid;
+			});
+			if (run) {
+				var outputUrl = run.outputUrl;
+				var options = {
+					url:'http://'+ run.host + ':' + config.mesos.slaves.port + '/files/download?path=' + outputUrl + path,
 				}
 				//var json = browsejson;
 				ret = request(options);
