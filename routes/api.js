@@ -69,6 +69,14 @@ exports.browseCoilJobRun = function(req, res) {
 	var jobuuid = req.params.jobid;
 	var runid = req.params.runid;
 	var path = req.params.path;
+
+	if (path === undefined) {
+		path = "";
+	}
+	if (path === "/") {
+		path = "";
+	}
+
 	db.getJobRunsByJobUuid(jobuuid)
 	.then(
 		function(runs) {
@@ -79,7 +87,7 @@ exports.browseCoilJobRun = function(req, res) {
 			if (run) {
 				var outputUrl = run.outputUrl;
 				var options = {
-					url:'http://'+ run.host + ':' + config.mesos.slaves.port + '/files/browse?path=' + outputUrl,
+					url:'http://'+ run.host + ':' + config.mesos.slaves.port + '/files/browse?path=' + outputUrl + path,
 					json: true
 				}
 				//var json = browsejson;
