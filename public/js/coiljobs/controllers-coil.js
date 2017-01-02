@@ -19,10 +19,13 @@ function CoilRunLogBrowserCtrl($routeParams, coilDataService) {
 	vm.runid = $routeParams.runid;
 	vm.path = "/"
 	vm.items = [];
+	vm.orderByField = "mtime";
+	vm.orderDesc = true;
 
 	vm.goToPath = goToPath;
 	vm.downloadFile = downloadFile;
 	vm.doAction = doAction;
+	vm.orderBy = orderBy;
 
 	load();
 
@@ -38,6 +41,14 @@ function CoilRunLogBrowserCtrl($routeParams, coilDataService) {
           console.log(err);
         }
       );
+    }
+
+    function orderBy(fieldName) {
+    	if (vm.orderByField === fieldName) {
+    		vm.orderDesc = !vm.orderDesc;
+    	}
+    	vm.orderByField = fieldName;
+
     }
 
     function goToPath(path) {

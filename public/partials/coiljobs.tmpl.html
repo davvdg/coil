@@ -16,7 +16,7 @@
 					<td><a href="/coiljobs/{{job.uuid}}">{{job.uuid}}</a></td>
 					<td>{{job.type}}</td>
 					<td>{{job.user}}</td>
-					<td>{{job.submissionDate}}</td>
+					<td>{{job.submissionDate | date: 'medium'}}</td>
 					<td>
 						<span class="nav-item label" ng-class="{
     				'label-warning': job.status == 'PENDING',
@@ -44,7 +44,7 @@
 					<td><a href="/coiljobs/{{job.uuid}}">{{job.uuid}}</a></td>
 					<td>{{job.type}}</td>
 					<td>{{job.user}}</td>
-					<td>{{job.submissionDate}}</td>
+					<td>{{job.submissionDate | date : 'medium'}}</td>
 					<td>
 						<span class="nav-item label" ng-class="{
     				'label-warning': job.status == 'PENDING',
@@ -68,11 +68,11 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr ng-repeat='job in ctrl.jobs'>
+				<tr ng-repeat='job in ctrl.jobs | filter: {status:"DONE"}' >
 					<td><a href="/coiljobs/{{job.uuid}}">{{job.uuid}}</a></td>
 					<td>{{job.type}}</td>
 					<td>{{job.user}}</td>
-					<td>{{job.submissionDate}}</td>
+					<td>{{job.submissionDate | date : 'medium'}}</td>
 					<td>
 						<span class="nav-item label" ng-class="{
     				'label-warning': job.status == 'PENDING',

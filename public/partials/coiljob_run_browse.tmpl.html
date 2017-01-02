@@ -13,21 +13,19 @@
 		<table class="table">
 			<thead>
 				<tr>
-					<th>nlink</th>
-					<th>mtime</th>
-					<th>gid</th>
-					<th>uid</th>
-					<th>path</th>
-					<th>size</th>
-					<th>mode</th>
-					
-
+					<th ng-click="ctrl.orderBy('nlink')">nlink</th>
+					<th ng-click="ctrl.orderBy('mtime')">mtime</th>
+					<th ng-click="ctrl.orderBy('gid')">gid</th>
+					<th ng-click="ctrl.orderBy('uid')">uid</th>
+					<th ng-click="ctrl.orderBy('path')">path</th>
+					<th ng-click="ctrl.orderBy('size')">size</th>
+					<th ng-click="ctrl.orderBy('mode')">mode</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr ng-repeat='item in ctrl.items'>
+				<tr ng-repeat='item in ctrl.items | orderBy : ctrl.orderByField : ctrl.orderDesc'>
 					<td>{{item.nlink}}</td>
-					<td>{{item.mtime}}</td>
+					<td>{{item.mtime*1000 | date : 'medium'}}</td>
 					<td>{{item.gid}}</td>
 					<td>{{item.uid}}</td>
 					<td ng-click="ctrl.doAction(item)">
@@ -37,7 +35,7 @@
 						}"  aria-hidden="true"></span>
 						{{item.path.split("/").pop()}}
 					</td>
-					<td>{{item.size}}</td>
+					<td>{{item.size | bytes}}</td>
 					<td>{{item.mode}}</td>
 				</tr>
 			</tbody>
