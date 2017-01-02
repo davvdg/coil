@@ -1,3 +1,8 @@
+(function() {
+
+
+'use strict';
+
 angular
 	.module('myApp.coiljobs')
 	.config(routeConfig);
@@ -23,3 +28,5 @@ function routeConfig($routeProvider, $locationProvider) {
     });
 
 }
+
+})();

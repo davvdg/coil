@@ -12,7 +12,7 @@ var uuid = require('uuid/v4');
 var url = require('url');
 var db = require('../db.js');
 
-//var browsejson = require("../samplejson/browsepp.json");
+var browsejson = require("../samplejson/browsepp.json");
 
 
 exports.getCoilJobs = function(req, res) {
@@ -90,15 +90,22 @@ exports.browseCoilJobRun = function(req, res) {
 					url:'http://'+ run.host + ':' + config.mesos.slaves.port + '/files/browse?path=' + outputUrl + path,
 					json: true
 				}
-				//var json = browsejson;
-				ret = request(options, function(error, response, data) {
-					if (!error && response.statusCode === 200) {
-						var newData = data.map(
+
+				var trimPath = function(data) {
+					var newData = data.map(
 							function(item) {
 								item.path = item.path.replace(outputUrl, "");
 							}
 						);
-						res.json(data);
+					return newData;
+				}
+
+				//var data = browsejson;
+				//res.json(data);
+				//return;
+				ret = request(options, function(error, response, data) {
+					if (!error && response.statusCode === 200) {
+						res.json(trimPath(data));
 					} else {
 						res.status(response.statusCode).json({error: error});
 					}

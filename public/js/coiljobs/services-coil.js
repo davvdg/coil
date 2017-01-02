@@ -1,3 +1,8 @@
+(function() {
+
+
+'use strict';
+
 angular
 	.module('myApp.coiljobs')
 	.factory('coilDataService', coilDataService)
@@ -9,7 +14,8 @@ function coilDataService($http) {
 	return {
 		getJobs: getJobs,
 		getJob: getJob,
-		getJobRunFiles:getJobRunFiles,
+		getJobRunFiles: getJobRunFiles,
+		downloadFile: downloadFile,
 		killJob: killJob
 	}
 
@@ -60,3 +66,5 @@ function PersistJobsService() {
 	    delete job[key];
 	}
 }
+
+})();

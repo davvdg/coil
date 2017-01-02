@@ -1,3 +1,9 @@
+(function() {
+
+
+'use strict';
+
+
 angular
 	.module('myApp.coiljobs', [])
 	.controller('CoilJobsCtrl', CoilJobsCtrl)
@@ -16,6 +22,7 @@ function CoilRunLogBrowserCtrl($routeParams, coilDataService) {
 
 	vm.goToPath = goToPath;
 	vm.downloadFile = downloadFile;
+	vm.doAction = doAction;
 
 	load();
 
@@ -48,6 +55,14 @@ function CoilRunLogBrowserCtrl($routeParams, coilDataService) {
 
     function downloadFile(path) {
     	coilDataService.downloadFile(vm.jobid, vm.runid, path);
+    }
+
+    function doAction(item) {
+    	if (item.nlink === 1) {
+    		downloadFile(item.path);
+    	} else {
+    		goToPath(item.path);
+    	}
     }
 }
 
@@ -156,3 +171,5 @@ function CoilJobCtrl($routeParams, socket, $location, PersistJobsService, coilDa
 	  }
 	}
 }
+
+})();
