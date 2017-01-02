@@ -52,12 +52,11 @@ function CoilRunLogBrowserCtrl($routeParams, coilDataService) {
     			var filename = path.split("/").pop();
 
 				// FOR IE:
-				var bloc = new Blob([res.data], { type: 'text/plain;charset=utf-8' });
+				var blob = new Blob([res.data], { type: 'text/plain;charset=utf-8' });
 
 				if (window.navigator && window.navigator.msSaveOrOpenBlob) {
 					window.navigator.msSaveOrOpenBlob(blob, filename);
-				}
-				else{
+				} else{
 					var e = document.createEvent('MouseEvents'),
 					a = document.createElement('a');
 
