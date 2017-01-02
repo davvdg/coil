@@ -1,23 +1,35 @@
+(function() {
+
 'use strict';
 
+
+
 angular.module('myApp.controllers.cook', [])
-.controller("CookSubmitJobCtrl", function($scope, $http, $routeParams, $location, PersistJobsService) {
-    var self = this;
-    self.name ="";
-    self.command ="";
-    self.priority =50;
-    self.max_retries = 1;
-    self.max_runtime = 60;
-    self.cpus = 1;
-    self.mem = 1024;
-    self.gpus = 0;
-    self.ports = 0;
-    self.uris = [];
-    self.envs = {};
+  .controller("CookSubmitJobCtrl", CookSubmitJobCtrl)
+  .controller("MesosUrisCtrl", MesosUrisCtrl)
+  .controller("MesosVolumesCtrl", MesosVolumesCtrl)
+  .controller("MesosPortsCtrl", MesosPortsCtrl)
+  .controller("ItemListCtrl", ItemListCtrl);
 
-    self.useDocker = false;
+CookSubmitJobCtrl.$inject = ['$scope', '$http', '$location', 'PersistJobsService'];
 
-    self.container = {
+function CookSubmitJobCtrl($scope, $http, $location, PersistJobsService) {
+    var vm = this;
+    vm.name ="";
+    vm.command ="";
+    vm.priority =50;
+    vm.max_retries = 1;
+    vm.max_runtime = 60;
+    vm.cpus = 1;
+    vm.mem = 1024;
+    vm.gpus = 0;
+    vm.ports = 0;
+    vm.uris = [];
+    vm.envs = {};
+
+    vm.useDocker = false;
+
+    vm.container = {
     	type: "docker",
     	docker: {
     		image: "ubuntu",
@@ -28,44 +40,57 @@ angular.module('myApp.controllers.cook', [])
       volumes: []
 	  };
 
-    self.errorMessage = "";
-    self.submitError = false;
+    vm.errorMessage = "";
+    vm.submitError = false;
 
-    var prepareJson = function() {
+    vm.submitJob = submitJob;
+    vm.loadJson = loadJson;
+    vm.downloadJson = downloadJson;
+    vm.clearAll = clearAll;
+
+    var pData = PersistJobsService.getData();
+    console.log(pData);
+    if ( pData.cook) {
+      setFromJson(pData.cook);
+    }
+
+    /////////////////////////////////////
+
+    function prepareJson() {
     	var submitJson = {
     		jobs: []
     	}
       var job = {
-        name: self.name,
-        command: self.command,
-        priority : self.priority,
-        max_retries: self.max_retries,
-        max_runtime: self.max_runtime,
-        cpus: self.cpus,
-        mem: self.mem,
-        gpus: self.gpus,
+        name: vm.name,
+        command: vm.command,
+        priority : vm.priority,
+        max_retries: vm.max_retries,
+        max_runtime: vm.max_runtime,
+        cpus: vm.cpus,
+        mem: vm.mem,
+        gpus: vm.gpus,
         //ports: self.ports,
-        uris: self.uris,
-        envs: self.envs
+        uris: vm.uris,
+        envs: vm.envs
       }
 
-      if (self.useDocker) {
-        job["container"] = self.container;
+      if (vm.useDocker) {
+        job["container"] = vm.container;
       }
     	submitJson.jobs.push(job);
     	return submitJson;
     }
 
 
-    self.submitJob = function() {
-		var data = prepareJson();
+    function submitJob() {
+		  var data = prepareJson();
     	$http.post('/api/submit/cook', angular.toJson(data))
       	.then(
       	// on success
         function(res) {
           console.log("success");
-          self.submitError = false;
-          self.errorMessage = "";
+          vm.submitError = false;
+          vm.errorMessage = "";
           //var driverid = res.data.submissionId;
           PersistJobsService.resetData("cook");
           $location.path("/coiljobs");
@@ -75,12 +100,12 @@ angular.module('myApp.controllers.cook', [])
         function(res) {
           console.log("error");
           console.log(res);
-          self.submitError = true;
-          self.errorMessage = res.data.error;
+          vm.submitError = true;
+          vm.errorMessage = res.data.error;
         });    	
     }
 
-    self.downloadJson = function() {
+    function downloadJson() {
       var data = prepareJson($scope);
     
       var filename = 'job.json';
@@ -109,64 +134,64 @@ angular.module('myApp.controllers.cook', [])
       }    	
     }
 
-    var setFromJson = function(jDataAll) {
+    function setFromJson(jDataAll) {
       var jData = jDataAll.jobs[0];
-      self.name = jData.name;
-      self.command = jData.command;
-      self.priority= jData.priority;
-      self.max_retries= jData.max_retries;
-      self.max_runtime= jData.max_runtime;
-      self.cpus= jData.cpus;
-      self.mem= jData.mem;
-      self.gpus= jData.gpus;
-      self.ports= jData.ports;
-      self.uris= jData.uris;
-      self.envs= jData.envs;
+      vm.name = jData.name;
+      vm.command = jData.command;
+      vm.priority= jData.priority;
+      vm.max_retries= jData.max_retries;
+      vm.max_runtime= jData.max_runtime;
+      vm.cpus= jData.cpus;
+      vm.mem= jData.mem;
+      vm.gpus= jData.gpus;
+      vm.ports= jData.ports;
+      vm.uris= jData.uris;
+      vm.envs= jData.envs;
 
       if (jData.container) {
-        self.container = jData.container;
-        self.useDocker = true;
+        vm.container = jData.container;
+        vm.useDocker = true;
       }      
     }
-    self.loadJson = function() {
-		var x = document.createElement("INPUT");
-		x.setAttribute("type", "file");
-		var e = document.createEvent('MouseEvents');
-		e.initEvent('click', true, false, window,
-		      0, 0, 0, 0, 0, false, false, false, false, 0, null);
-		x.dispatchEvent(e);      
-		x.onchange = function() {
-		    var f = x.files[0];
-		    var r = new FileReader();
-		    r.onloadend = function(e) {
-				var data = e.target.result;
 
-				var jData = JSON.parse(data);
-				console.log(jData);
+    function loadJson() {
+  		var x = document.createElement("INPUT");
+  		x.setAttribute("type", "file");
+  		var e = document.createEvent('MouseEvents');
+  		e.initEvent('click', true, false, window,
+  		      0, 0, 0, 0, 0, false, false, false, false, 0, null);
+  		x.dispatchEvent(e);      
+  		x.onchange = function() {
+        var f = x.files[0];
+        var r = new FileReader();
+        r.onloadend = function(e) {
+    		var data = e.target.result;
+
+    		var jData = JSON.parse(data);
+    		console.log(jData);
         PersistJobsService.setData('cook', jData);
         setFromJson(jData);
-				$scope.$apply();    
-		      //send your binary data via $http or $resource or do anything else with it
-		    }
-		    r.readAsText(f);
-		}
-    }    	
-    
+    		$scope.$apply();    
+          //send your binary data via $http or $resource or do anything else with it
+        }
+        r.readAsText(f);
+  		}
+    }
 
-    self.clearAll = function() {
-    	self.name ="";
-	    self.command ="";
-	    self.priority =50;
-	    self.max_retries = 1;
-	    self.max_runtime = 60;
-	    self.cpus = 1;
-	    self.mem = 1024;
-	    self.gpus = 0;
-	    self.ports = 0;
-	    self.uris = [];
-	    self.envs = {};
-      self.useDocker = false;
-      self.container = {};
+    function clearAll() {
+    	vm.name ="";
+	    vm.command ="";
+	    vm.priority =50;
+	    vm.max_retries = 1;
+	    vm.max_runtime = 60;
+	    vm.cpus = 1;
+	    vm.mem = 1024;
+	    vm.gpus = 0;
+	    vm.ports = 0;
+	    vm.uris = [];
+	    vm.envs = {};
+      vm.useDocker = false;
+      vm.container = {};
       PersistJobsService.resetData("cook");
     }
 
@@ -175,104 +200,147 @@ angular.module('myApp.controllers.cook', [])
       console.log(jData);
       PersistJobsService.setData('cook', jData);
     });
+  }
+  
 
+function MesosUrisCtrl() {
+	var vm = this;
+	vm.rows = [];
+	vm.newRow = {};
+  vm.addRow = addRow;
+  vm.delRow = delRow;
 
-    var pData = PersistJobsService.getData();
-    console.log(pData);
-    if ( pData.cook) {
-      setFromJson(pData.cook);
-    }
-  }).controller("MesosUrisCtrl", function($scope, $http, $routeParams) {
-  	var self = this;
-  	self.rows = [];
-  	self.newRow = {};
-  	self.createNewRow = function() {
-  		self.newRow = {
-  			value: "",
-  			executable: false,
-  			extract: false,
-  			cache: false
-  		}
-  	}
-  	self.validateNewRow = function() {
-  		return self.newRow.value !== "";
-  	}
-  	self.addRow = function() {
-  		if (self.validateNewRow()) {
-	  		self.rows.push(self.newRow);
-	  		self.createNewRow();
+  createNewRow();
+
+  ////////////////////////
+
+	function createNewRow() {
+		vm.newRow = {
+			value: "",
+			executable: false,
+			extract: false,
+			cache: false
 		}
-  	}
-  	self.delRow = function(idx) {
-  		self.rows.splice(idx, 1);
-  	}
-  	self.createNewRow();
-  }).controller("MesosVolumesCtrl", function($scope, $http, $routeParams) {
-  	var self = this;
-  	self.rows = [];
-  	self.newRow = {};
-  	self.createNewRow = function() {
-  		self.newRow = {
-  			host_path: "",
-  			container_path: "",
-  			mode: "rw"
-  		}
-  	}
-  	self.validateNewRow = function() {
-  		return (self.newRow.host_path !== "") && (self.newRow.container_path !== "");
-  	}
-  	self.addRow = function() {
-  		if (self.validateNewRow()) {
-	  		self.rows.push(self.newRow);
-	  		self.createNewRow();
+	}
+
+	function validateNewRow() {
+		return vm.newRow.value !== "";
+	}
+
+	function addRow() {
+		if (validateNewRow()) {
+  		vm.rows.push(vm.newRow);
+  		createNewRow();
+	  }
+	}
+
+	function delRow(idx) {
+		vm.rows.splice(idx, 1);
+	}
+}
+
+function MesosVolumesCtrl() {
+	var vm = this;
+	vm.rows = [];
+	vm.newRow = {};
+  vm.addRow = addRow;
+  vm.delRow = delRow;
+
+  /////////////////////////
+
+  createNewRow();
+
+	function createNewRow() {
+		vm.newRow = {
+			host_path: "",
+			container_path: "",
+			mode: "rw"
 		}
-  	}
-  	self.delRow = function(idx) {
-  		self.rows.splice(idx, 1);
-  	}
-  	self.createNewRow();
-  }).controller("MesosPortsCtrl", function($scope, $http, $routeParams) {
-  	var self = this;
-  	self.rows = [];
-  	self.newRow = {};
-  	self.createNewRow = function() {
-  		self.newRow = {
-  			host_port: "",
-  			container_port: "",
-  			protocol: "tcp"
-  		}
-  	}
-  	self.validateNewRow = function() {
-  		return (self.newRow.host_port !== "") && (self.newRow.container_port !== "");
-  	}
-  	self.addRow = function() {
-  		if (self.validateNewRow()) {
-	  		self.rows.push(self.newRow);
-	  		self.createNewRow();
+	}
+
+	function validateNewRow() {
+		return (vm.newRow.host_path !== "") && (vm.newRow.container_path !== "");
+	}
+
+	function addRow() {
+		if (validateNewRow()) {
+  		vm.rows.push(vm.newRow);
+  		createNewRow();
+	  }
+	}
+	
+  function delRow(idx) {
+		vm.rows.splice(idx, 1);
+	}
+
+}
+
+function MesosPortsCtrl() {
+	var vm = this;
+	vm.rows = [];
+	vm.newRow = {};
+  vm.addRow = addRow;
+  vm.delRow = delRow;
+
+  createNewRow();
+	
+  //////////////////////
+
+  function createNewRow() {
+		vm.newRow = {
+			host_port: "",
+			container_port: "",
+			protocol: "tcp"
 		}
+	}
+
+	function validateNewRow() {
+		return (vm.newRow.host_port !== "") && (vm.newRow.container_port !== "");
+	}
+
+	function addRow() {
+		if (validateNewRow()) {
+  		vm.rows.push(vm.newRow);
+  		createNewRow();
+	  }
+	}
+
+	function delRow(idx) {
+		vm.rows.splice(idx, 1);
+	}
+	
+}
+
+function ItemListCtrl() {
+  	var vm = this;
+  	vm.rows = [];
+  	vm.newRow = "";
+    vm.addRow = addRow;
+    vm.delRow = delRow;
+
+    createNewRow();
+
+    ////////////////////////
+
+  	function createNewRow() {
+  		vm.newRow = ""
   	}
-  	self.delRow = function(idx) {
-  		self.rows.splice(idx, 1);
+  	
+    function validateNewRow() {
+  		return (vm.newRow !== "");
   	}
-  	self.createNewRow();
-  }).controller("ItemListCtrl", function($scope, $http, $routeParams) {
-  	var self = this;
-  	self.rows = [];
-  	self.newRow = "";
-  	self.createNewRow = function() {
-  		self.newRow = ""
+
+  	function addRow() {
+  		if (validateNewRow()) {
+	  		vm.rows.push(vm.newRow);
+	  		createNewRow();
+		  }
   	}
-  	self.validateNewRow = function() {
-  		return (self.newRow !== "");
+
+  	function delRow(idx) {
+  		vm.rows.splice(idx, 1);
   	}
-  	self.addRow = function() {
-  		if (self.validateNewRow()) {
-	  		self.rows.push(self.newRow);
-	  		self.createNewRow();
-		}
-  	}
-  	self.delRow = function(idx) {
-  		self.rows.splice(idx, 1);
-  	}
-  	self.createNewRow();
-  });
+  	
+  }
+
+})();
