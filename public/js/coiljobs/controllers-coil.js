@@ -46,7 +46,33 @@ function CoilRunLogBrowserCtrl($routeParams, coilDataService) {
     }
 
     function downloadFile(path) {
-    	coilDataService.downloadFile(vm.jobid, vm.runid, path);
+    	coilDataService.downloadFile(vm.jobid, vm.runid, path)
+    	.then(
+    		function(res) {
+    			var filename = path.split("/").pop();
+
+				// FOR IE:
+				var bloc = new Blob([res.data], { type: 'text/plain;charset=utf-8' });
+
+				if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+					window.navigator.msSaveOrOpenBlob(blob, filename);
+				}
+				else{
+					var e = document.createEvent('MouseEvents'),
+					a = document.createElement('a');
+
+					a.download = filename;
+					a.href = window.URL.createObjectURL(blob);
+					a.dataset.downloadurl = ['text/plain', a.download, a.href].join(':');
+					e.initEvent('click', true, false, window,
+					0, 0, 0, 0, 0, false, false, false, false, 0, null);
+					a.dispatchEvent(e);
+				}
+    		},
+    		function(err) {
+    			console.log(err);
+    		}
+    	);
     }
 
     function doAction(item) {

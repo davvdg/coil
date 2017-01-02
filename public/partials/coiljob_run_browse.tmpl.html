@@ -3,6 +3,7 @@
 	<h2>Job <a href="/coiljobs/{{ctrl.jobid}}">{{ctrl.jobid}}</a></h2>
 	<h3>Files for run {{ctrl.runid}}</h3>
 	<ul class="breadcrumb">
+		<li><a ng-click='ctrl.goToPath("/")'>sandbox</li>
 		<li ng-repeat='path_elem in ctrl.path.split("/") track by $index'>
 			<a ng-click='ctrl.goToPath(ctrl.path.split("/").slice(0, $index +1).join("/"))'>{{path_elem}}</a>
 		</li>
