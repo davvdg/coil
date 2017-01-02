@@ -95,6 +95,7 @@ exports.browseCoilJobRun = function(req, res) {
 					var newData = data.map(
 							function(item) {
 								item.path = item.path.replace(outputUrl, "");
+								return item;
 							}
 						);
 					return newData;
@@ -105,7 +106,13 @@ exports.browseCoilJobRun = function(req, res) {
 				//return;
 				ret = request(options, function(error, response, data) {
 					if (!error && response.statusCode === 200) {
-						res.json(trimPath(data));
+						var newData = data.map(
+							function(item) {
+								item.path = item.path.replace(outputUrl, "");
+								return item;
+							}
+						);
+						res.json(newData);
 					} else {
 						res.status(response.statusCode).json({error: error});
 					}
