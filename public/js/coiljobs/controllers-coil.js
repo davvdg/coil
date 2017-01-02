@@ -42,15 +42,7 @@ function CoilRunLogBrowserCtrl($routeParams, coilDataService) {
 
     function goToPath(path) {
     	vm.path = path;
-    	coilDataService.getJobRunFiles(vm.jobid, vm.runid, path)
-      	.then(
-        	function(res) {
-          		vm.items = res.data;
-        	},
-        	function(err) {
-          		console.log(err);
-        	}
-      	);
+    	load();
     }
 
     function downloadFile(path) {

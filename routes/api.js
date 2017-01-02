@@ -68,7 +68,8 @@ exports.killCoilJob = function(req, res) {
 exports.browseCoilJobRun = function(req, res) {
 	var jobuuid = req.params.jobid;
 	var runid = req.params.runid;
-	var path = req.params.path;
+	var path = req.query.path;
+	console.log("trying to browse path:" + path);
 
 	if (path === undefined) {
 		path = "";
@@ -132,8 +133,8 @@ exports.browseCoilJobRun = function(req, res) {
 exports.downloadCoilJobRunFile = function(req, res) {
 	var jobuuid = req.params.jobid;
 	var runid = req.params.runid;
-	var path = req.params.path;
-
+	var path = req.query.path;
+	console.log("trying to download path:" + path);
 	if (path === undefined) {
 		path = "";
 	}
