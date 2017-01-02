@@ -12,7 +12,7 @@ var uuid = require('uuid/v4');
 var url = require('url');
 var db = require('../db.js');
 
-var browsejson = require("../samplejson/browsepp.json");
+//var browsejson = require("../samplejson/browsepp.json");
 
 
 exports.getCoilJobs = function(req, res) {
