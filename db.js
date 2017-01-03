@@ -29,7 +29,7 @@ exports.getJobByUuid = function(uuid) {
 exports.getJobRunsByJobUuid = function(uuid) {
 	return db.getJobByUuid(uuid).then(
 		function(job) {
-			console.log(job);
+			//console.log(job);
 			return Promise.resolve(job.runs);
 		}
 	);	
