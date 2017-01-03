@@ -343,4 +343,9 @@ function ItemListCtrl() {
   	
   }
 
+function CookSubmitJobGroupCtrl() {
+  var vm = this;
+  
+}
+
 })();
