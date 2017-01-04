@@ -38,7 +38,7 @@ function coilDataService($http) {
     }
 	
 	function killJob(jobid) {
-		return $http.delete('/api/coiljobs/' + vm.uuid + '/kill');
+		return $http.delete('/api/coiljobs/' + jobid + '/kill');
 	}
 }
 

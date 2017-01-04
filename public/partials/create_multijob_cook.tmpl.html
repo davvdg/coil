@@ -1,0 +1,166 @@
+<div class="container-fluid">
+	<h1>Create and Submit Cook Job</h1>
+	<div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+		<div class="btn-group" role="group" aria-label="First group">
+			<button type="button" class=" btn btn-default " ng-click='ctrl.downloadJson()'>
+				<span class="glyphicon glyphicon-save" aria-hidden="true"></span> save as json</button>
+			<button type="button" class=" btn btn-default" ng-click='ctrl.loadJson()'>
+				<span class="glyphicon glyphicon-open" aria-hidden="true"></span> load from json</button>
+		</div>
+		<div class="btn-group" role="group" aria-label="First group">
+			<button type="button" class=" btn btn-default" ng-click='ctrl.clearAll()'>
+				<span class="glyphicon glyphicon-remove" aria-hidden="true"></span> clear all</button>
+		</div>
+	</div>
+	<div ng-show="ctrl.submitError" class="alert alert-danger">{{ctrl.errorMessage}}</div>
+
+	<div class="panel-group" id="accordion">
+    <div class="panel panel-default" id="mainOptions">
+    	<div class="panel-heading">
+			<h3 class="panel-title">
+			<a data-toggle="collapse" data-target="#collapseMainOptions">
+           Main options</a></h3>
+		</div>
+	    <div id="collapseMainOptions" class="panel-collapse collapse in">
+	    	<div class="panel-body">
+				<form>
+					<div id="name" class='form-group'>
+						<label>name</label>
+						<input type="text" name="name" ng-model='ctrl.name' class="form-control" placeholder="name of the job">
+					</div>
+					<div id="mainclass" class='form-group'>
+						<label>Command</label>
+						<input type="text" name="command" ng-model='ctrl.command' class="form-control" placeholder="the command to run">
+					</div>
+				</form>
+			</div>
+	    </div>
+	</div>
+
+    <div class="panel panel-default" id="multiJob">
+    	<div class="panel-heading">
+			<h3 class="panel-title">
+			<a data-toggle="collapse" data-target="#collapseMultiJobs">
+           Multi Jobs</a></h3>
+		</div>
+	    <div id="collapseMainOptions" class="panel-collapse collapse in">
+	    	<!--
+	    	<div class="panel-body">
+				<form>
+					<div id="name" class='form-group'>
+						<label>from</label>
+						<input type="text" name="name" ng-model='ctrl.name' class="form-control" placeholder="name of the job">
+					</div>
+					<div id="mainclass" class='form-group'>
+						<label>to</label>
+						<input type="text" name="command" ng-model='ctrl.command' class="form-control" placeholder="the command to run">
+					</div>
+				</form>
+			</div>
+			-->
+	    </div>
+	</div>
+
+	<div class="panel panel-default" id="runDetails">
+    	<div class="panel-heading">
+			<h3 class="panel-title">
+			<a data-toggle="collapse" data-target="#collapseRunDetails" 
+            class="collapsed">
+           Details</a></h3>
+		</div>
+	    <div id="collapseRunDetails" class="panel-collapse collapse">
+	    	<div class="panel-body">
+				<form>
+					<div id="priority" class='form-group'>
+						<label>Priority</label>
+						<input type="number" name="priority" ng-model='ctrl.priority' min='0' max='100' class="form-control" placeholder="priority of the job. Should be between 0 and 100, inclusive.">
+					</div>
+					<div id="max_retries" class='form-group'>
+						<label>Max Retries</label>
+						<input type="number" name="max_retries" min='0' ng-model='ctrl.max_retries' class="form-control" placeholder="the maximum number of retries">
+					</div>
+					<div id="max_runtime" class='form-group'>
+						<label>Max Runtime</label>
+						<input type="number" name="max_runtime" min='0' ng-model='ctrl.max_runtime' class="form-control" placeholder="the maximum running time of the job in milliseconds. An instance that runs for more than max_runtime will be killed and job will be retried.">
+					</div>
+					<div id="cpus" class='form-group'>
+						<label>Cpus</label>
+						<input type="number" name="cpus" min='0' ng-model='ctrl.cpus' class="form-control" placeholder="number of requested cpus.">
+					</div>
+					<div id="mem" class='form-group'>
+						<label>Memory</label>
+						<input type="number" name="mem" min='0' ng-model='ctrl.mem' class="form-control" placeholder="MB of requested memory.">
+					</div>
+					<div id="gpus" class='form-group'>
+						<label>Gpus</label>
+						<input type="number" name="gpus" min='0' ng-model='ctrl.gpus' class="form-control" placeholder="Number of requested GPUs. Must be a whole number and support must be enabled in the config.">
+					</div>
+					<div id="ports" class='form-group'>
+						<label>Ports</label>
+						<input type="number" name="ports" ng-model='ctrl.ports' class="form-control" placeholder="Number of ports that should be opened for the job.">
+					</div>
+					<div id="envs" class='form-group'>
+						<label>Env variables</label>
+						<kvtable data-confs="ctrl.envs"/>
+					</div>
+				</form>		
+			</div>
+	    </div>
+	</div>
+
+	<div class="panel panel-default" id="resourceFiles">
+    	<div class="panel-heading">
+			<h3 class="panel-title">
+			<a data-toggle="collapse" data-target="#collapseResourceFiles" 
+            class="collapsed">
+           Files</a></h3>
+		</div>
+	    <div id="collapseResourceFiles" class="panel-collapse collapse">
+	    	<div class="panel-body" >
+				<form>
+					<div id="uris" class='form-group'>
+						<label>Uris</label>
+						<mesosuris data-rows="ctrl.uris"/>
+					</div>
+				</form>		
+			</div>
+	    </div>
+	</div>
+
+
+
+	</div>				
+
+	<form>
+		<div id="docker" class='form-group'>
+			<label>docker</label>
+			<input type="checkbox" ng-model="ctrl.useDocker"/>
+		</div>
+		<div ng-show="ctrl.useDocker">
+			<div id="image" class='form-group'>
+				<label>image</label>
+				<input type="text" name="image" class="form-control" ng-model="ctrl.container.docker.image">
+			</div>
+			<div id="parameters" class='form-group'>
+				<label>parameters</label>
+				<itemlist data-rows="ctrl.container.docker.parameters">
+			</div>
+			<div id="network" class='form-group'>
+				<label>Network</label>
+				<input type="text" name="image" class="form-control" ng-model="ctrl.container.docker.network">
+			</div>			
+			<div id="ports" class='form-group'>
+				<label>Port-Mapping</label>
+				<mesosports data-rows="ctrl.container.docker['port-mapping']">
+			</div>
+			<div id="volumes" class='form-group'>
+				<label>Volumes</label>
+				<mesosvolumes data-rows="ctrl.container.volumes">
+			</div>
+		</div>
+					
+	</form>
+	
+	
+	<button class="btn btn-primary btn-lg btn-block" ng-click='ctrl.submitJob()'>submit</button>
+</div>

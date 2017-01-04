@@ -114,8 +114,14 @@ exports.browseCoilJobRun = function(req, res) {
 							}
 						);
 						res.json(newData);
-					} else {
-						res.status(response.statusCode).json({error: error});
+						return;
+					}
+					if (!error && response.statusCode !== 200) {
+						res.status(response.statusCode).json(data);
+						return;
+					}
+					if (error) {
+						res.status(404).json({error: error});
 					}
 				});
 			} else {
