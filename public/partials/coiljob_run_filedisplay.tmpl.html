@@ -1,0 +1,6 @@
+
+<div class="container-fluid" >	
+	<h3>Files for run {{ctrl.path.split("/").pop()}}</h3>
+	<div ng-show="ctrl.errorMessage" class="alert alert-danger">{{ctrl.errorMessage}}</div>
+	<textarea ngModel="ctrl.text" class="form-control" rows="40"></textarea>
+</div>
