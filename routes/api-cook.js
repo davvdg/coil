@@ -12,6 +12,7 @@ var mesos = require("./api-mesos.js");
 
 exports.postCookJobs = function(req,res) {
 	var user = req.session.passport.user.username;
+	console.log("User is " + user);
 	var newbody = req.body;
 	var jobs = newbody.jobs;
 	jobs.forEach(function(elem) {
