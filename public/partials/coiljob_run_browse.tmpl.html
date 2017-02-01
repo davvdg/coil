@@ -18,6 +18,7 @@
 					<th ng-click="ctrl.orderBy('gid')">gid</th>
 					<th ng-click="ctrl.orderBy('uid')">uid</th>
 					<th ng-click="ctrl.orderBy('path')">path</th>
+					<th >watch</th>
 					<th ng-click="ctrl.orderBy('size')">size</th>
 					<th ng-click="ctrl.orderBy('mode')">mode</th>
 				</tr>
@@ -35,6 +36,7 @@
 						}"  aria-hidden="true"></span>
 						{{item.path.split("/").pop()}}
 					</td>
+					<td><a href="/coiljobs/{{ctrl.jobid}}/runs/{{ctrl.runid}}/watch/{{item.path}}">watch file</td>
 					<td>{{item.size | bytes}}</td>
 					<td>{{item.mode}}</td>
 				</tr>

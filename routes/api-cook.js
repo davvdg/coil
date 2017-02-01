@@ -26,8 +26,13 @@ exports.postCookJobs = function(req,res) {
 	var options = {
 	  uri: 'http://'+ config.cook.url + ':' + config.cook.port + '/rawscheduler',
 	  method: 'POST',
+	  auth: {
+	  	user: user,
+	  	pass: user,
+
+	  },	  
 	  headers: {
-	      'Content-Type': 'application/json'
+	      'Content-Type': 'application/json',
 	  },
 	  json: true, 
 	  body: newbody
@@ -97,6 +102,7 @@ var getCoilCookJobStatus = function(job) {
 }
 
 var getCookJobStatus = function(uuid) {
+
 	var cookToCoilStatusMap = {
 		waiting: "PENDING",
 		running: "RUNNING",
@@ -105,6 +111,11 @@ var getCookJobStatus = function(uuid) {
 
 	var options = {
 	  uri: 'http://'+ config.cook.url + ':' + config.cook.port + '/rawscheduler?job=' + uuid,
+	  auth: {
+	  	user: "root",
+	  	pass: "root",
+
+	  }
 	};
 	//console.log(options);
 	var promise = rp(options)
@@ -133,6 +144,11 @@ var getCoilCookRuns = function(job) {
 	var uuid = job.internalId;
 	var options = {
 	  uri: 'http://'+ config.cook.url + ':' + config.cook.port + '/rawscheduler?job=' + uuid,
+	  auth: {
+	  	user: "root",
+	  	pass: "root",
+
+	  }
 	};
 	var promise = rp(options)
 	.then(function(data) {
@@ -173,7 +189,12 @@ var getCoilCookRuns = function(job) {
 var killCookJob = function(uuid) {
 	var options = {
 	  uri: 'http://'+ config.cook.url + ':' + config.cook.port + '/rawscheduler?job=' + uuid,
-	  method: 'DELETE'
+	  method: 'DELETE',
+	  auth: {
+	  	user: "root",
+	  	pass: "root",
+
+	  }
 	};
 	var promise = rp(options);
     return promise;

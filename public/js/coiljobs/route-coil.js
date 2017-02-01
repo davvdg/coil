@@ -25,7 +25,12 @@ function routeConfig($routeProvider, $locationProvider) {
       templateUrl: 'partials/coiljob_run_browse.tmpl.html',
       controller: 'CoilRunLogBrowserCtrl',
       controllerAs: 'ctrl'
-    });
+    }).
+    when('/coiljobs/:jobid/runs/:runid/watch/*path', {
+      templateUrl: 'partials/coiljob_run_filedisplay.tmpl.html',
+      controller: 'CoilRunLogDisplayCtrl',
+      controllerAs: 'ctrl'
+    });    
 
 }
 

@@ -8,7 +8,8 @@ angular
 	.module('myApp.coiljobs', [])
 	.controller('CoilJobsCtrl', CoilJobsCtrl)
 	.controller('CoilJobCtrl', CoilJobCtrl)
-	.controller("CoilRunLogBrowserCtrl", CoilRunLogBrowserCtrl);
+	.controller("CoilRunLogBrowserCtrl", CoilRunLogBrowserCtrl)
+	.controller("CoilRunLogDisplayCtrl", CoilRunLogDisplayCtrl);
 
 CoilRunLogBrowserCtrl.$inject = ["$routeParams", "coilDataService"];
 
@@ -198,6 +199,49 @@ function CoilJobCtrl($routeParams, socket, $location, PersistJobsService, coilDa
 	    vm.errorMessage = "Error: job type unknown. Cannot route to submit page";
 	  }
 	}
+}
+
+CoilRunLogDisplayCtrl.$inject = ["$routeParams", "coilDataService", "$timeout", "$scope"];
+
+
+function CoilRunLogDisplayCtrl($routeParams, coilDataService, $timeout, $scope) {
+	var vm = this;
+	vm.text = "";
+	vm.errorMessage = "";
+	vm.path = $routeParams.path;
+
+	var jobid = $routeParams.jobid;
+	var runid = $routeParams.runid;
+	var refreshPromise = null;
+
+	function loadText() {
+	
+   	return coilDataService.downloadFile(jobid, runid, vm.path)
+    	.then(
+    		function(res) {
+    			vm.text = res.data;
+    		},
+    		function(err) {
+    			vm.text = ""
+    			vm.errorMessage("unable to load the content of the file");
+    			console.log(err);
+    		}
+    	);		
+	}
+
+	function refreshInterval() {
+		console.log("refresh");
+		refreshPromise = $timeout(function() {
+			loadText().then(refreshInterval);
+		}, 1000);
+	}
+
+	refreshInterval();
+	
+	$scope.$on('$destroy',function(){
+    if(refreshPromise)
+        $timeout.cancel(refreshPromise);   
+	});
 }
 
 })();
