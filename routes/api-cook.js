@@ -11,8 +11,11 @@ var mesos = require("./api-mesos.js");
 
 
 exports.postCookJobs = function(req,res) {
-	var user = req.session.passport.user.username;
+	//var user = req.session.passport.user.username;
+	var user = req.user;
+	var username = user.uid;
 	console.log("User is " + user);
+	console.log("Username is " + username);
 	var newbody = req.body;
 	var jobs = newbody.jobs;
 	jobs.forEach(function(elem) {
@@ -28,8 +31,8 @@ exports.postCookJobs = function(req,res) {
 	  uri: 'http://'+ config.cook.url + ':' + config.cook.port + '/rawscheduler',
 	  method: 'POST',
 	  auth: {
-	  	user: user,
-	  	pass: user,
+	  	user: username,
+	  	pass: username,
 
 	  },	  
 	  headers: {

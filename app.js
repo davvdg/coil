@@ -33,6 +33,7 @@ var LocalStrategy = require('passport-local').Strategy;
 
 if (config.auth.method === "local") {
   passport.use(new LocalStrategy(
+    // verify callback
     function(username, password, cb) {
       console.log(username,password);
       if (username==="xxxxx" && password==="xxxxx") {
@@ -40,14 +41,19 @@ if (config.auth.method === "local") {
         return cb(null, user);
       }
       return cb(null, false);
-    })
+    }
+    ///////////////////////////////
+    )
   );
 }
 
 if (config.auth.method === "ldapauth") {
-	passport.use(new LdapStrategy({
+	passport.use(new LdapStrategy(
+  // options
+  {
 		server: config.auth.ldapauth
 	}
+  // no verify callback
 	));
 }
 
@@ -57,7 +63,8 @@ passport.serializeUser(function(user, cb) {
 });
 
 passport.deserializeUser(function(user, cb) {
-  
+  console.log("deserialized User");
+  console.log(user);
   cb(null, user);
   
 });
@@ -126,17 +133,25 @@ app.post('/user/login', function(req, res, next) {
         err: info
       });
     }
+    // logIn is a function added by passport to establish a session.
+    // when authentication is finished, req.user is set.
+    // if passport.authenticate is used as middleware (not the case here), 
+    // then login is called automatically
     req.logIn(user, function(err) {
       if (err) {
-	console.log("failed to log user");
-	console.log(err);
-        return res.status(500).json({
-          err: 'Could not log in user'
-        });
+        console.log("failed to log user");
+        console.log(err);
+        return res
+          .status(500)
+          .json({
+            err: 'Could not log in user'
+          });
       }
+
       res.status(200).json({
         status: 'Login successful!'
       });
+
     });
   })(req, res, next);
 });
